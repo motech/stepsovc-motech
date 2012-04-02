@@ -11,4 +11,5 @@
     </context:component-scan>
 
     <mvc:annotation-driven/>
+    <!-- configure couchdb-->
 </beans>
