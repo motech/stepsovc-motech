@@ -15,6 +15,11 @@
         <motech-platform.version>0.9-SNAPSHOT</motech-platform.version>
     </properties>
     <repositories>
+        <repository>
+            <id>motech.nexus</id>
+            <name>Motech Snapshots Repository</name>
+            <url>http://nexus.motechproject.org/content/repositories/snapshots</url>
+        </repository>
     </repositories>
     <dependencies>
        <dependency>
