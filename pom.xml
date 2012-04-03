@@ -14,6 +14,22 @@
         <spring.version>3.0.5.RELEASE</spring.version>
         <motech-platform.version>0.9-SNAPSHOT</motech-platform.version>
     </properties>
+
+    <distributionManagement>
+        <repository>
+            <id>motech.nexus</id>
+            <name>Motech Releases Repository</name>
+            <url>http://nexus.motechproject.org/content/repositories/releases</url>
+            <uniqueVersion>false</uniqueVersion>
+        </repository>
+        <snapshotRepository>
+            <id>motech.nexus</id>
+            <name>Motech Snapshots Repository</name>
+            <url>http://nexus.motechproject.org/content/repositories/snapshots</url>
+            <uniqueVersion>false</uniqueVersion>
+        </snapshotRepository>
+    </distributionManagement>
+
     <repositories>
         <repository>
             <id>motech.nexus</id>
@@ -22,7 +38,7 @@
         </repository>
     </repositories>
     <dependencies>
-       <dependency>
+        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
             <version>${spring.version}</version>
