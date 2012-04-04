@@ -13,6 +13,6 @@ public class TestController {
     @RequestMapping(value = "/test")
     @ResponseBody
     public String loadHelloWorld() {
-        return "StepOVC Running @" + new Date();
+        return " Test - StepOVC Running @" + new Date();
     }
 }
