@@ -18,11 +18,6 @@
             <version>2.5</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>org.motechproject</groupId>
-            <artifactId>commcare-case-service</artifactId>
-            <version>0.1-SNAPSHOT</version>
-        </dependency>
     </dependencies>
     <properties>
         <jetty.port>9979</jetty.port>
