@@ -28,22 +28,6 @@
         <jetty.port>9979</jetty.port>
     </properties>
     <build>
-        <resources>
-            <resource>
-                <directory>${project.build.directory}/generated-resources</directory>
-                <filtering>true</filtering>
-                <excludes>
-                    <exclude>**/*.omod</exclude>
-                </excludes>
-            </resource>
-            <resource>
-                <directory>${project.build.directory}/generated-resources</directory>
-                <filtering>false</filtering>
-                <includes>
-                    <include>**/*.omod</include>
-                </includes>
-            </resource>
-        </resources>
         <finalName>stepsovc</finalName>
         <plugins>
             <plugin>
