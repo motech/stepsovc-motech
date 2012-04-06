@@ -110,5 +110,11 @@
             <artifactId>commcare-case-service</artifactId>
             <version>0.1-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <artifactId>motech-platform-server-api</artifactId>
+            <groupId>org.motechproject</groupId>
+            <version>${motech-platform.version}</version>
+        </dependency>
+
     </dependencies>
 </project>
