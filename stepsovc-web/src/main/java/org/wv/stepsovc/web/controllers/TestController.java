@@ -1,4 +1,4 @@
-package org.wv.stepsovc.controllers;
+package org.wv.stepsovc.web.controllers;
 
 
 import org.springframework.stereotype.Controller;

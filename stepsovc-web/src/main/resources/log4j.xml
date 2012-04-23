@@ -2,7 +2,7 @@
 <!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
     <appender class="org.apache.log4j.RollingFileAppender" name="logfile">
-        <param value="./stepsovc.log" name="File"/>
+        <param value="../logs/stepsovc.log" name="File"/>
         <param name="Append" value="true"/>
         <param name="MaxFileSize" value="4096KB"/>
         <param name="maxBackupIndex" value="5"/>
@@ -13,9 +13,9 @@
     <appender name="emailappender" class="org.apache.log4j.net.SMTPAppender">
         <param name="BufferSize" value="5"/>
         <param name="SMTPHost" value="gmail-smtp-in.l.google.com"/>
-        <param name="From" value="ananya_care_errors@thoughtworks.com"/>
-        <param name="To" value="ananya_care_errors@thoughtworks.com"/>
-        <param name="Subject" value="Ananya Error"/>
+        <param name="From" value="stepsovc@thoughtworks.com"/>
+        <param name="To" value="stepsovc@thoughtworks.com"/>
+        <param name="Subject" value="STEPS-OVC Error"/>
         <layout class="org.apache.log4j.PatternLayout">
             <param value="[%t] - %d %p [%c] - %m%n" name="ConversionPattern"/>
         </layout>
@@ -37,6 +37,9 @@
         <level value="error"/>
     </logger>
     <logger name="org.motechproject">
+        <level value="info"/>
+    </logger>
+    <logger name="org.wv">
         <level value="info"/>
     </logger>
     <root>

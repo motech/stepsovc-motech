@@ -77,6 +77,14 @@
             <name>Jasmine JavaScript BDD Repository</name>
             <url>http://searls-maven-repository.googlecode.com/svn/trunk/snapshots</url>
         </pluginRepository>
+        <pluginRepository>
+            <id>sonatype-nexus-snapshots</id>
+            <name>Sonatype Nexus Snapshots</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </pluginRepository>
     </pluginRepositories>
 
 
@@ -85,16 +93,34 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
             <version>${spring.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
             <version>${spring.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
             <version>${spring.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.motechproject</groupId>
@@ -110,7 +136,7 @@
 
         <dependency>
             <groupId>org.motechproject</groupId>
-            <artifactId>commcare-case-service</artifactId>
+            <artifactId>case-service</artifactId>
             <version>0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
@@ -119,5 +145,22 @@
             <version>${motech-platform.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aspects</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>${spring.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
     </dependencies>
 </project>
