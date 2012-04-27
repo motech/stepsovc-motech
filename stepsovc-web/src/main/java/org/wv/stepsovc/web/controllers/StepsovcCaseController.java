@@ -12,6 +12,8 @@ import org.wv.stepsovc.web.handlers.UpdateServiceHandler;
 import org.wv.stepsovc.web.request.BeneficiaryCase;
 import org.wv.stepsovc.web.request.CaseUpdateType;
 
+import java.text.ParseException;
+
 @Controller
 @RequestMapping("/case/**")
 public class StepsovcCaseController extends CaseService<BeneficiaryCase> {
@@ -51,12 +53,17 @@ public class StepsovcCaseController extends CaseService<BeneficiaryCase> {
 
     @Override
     public void createCase(BeneficiaryCase beneficiaryCase) {
-        logger.info("Inside create case");
+        logger.info("Inside create case \"" + beneficiaryCase.getForm_type() + "\"");
+        logger.info("followupdate "+beneficiaryCase.getFollowup_date());
 
         if(CaseUpdateType.BENEFICIARY_REGISTRATION.getType().equals(beneficiaryCase.getForm_type()))
             beneficiaryRegistrationHandler.handleCase(beneficiaryCase);
         else if(CaseUpdateType.NEW_REFERRAL.getType().equals(beneficiaryCase.getForm_type()))
-            newReferralHandler.handleCase(beneficiaryCase);
+            try {
+                newReferralHandler.handleCase(beneficiaryCase);
+            } catch (ParseException e) {
+                logger.error("ParseException while handling new referral");
+            }
         else if(CaseUpdateType.UPDATE_REFERRAL.getType().equals(beneficiaryCase.getForm_type()))
             updateReferralHandler.handleCase(beneficiaryCase);
         else if(CaseUpdateType.UPDATE_SERVICE.getType().equals(beneficiaryCase.getForm_type()))

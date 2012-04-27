@@ -2,6 +2,7 @@ package org.wv.stepsovc.web.handlers;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.wv.stepsovc.web.mapper.BeneficiaryMapper;
 import org.wv.stepsovc.web.repository.AllBeneficiaries;
 import org.wv.stepsovc.web.request.BeneficiaryCase;
 
@@ -15,6 +16,6 @@ public class BeneficiaryRegistrationHandler {
 
     public void handleCase(BeneficiaryCase beneficiaryCase) {
         logger.info("Handling beneficiary registration for "+beneficiaryCase.getBeneficiary_name());
-        allBeneficiaries.add(beneficiaryCase);
+        allBeneficiaries.add(new BeneficiaryMapper().map(beneficiaryCase));
     }
 }
