@@ -43,6 +43,11 @@
             <artifactId>mockito-core</artifactId>
             <version>1.8.5</version>
         </dependency>
+        <dependency>
+            <groupId>org.motechproject</groupId>
+            <artifactId>commcare-case-gateway</artifactId>
+            <version>0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
     <properties>
         <jetty.port>9979</jetty.port>

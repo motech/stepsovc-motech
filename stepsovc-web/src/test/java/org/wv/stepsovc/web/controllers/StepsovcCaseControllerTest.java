@@ -1,5 +1,6 @@
 package org.wv.stepsovc.web.controllers;
 
+import org.apache.velocity.app.VelocityEngine;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -24,30 +25,33 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class StepsovcCaseControllerTest {
 
-@Mock
-BeneficiaryRegistrationHandler mockBeneficiaryHandler;
-@Mock
-NewReferralHandler mockNewReferralHandler;
-@Mock
-UpdateReferralHandler mockUpdateReferralHandler;
-@Mock
-UpdateServiceHandler mockUpdateServiceHandler;
+    @Mock
+    BeneficiaryRegistrationHandler mockBeneficiaryHandler;
+    @Mock
+    NewReferralHandler mockNewReferralHandler;
+    @Mock
+    UpdateReferralHandler mockUpdateReferralHandler;
+    @Mock
+    UpdateServiceHandler mockUpdateServiceHandler;
+    @Mock
+    VelocityEngine velocityEngine;
 
-StepsovcCaseController stepsovcCaseController;
-        private BeneficiaryCase beneficiaryCase;
+
+    StepsovcCaseController stepsovcCaseController;
+    private BeneficiaryCase beneficiaryCase;
 
 
     @Before
-    public void setup(){
+    public void setup() {
         initMocks(this);
-        stepsovcCaseController= new StepsovcCaseController(mockBeneficiaryHandler,mockNewReferralHandler,mockUpdateReferralHandler,mockUpdateServiceHandler);
-        beneficiaryCase= new BeneficiaryCase();
+        stepsovcCaseController = new StepsovcCaseController(mockBeneficiaryHandler, mockNewReferralHandler, mockUpdateReferralHandler, mockUpdateServiceHandler);
+        beneficiaryCase = new BeneficiaryCase();
     }
 
 
     @Test
     public void ShouldCallBeneficiaryRegistrationHandler() throws Exception {
-         beneficiaryCase.setForm_type(CaseUpdateType.BENEFICIARY_REGISTRATION.getType());
+        beneficiaryCase.setForm_type(CaseUpdateType.BENEFICIARY_REGISTRATION.getType());
         stepsovcCaseController.createCase(beneficiaryCase);
         verify(mockBeneficiaryHandler).handleCase(beneficiaryCase);
     }

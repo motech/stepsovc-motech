@@ -1,6 +1,7 @@
 package org.wv.stepsovc.web.controllers;
 
 import org.apache.log4j.Logger;
+import org.apache.velocity.app.VelocityEngine;
 import org.motechproject.casexml.service.CaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,21 +26,16 @@ public class StepsovcCaseController extends CaseService<BeneficiaryCase> {
     private UpdateReferralHandler updateReferralHandler;
     private UpdateServiceHandler updateServiceHandler;
 
-    public StepsovcCaseController(){
-        super(BeneficiaryCase.class);
-    }
-
     @Autowired
     public StepsovcCaseController(BeneficiaryRegistrationHandler beneficiaryRegistrationHandler,
                                   NewReferralHandler newReferralHandler, UpdateReferralHandler updateReferralHandler,
                                   UpdateServiceHandler updateServiceHandler) {
-        super(BeneficiaryCase.class);
+        super(BeneficiaryCase.class, new VelocityEngine());
         this.beneficiaryRegistrationHandler = beneficiaryRegistrationHandler;
         this.newReferralHandler = newReferralHandler;
         this.updateReferralHandler = updateReferralHandler;
         this.updateServiceHandler = updateServiceHandler;
     }
-
 
     @Override
     public void closeCase(BeneficiaryCase beneficiaryCase) {
