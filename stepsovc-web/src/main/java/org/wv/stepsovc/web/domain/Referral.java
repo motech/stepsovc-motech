@@ -8,32 +8,39 @@ import java.util.Date;
 
 @TypeDiscriminator("doc.type == 'Referral'")
 public class Referral extends MotechBaseDataObject {
-    @JsonProperty("beneficiary_code")
+    @JsonProperty
     private String beneficiaryCode;
-    @JsonProperty("facility_id")
+    @JsonProperty
     private String facilityId;
-    @JsonProperty("visit_date")
+    @JsonProperty
     private Date visitDate;
-    @JsonProperty("referred_date")
+    @JsonProperty
     private Date serviceDate;
-    @JsonProperty("followup_required")
+    @JsonProperty
     private String followupRequired;
-    @JsonProperty("art_adherence_counseling")
+    @JsonProperty
     private String artAdherenceCounseling;
     @JsonProperty
     private String condoms;
-    @JsonProperty("end_of_life_hospice")
+    @JsonProperty
     private String endOfLifeHospice;
-    @JsonProperty("family_planning")
+    @JsonProperty
     private String familyPlanning;
-    @JsonProperty("hiv_counseling")
+    @JsonProperty
     private String hivCounseling;
-    @JsonProperty("new_diagnosis")
+    @JsonProperty
     private String newDiagnosis;
-    @JsonProperty("other_health_services")
+    @JsonProperty
     private String otherHealthServices;
-    @JsonProperty("followup_date")
+    @JsonProperty
     private Date followupDate;
+    @JsonProperty
+    private String painManagement;
+    @JsonProperty
+    private String pmtct;
+    @JsonProperty
+    private String sexuallyTransmittedInfection;
+
 
     public String getFollowupRequired() {
         return followupRequired;
@@ -130,13 +137,6 @@ public class Referral extends MotechBaseDataObject {
     public void setSexuallyTransmittedInfection(String sexuallyTransmittedInfection) {
         this.sexuallyTransmittedInfection = sexuallyTransmittedInfection;
     }
-
-    @JsonProperty("pain_management")
-    private String painManagement;
-    @JsonProperty
-    private String pmtct;
-    @JsonProperty("sexually_transmitted_infection")
-    private String sexuallyTransmittedInfection;
 
     public String getBeneficiaryCode() {
         return beneficiaryCode;

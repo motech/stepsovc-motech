@@ -6,15 +6,17 @@ import org.motechproject.model.MotechBaseDataObject;
 
 @TypeDiscriminator("doc.type == 'Beneficiary'")
 public class Beneficiary extends MotechBaseDataObject {
+    @JsonProperty
     private String name;
+    @JsonProperty
     private String code;
-    @JsonProperty("dob")
+    @JsonProperty
     private String dateOfBirth;
     @JsonProperty
     private String title;
     @JsonProperty
     private String sex;
-    @JsonProperty("caregiver_id")
+    @JsonProperty
     private String caregiverId;
 
     public String getName() {

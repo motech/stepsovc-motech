@@ -4,6 +4,8 @@ import org.apache.log4j.Logger;
 import org.apache.velocity.app.VelocityEngine;
 import org.motechproject.casexml.service.CaseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.wv.stepsovc.web.handlers.BeneficiaryRegistrationHandler;
@@ -13,6 +15,7 @@ import org.wv.stepsovc.web.handlers.UpdateServiceHandler;
 import org.wv.stepsovc.web.request.BeneficiaryCase;
 import org.wv.stepsovc.web.request.CaseUpdateType;
 
+import java.io.IOException;
 import java.text.ParseException;
 
 @Controller
@@ -35,6 +38,19 @@ public class StepsovcCaseController extends CaseService<BeneficiaryCase> {
         this.newReferralHandler = newReferralHandler;
         this.updateReferralHandler = updateReferralHandler;
         this.updateServiceHandler = updateServiceHandler;
+    }
+
+    @Override
+    public ResponseEntity<String> processCase(HttpEntity<String> requestEntity) throws IOException {
+
+        ResponseEntity<String> stringResponseEntity = null;
+        try {
+            stringResponseEntity = super.processCase(requestEntity);
+        } catch (Exception e) {
+            //TODO: decide about when to throwing it back to commcare-hq
+            logger.error("Caught Exception while processing care : " + e);
+        }
+        return stringResponseEntity;
     }
 
     @Override
