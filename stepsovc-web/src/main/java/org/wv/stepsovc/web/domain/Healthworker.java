@@ -10,8 +10,8 @@ public class HealthWorker extends MotechBaseDataObject {
     private String name;
     @JsonProperty
     private String id;
-    @JsonProperty("facility_id")
+    @JsonProperty
     private String facilityId;
-    @JsonProperty("phone_number")
+    @JsonProperty
     private String phoneNumber;
 }
