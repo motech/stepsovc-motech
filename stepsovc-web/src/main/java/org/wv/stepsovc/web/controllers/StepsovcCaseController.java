@@ -24,6 +24,10 @@ public class StepsovcCaseController extends CaseService<BeneficiaryCase> {
     private UpdateReferralHandler updateReferralHandler;
     private UpdateServiceHandler updateServiceHandler;
 
+    public StepsovcCaseController(){
+        super(BeneficiaryCase.class);
+    }
+
     @Autowired
     public StepsovcCaseController(BeneficiaryRegistrationHandler beneficiaryRegistrationHandler,
                                   NewReferralHandler newReferralHandler, UpdateReferralHandler updateReferralHandler,

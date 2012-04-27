@@ -1,13 +1,25 @@
 package org.wv.stepsovc.web.request;
 
-public class BeneficiaryCase {
+import org.codehaus.jackson.annotate.JsonProperty;
+import org.ektorp.support.TypeDiscriminator;
+import org.motechproject.model.MotechBaseDataObject;
 
+@TypeDiscriminator("doc.type == 'BeneficiaryCase'")
+public class BeneficiaryCase extends MotechBaseDataObject {
+
+    @JsonProperty
     private String beneficiary_name;
+    @JsonProperty
     private String beneficiary_code;
+    @JsonProperty
     private String beneficiary_dob;
+    @JsonProperty
     private String title;
+    @JsonProperty
     private String sex;
+    @JsonProperty
     private String caregiver_name;
+    @JsonProperty
     private String caregiver_id;
     private String receiving_organization;
     private String form_type;
@@ -81,6 +93,6 @@ public class BeneficiaryCase {
     }
 
     public void setForm_type(String form_type) {
-        this.form_type = form_type;
+        this.form_type = form_type.toString();
     }
 }
