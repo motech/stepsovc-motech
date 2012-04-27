@@ -1,6 +1,7 @@
 package org.wv.stepsovc.web.controllers;
 
 import org.apache.log4j.Logger;
+import org.apache.velocity.app.VelocityEngine;
 import org.motechproject.casexml.service.CaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,8 +27,8 @@ public class StepsovcCaseController extends CaseService<BeneficiaryCase> {
     @Autowired
     public StepsovcCaseController(BeneficiaryRegistrationHandler beneficiaryRegistrationHandler,
                                   NewReferralHandler newReferralHandler, UpdateReferralHandler updateReferralHandler,
-                                  UpdateServiceHandler updateServiceHandler) {
-        super(BeneficiaryCase.class);
+                                  UpdateServiceHandler updateServiceHandler, VelocityEngine velocityEngine) {
+        super(BeneficiaryCase.class, velocityEngine);
         this.beneficiaryRegistrationHandler = beneficiaryRegistrationHandler;
         this.newReferralHandler = newReferralHandler;
         this.updateReferralHandler = updateReferralHandler;
@@ -49,13 +50,13 @@ public class StepsovcCaseController extends CaseService<BeneficiaryCase> {
     public void createCase(BeneficiaryCase beneficiaryCase) {
         logger.info("Inside create case");
 
-        if(CaseUpdateType.BENEFICIARY_REGISTRATION.getType().equals(beneficiaryCase.getForm_type()))
+        if (CaseUpdateType.BENEFICIARY_REGISTRATION.getType().equals(beneficiaryCase.getForm_type()))
             beneficiaryRegistrationHandler.handleCase(beneficiaryCase);
-        else if(CaseUpdateType.NEW_REFERRAL.getType().equals(beneficiaryCase.getForm_type()))
+        else if (CaseUpdateType.NEW_REFERRAL.getType().equals(beneficiaryCase.getForm_type()))
             newReferralHandler.handleCase(beneficiaryCase);
-        else if(CaseUpdateType.UPDATE_REFERRAL.getType().equals(beneficiaryCase.getForm_type()))
+        else if (CaseUpdateType.UPDATE_REFERRAL.getType().equals(beneficiaryCase.getForm_type()))
             updateReferralHandler.handleCase(beneficiaryCase);
-        else if(CaseUpdateType.UPDATE_SERVICE.getType().equals(beneficiaryCase.getForm_type()))
+        else if (CaseUpdateType.UPDATE_SERVICE.getType().equals(beneficiaryCase.getForm_type()))
             updateServiceHandler.handleCase(beneficiaryCase);
     }
 }
