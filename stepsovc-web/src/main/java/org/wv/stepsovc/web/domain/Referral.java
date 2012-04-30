@@ -4,137 +4,144 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.ektorp.support.TypeDiscriminator;
 import org.motechproject.model.MotechBaseDataObject;
 
-import java.util.Date;
-
 @TypeDiscriminator("doc.type == 'Referral'")
 public class Referral extends MotechBaseDataObject {
+    @JsonProperty
+    private boolean active;
     @JsonProperty
     private String beneficiaryCode;
     @JsonProperty
     private String facilityId;
     @JsonProperty
-    private Date visitDate;
+    private String visitDate;
     @JsonProperty
-    private Date serviceDate;
+    private String serviceDate;
     @JsonProperty
     private String followupRequired;
     @JsonProperty
-    private String artAdherenceCounseling;
+    private Service artAdherenceCounseling;
     @JsonProperty
-    private String condoms;
+    private Service condoms;
     @JsonProperty
-    private String endOfLifeHospice;
+    private Service endOfLifeHospice;
     @JsonProperty
-    private String familyPlanning;
+    private Service familyPlanning;
     @JsonProperty
-    private String hivCounseling;
+    private Service hivCounseling;
     @JsonProperty
-    private String newDiagnosis;
+    private Service newDiagnosis;
     @JsonProperty
-    private String otherHealthServices;
+    private Service otherHealthServices;
     @JsonProperty
-    private Date followupDate;
+    private String followupDate;
     @JsonProperty
-    private String painManagement;
+    private Service painManagement;
     @JsonProperty
-    private String pmtct;
+    private Service pmtct;
     @JsonProperty
-    private String sexuallyTransmittedInfection;
+    private Service sexuallyTransmittedInfection;
 
+    public void setActive(boolean active) {
+        this.active = active;
+    }
 
     public String getFollowupRequired() {
         return followupRequired;
+    }
+
+    public boolean isActive() {
+        return active;
     }
 
     public void setFollowupRequired(String followupRequired) {
         this.followupRequired = followupRequired;
     }
 
-    public Date getFollowupDate() {
+    public String getFollowupDate() {
         return followupDate;
     }
 
-    public void setFollowupDate(Date followupDate) {
+    public void setFollowupDate(String followupDate) {
         this.followupDate = followupDate;
     }
 
-    public String getArtAdherenceCounseling() {
+    public Service getArtAdherenceCounseling() {
         return artAdherenceCounseling;
     }
 
-    public void setArtAdherenceCounseling(String artAdherenceCounseling) {
+    public void setArtAdherenceCounseling(Service artAdherenceCounseling) {
         this.artAdherenceCounseling = artAdherenceCounseling;
     }
 
-    public String getCondoms() {
+    public Service getCondoms() {
         return condoms;
     }
 
-    public void setCondoms(String condoms) {
+    public void setCondoms(Service condoms) {
         this.condoms = condoms;
     }
 
-    public String getEndOfLifeHospice() {
+    public Service getEndOfLifeHospice() {
         return endOfLifeHospice;
     }
 
-    public void setEndOfLifeHospice(String endOfLifeHospice) {
+    public void setEndOfLifeHospice(Service endOfLifeHospice) {
         this.endOfLifeHospice = endOfLifeHospice;
     }
 
-    public String getFamilyPlanning() {
+    public Service getFamilyPlanning() {
         return familyPlanning;
     }
 
-    public void setFamilyPlanning(String familyPlanning) {
+    public void setFamilyPlanning(Service familyPlanning) {
         this.familyPlanning = familyPlanning;
     }
 
-    public String getHivCounseling() {
+    public Service getHivCounseling() {
         return hivCounseling;
     }
 
-    public void setHivCounseling(String hivCounseling) {
+    public void setHivCounseling(Service hivCounseling) {
         this.hivCounseling = hivCounseling;
     }
 
-    public String getNewDiagnosis() {
+    public Service getNewDiagnosis() {
         return newDiagnosis;
     }
 
-    public void setNewDiagnosis(String newDiagnosis) {
+    public void setNewDiagnosis(Service newDiagnosis) {
         this.newDiagnosis = newDiagnosis;
     }
 
-    public String getOtherHealthServices() {
+    public Service getOtherHealthServices() {
         return otherHealthServices;
     }
 
-    public void setOtherHealthServices(String otherHealthServices) {
+    public void setOtherHealthServices(Service otherHealthServices) {
         this.otherHealthServices = otherHealthServices;
     }
 
-    public String getPainManagement() {
+    public Service getPainManagement() {
         return painManagement;
     }
 
-    public void setPainManagement(String painManagement) {
+    public void setPainManagement(Service painManagement) {
         this.painManagement = painManagement;
     }
 
-    public String getPmtct() {
+    public Service getPmtct() {
         return pmtct;
     }
 
-    public void setPmtct(String pmtct) {
+    public void setPmtct(Service pmtct) {
         this.pmtct = pmtct;
     }
 
-    public String getSexuallyTransmittedInfection() {
+    public Service getSexuallyTransmittedInfection() {
         return sexuallyTransmittedInfection;
     }
 
-    public void setSexuallyTransmittedInfection(String sexuallyTransmittedInfection) {
+    public void setSexuallyTransmittedInfection(Service sexuallyTransmittedInfection) {
         this.sexuallyTransmittedInfection = sexuallyTransmittedInfection;
     }
 
@@ -154,19 +161,19 @@ public class Referral extends MotechBaseDataObject {
         this.facilityId = facilityId;
     }
 
-    public Date getVisitDate() {
+    public String getVisitDate() {
         return visitDate;
     }
 
-    public void setVisitDate(Date visitDate) {
+    public void setVisitDate(String visitDate) {
         this.visitDate = visitDate;
     }
 
-    public Date getServiceDate() {
+    public String getServiceDate() {
         return serviceDate;
     }
 
-    public void setServiceDate(Date serviceDate) {
+    public void setServiceDate(String serviceDate) {
         this.serviceDate = serviceDate;
     }
 }

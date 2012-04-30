@@ -2,11 +2,10 @@ package org.wv.stepsovc.web.handlers;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.wv.stepsovc.web.domain.Referral;
 import org.wv.stepsovc.web.mapper.ReferralMapper;
 import org.wv.stepsovc.web.repository.AllReferrals;
 import org.wv.stepsovc.web.request.BeneficiaryCase;
-
-import java.text.ParseException;
 
 public class NewReferralHandler {
     private static Logger logger = Logger.getLogger(BeneficiaryRegistrationHandler.class);
@@ -14,8 +13,16 @@ public class NewReferralHandler {
     @Autowired
     private AllReferrals allReferrals;
 
-    public void handleCase(BeneficiaryCase beneficiaryCase) throws ParseException {
+    public void handleCase(BeneficiaryCase beneficiaryCase) {
         logger.info("Handling new referral");
-        allReferrals.add(new ReferralMapper().map(beneficiaryCase));
+        Referral oldActiveReferral = allReferrals.findActiveReferral(beneficiaryCase.getBeneficiary_code());
+        if(oldActiveReferral != null) {
+            oldActiveReferral.setActive(false);
+            allReferrals.update(oldActiveReferral);
+        }
+
+        Referral newReferral = new ReferralMapper().map(beneficiaryCase);
+        newReferral.setActive(true);
+        allReferrals.add(newReferral);
     }
 }

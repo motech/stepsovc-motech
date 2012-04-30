@@ -1,33 +1,58 @@
 package org.wv.stepsovc.web.mapper;
 
 import org.wv.stepsovc.web.domain.Referral;
+import org.wv.stepsovc.web.domain.Service;
 import org.wv.stepsovc.web.request.BeneficiaryCase;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 public class ReferralMapper {
 
     static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    static String REFERRED = "Referred";
+    static String NOT_REFERRED = "Not Referred";
+    static String SERVICE_RECEIVED = "Received";
+    static String SERVICE_NOT_AVAILED = "Not Availed";
 
-    public Referral map(BeneficiaryCase beneficiaryCase) throws ParseException {
+    public Referral map(BeneficiaryCase beneficiaryCase) {
         Referral newReferral = new Referral();
         newReferral.setBeneficiaryCode(beneficiaryCase.getBeneficiary_code());
         newReferral.setFacilityId(beneficiaryCase.getService_provider());
-        newReferral.setServiceDate(dateFormat.parse(beneficiaryCase.getService_date()));
-        newReferral.setFollowupDate(beneficiaryCase.getFollowup_date() == null ? null : dateFormat.parse(beneficiaryCase.getFollowup_date()));
-        newReferral.setVisitDate(dateFormat.parse(beneficiaryCase.getVisit_date()));
+        newReferral.setServiceDate(beneficiaryCase.getService_date());
+        newReferral.setFollowupDate(beneficiaryCase.getFollowup_date());
+        newReferral.setVisitDate(beneficiaryCase.getVisit_date());
         newReferral.setFollowupRequired(beneficiaryCase.getFollowup_required());
-        newReferral.setArtAdherenceCounseling(beneficiaryCase.getArt_adherence_counseling());
-        newReferral.setCondoms(beneficiaryCase.getCondoms());
-        newReferral.setEndOfLifeHospice(beneficiaryCase.getEnd_of_life_hospice());
-        newReferral.setFamilyPlanning(beneficiaryCase.getFamily_planning());
-        newReferral.setHivCounseling(beneficiaryCase.getHiv_counseling());
-        newReferral.setOtherHealthServices(beneficiaryCase.getOther_health_services());
-        newReferral.setNewDiagnosis(beneficiaryCase.getNew_diagnosis());
-        newReferral.setPainManagement(beneficiaryCase.getPain_management());
-        newReferral.setPmtct(beneficiaryCase.getPmtct());
-        newReferral.setSexuallyTransmittedInfection(beneficiaryCase.getSexually_transmitted_infection());
+        newReferral.setArtAdherenceCounseling(new Service(REFERRED.equals(beneficiaryCase.getArt_adherence_counseling())));
+        newReferral.setCondoms(new Service(REFERRED.equals(beneficiaryCase.getCondoms())));
+        newReferral.setEndOfLifeHospice(new Service(REFERRED.equals(beneficiaryCase.getEnd_of_life_hospice())));
+        newReferral.setFamilyPlanning(new Service(REFERRED.equals(beneficiaryCase.getFamily_planning())));
+        newReferral.setHivCounseling(new Service(REFERRED.equals(beneficiaryCase.getHiv_counseling())));
+        newReferral.setOtherHealthServices(new Service(REFERRED.equals(beneficiaryCase.getOther_health_services())));
+        newReferral.setNewDiagnosis(new Service(REFERRED.equals(beneficiaryCase.getNew_diagnosis())));
+        newReferral.setPainManagement(new Service(REFERRED.equals(beneficiaryCase.getPain_management())));
+        newReferral.setPmtct(new Service(REFERRED.equals(beneficiaryCase.getPmtct())));
+        newReferral.setSexuallyTransmittedInfection(new Service(REFERRED.equals(beneficiaryCase.getSexually_transmitted_infection())));
+
         return newReferral;
+    }
+
+    public Referral updateServices(Referral referral, BeneficiaryCase beneficiaryCase) {
+        referral.getCondoms().setProvided(SERVICE_RECEIVED.equals(beneficiaryCase.getCondoms()));
+        referral.getArtAdherenceCounseling().setProvided(SERVICE_RECEIVED.equals(beneficiaryCase.getArt_adherence_counseling()));
+        referral.getEndOfLifeHospice().setProvided(SERVICE_RECEIVED.equals(beneficiaryCase.getEnd_of_life_hospice()));
+        referral.getFamilyPlanning().setProvided(SERVICE_RECEIVED.equals(beneficiaryCase.getFamily_planning()));
+        referral.getHivCounseling().setProvided(SERVICE_RECEIVED.equals(beneficiaryCase.getHiv_counseling()));
+        referral.getNewDiagnosis().setProvided(SERVICE_RECEIVED.equals(beneficiaryCase.getNew_diagnosis()));
+        referral.getOtherHealthServices().setProvided(SERVICE_RECEIVED.equals(beneficiaryCase.getOther_health_services()));
+        referral.getPainManagement().setProvided(SERVICE_RECEIVED.equals(beneficiaryCase.getPain_management()));
+        referral.getPmtct().setProvided(SERVICE_RECEIVED.equals(beneficiaryCase.getPmtct()));
+        referral.getSexuallyTransmittedInfection().setProvided(SERVICE_RECEIVED.equals(beneficiaryCase.getSexually_transmitted_infection()));
+        referral.setVisitDate(beneficiaryCase.getVisit_date());
+
+        //TODO: check if we need to create new referral if facility id is set
+        referral.setFacilityId(beneficiaryCase.getService_provider());
+        referral.setServiceDate(beneficiaryCase.getService_date());
+
+        return referral;
     }
 }

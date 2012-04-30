@@ -12,10 +12,10 @@
     <util:properties id="stepovcProperties" location="classpath:/stepsovc.properties"/>
     <util:properties id="couchdbProperties" location="classpath:/couchdb.properties"/>
 
+    <import resource="classpath:applicationContext-caseService.xml"/>
+    <context:component-scan base-package="org.wv.stepsovc"></context:component-scan>
     <context:spring-configured/>
     <context:annotation-config/>
-
-    <context:component-scan base-package="org.wv.stepsovc"></context:component-scan>
 
     <bean id="beneficiaryRegistrationHandler" class="org.wv.stepsovc.web.handlers.BeneficiaryRegistrationHandler"/>
     <bean id="newReferralHandler" class="org.wv.stepsovc.web.handlers.NewReferralHandler"/>
@@ -32,7 +32,5 @@
         <constructor-arg value="stepsovc"/>
         <constructor-arg ref="stepsovcDbInstance"/>
     </bean>
-
-
 
 </beans>
