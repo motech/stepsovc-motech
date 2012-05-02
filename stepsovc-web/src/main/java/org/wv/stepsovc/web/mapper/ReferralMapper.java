@@ -49,7 +49,6 @@ public class ReferralMapper {
         referral.getSexuallyTransmittedInfection().setProvided(SERVICE_RECEIVED.equals(beneficiaryCase.getSexually_transmitted_infection()));
         referral.setVisitDate(beneficiaryCase.getVisit_date());
 
-        //TODO: check if we need to create new referral if facility id is set
         referral.setFacilityId(beneficiaryCase.getService_provider());
         referral.setServiceDate(beneficiaryCase.getService_date());
 
