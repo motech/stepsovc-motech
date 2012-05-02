@@ -55,4 +55,19 @@ public class ReferralMapper {
 
         return referral;
     }
+
+    public Referral updateReferral(Referral referral, BeneficiaryCase beneficiaryCase) {
+        referral.getCondoms().setReason(beneficiaryCase.getCondoms_na_reason());
+        referral.getArtAdherenceCounseling().setReason(beneficiaryCase.getArt_adherence_na_reason());
+        referral.getEndOfLifeHospice().setReason(beneficiaryCase.getEnd_of_life_hospice_na_reason());
+        referral.getFamilyPlanning().setReason(beneficiaryCase.getFamily_planning_na_reason());
+        referral.getHivCounseling().setReason(beneficiaryCase.getHiv_counseling_na_reason());
+        referral.getNewDiagnosis().setReason(beneficiaryCase.getNew_diagnosis_na_reason());
+        referral.getOtherHealthServices().setReason(beneficiaryCase.getOther_health_service_na_reason());
+        referral.getPainManagement().setReason((beneficiaryCase.getPain_management_na_reason()));
+        referral.getPmtct().setReason(beneficiaryCase.getPmtct_na_reason());
+        referral.getSexuallyTransmittedInfection().setReason(beneficiaryCase.getSexually_transmitted_na_reason());
+
+        return referral;
+    }
 }

@@ -26,6 +26,96 @@ public class BeneficiaryCase{
     private String pain_management;
     private String pmtct;
     private String sexually_transmitted_infection;
+    private String other_health_service_na_reason;
+    private String art_adherence_na_reason;
+    private String pain_management_na_reason;
+    private String sexually_transmitted_na_reason;
+    private String family_planning_na_reason;
+    private String new_diagnosis_na_reason;
+    private String condoms_na_reason;
+    private String end_of_life_hospice_na_reason;
+    private String hiv_counseling_na_reason;
+    private String pmtct_na_reason;
+
+    public String getOther_health_service_na_reason() {
+        return other_health_service_na_reason;
+    }
+
+    public void setOther_health_service_na_reason(String other_health_service_na_reason) {
+        this.other_health_service_na_reason = other_health_service_na_reason;
+    }
+
+    public String getArt_adherence_na_reason() {
+        return art_adherence_na_reason;
+    }
+
+    public void setArt_adherence_na_reason(String art_adherence_na_reason) {
+        this.art_adherence_na_reason = art_adherence_na_reason;
+    }
+
+    public String getPain_management_na_reason() {
+        return pain_management_na_reason;
+    }
+
+    public void setPain_management_na_reason(String pain_management_na_reason) {
+        this.pain_management_na_reason = pain_management_na_reason;
+    }
+
+    public String getSexually_transmitted_na_reason() {
+        return sexually_transmitted_na_reason;
+    }
+
+    public void setSexually_transmitted_na_reason(String sexually_transmitted_na_reason) {
+        this.sexually_transmitted_na_reason = sexually_transmitted_na_reason;
+    }
+
+    public String getFamily_planning_na_reason() {
+        return family_planning_na_reason;
+    }
+
+    public void setFamily_planning_na_reason(String family_planning_na_reason) {
+        this.family_planning_na_reason = family_planning_na_reason;
+    }
+
+    public String getNew_diagnosis_na_reason() {
+        return new_diagnosis_na_reason;
+    }
+
+    public void setNew_diagnosis_na_reason(String new_diagnosis_na_reason) {
+        this.new_diagnosis_na_reason = new_diagnosis_na_reason;
+    }
+
+    public String getCondoms_na_reason() {
+        return condoms_na_reason;
+    }
+
+    public void setCondoms_na_reason(String condoms_na_reason) {
+        this.condoms_na_reason = condoms_na_reason;
+    }
+
+    public String getEnd_of_life_hospice_na_reason() {
+        return end_of_life_hospice_na_reason;
+    }
+
+    public void setEnd_of_life_hospice_na_reason(String end_of_life_hospice_na_reason) {
+        this.end_of_life_hospice_na_reason = end_of_life_hospice_na_reason;
+    }
+
+    public String getHiv_counseling_na_reason() {
+        return hiv_counseling_na_reason;
+    }
+
+    public void setHiv_counseling_na_reason(String hiv_counseling_na_reason) {
+        this.hiv_counseling_na_reason = hiv_counseling_na_reason;
+    }
+
+    public String getPmtct_na_reason() {
+        return pmtct_na_reason;
+    }
+
+    public void setPmtct_na_reason(String pmtct_na_reason) {
+        this.pmtct_na_reason = pmtct_na_reason;
+    }
 
     public String getService_provider() {
         return service_provider;

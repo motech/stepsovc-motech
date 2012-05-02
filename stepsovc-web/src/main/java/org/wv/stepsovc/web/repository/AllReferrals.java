@@ -20,9 +20,9 @@ public class AllReferrals extends MotechBaseRepository<Referral>{
         super(Referral.class, dbCouchDbConnector);
     }
 
-    @View(name = "by_beneficiary", map = "function(doc){ if(doc.type === 'Referral') emit([doc.beneficiaryCode, doc.active],doc) }")
+    @View(name = "active_by_beneficiary", map = "function(doc){ if(doc.type === 'Referral' && doc.active == true) emit([doc.beneficiaryCode],doc) }")
     public Referral findActiveReferral(String beneficiaryCode) {
-        ViewQuery viewQuery = createQuery("by_beneficiary").key(ComplexKey.of(beneficiaryCode, true)).includeDocs(true);
+        ViewQuery viewQuery = createQuery("active_by_beneficiary").key(ComplexKey.of(beneficiaryCode)).includeDocs(true);
         List<Referral> latestReferral = db.queryView(viewQuery, Referral.class);
         return CollectionUtils.isEmpty(latestReferral) ? null : latestReferral.get(0);
     }
