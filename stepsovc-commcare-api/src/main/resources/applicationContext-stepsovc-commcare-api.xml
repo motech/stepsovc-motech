@@ -18,4 +18,15 @@
             </value>
         </property>
     </bean>
+
+    <bean id="commcareDbInstance" class="org.ektorp.impl.StdCouchDbInstance">
+        <constructor-arg>
+            <bean id="commcareHttpClient" class="org.ektorp.spring.HttpClientFactoryBean"/>
+        </constructor-arg>
+    </bean>
+
+    <bean id="commcareDbConnector" class="org.ektorp.impl.StdCouchDbConnector">
+        <constructor-arg value="commcarehq"/>
+        <constructor-arg ref="commcareDbInstance"/>
+    </bean>
 </beans>

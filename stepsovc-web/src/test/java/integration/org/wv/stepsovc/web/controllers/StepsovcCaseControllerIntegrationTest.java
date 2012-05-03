@@ -18,14 +18,12 @@ import static junit.framework.Assert.assertNotNull;
 import static org.wv.stepsovc.web.mapper.ReferralMapperTest.*;
 import static org.wv.stepsovc.web.request.CaseUpdateType.*;
 
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath*:applicationContext-Web.xml")
 public class StepsovcCaseControllerIntegrationTest {
 
     @Autowired
     StepsovcCaseController stepsovcCaseController;
-
     @Autowired
     AllBeneficiaries allBeneficiaries;
     @Autowired
@@ -34,6 +32,8 @@ public class StepsovcCaseControllerIntegrationTest {
     private String beneficiaryCode = "8888";
 
     private Beneficiary beneficiary;
+
+    public static final String APPLICATION_CONTEXT_XML = "applicationContext-Web.xml";
 
     @Test
     public void shouldCreateBeneficiaryReferralAndUpdateReferral() {
@@ -74,10 +74,10 @@ public class StepsovcCaseControllerIntegrationTest {
 
     }
 
-
     @After
     public void clearAll() throws SchedulerException {
         allBeneficiaries.remove(beneficiary);
+        allReferrals.removeAllByBeneficiary(beneficiaryCode);
     }
 
 }

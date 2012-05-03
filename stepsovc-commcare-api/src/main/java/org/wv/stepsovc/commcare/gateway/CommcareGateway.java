@@ -1,4 +1,4 @@
-package org.wv.stepsovc.gateway;
+package org.wv.stepsovc.commcare.gateway;
 
 import org.apache.velocity.app.VelocityEngine;
 import org.motechproject.http.client.listener.HttpClientEventListener;
