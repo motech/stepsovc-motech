@@ -80,7 +80,8 @@ public class CommcareGatewayIntegrationTest {
     private String getExpectedXml() {
 
         return "<?xml version=\"1.0\"?>\n" +
-                "<data xmlns:jrm=\"http://dev.commcarehq.org/jr/xforms\" xmlns=\"http://openrosa.org/formdesigner/A6E4F029-A971-41F1-80C1-9DDD5CC24571\" uiVersion=\"1\" version=\"12\" name=\"Registration\">\n" +
+                "<data xmlns=\"http://openrosa.org/formdesigner/A6E4F029-A971-41F1-80C1-9DDD5CC24571\" uiVersion=\"1\" version=\"12\"\n" +
+                "      name=\"Registration\">\n" +
                 "    <beneficiary_information>\n" +
                 "        <beneficiary_name>Albie</beneficiary_name>\n" +
                 "        <beneficiary_code>XYZ</beneficiary_code>\n" +
