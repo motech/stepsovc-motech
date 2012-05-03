@@ -9,6 +9,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>stepsovc-web</module>
+        <module>stepsovc-commcare-api</module>
     </modules>
     <properties>
         <spring.version>3.0.5.RELEASE</spring.version>
