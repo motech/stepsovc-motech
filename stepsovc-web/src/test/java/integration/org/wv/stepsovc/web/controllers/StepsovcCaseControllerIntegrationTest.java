@@ -2,11 +2,12 @@ package org.wv.stepsovc.web.controllers;
 
 import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.quartz.SchedulerException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.wv.stepsovc.web.domain.Beneficiary;
 import org.wv.stepsovc.web.domain.Referral;
 import org.wv.stepsovc.web.repository.AllBeneficiaries;
@@ -17,27 +18,22 @@ import static junit.framework.Assert.assertNotNull;
 import static org.wv.stepsovc.web.mapper.ReferralMapperTest.*;
 import static org.wv.stepsovc.web.request.CaseUpdateType.*;
 
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration("classpath*:applicationContext-Web.xml")
 public class StepsovcCaseControllerIntegrationTest {
 
+    @Autowired
     StepsovcCaseController stepsovcCaseController;
 
+    @Autowired
     AllBeneficiaries allBeneficiaries;
-
+    @Autowired
     AllReferrals allReferrals;
 
     private String beneficiaryCode = "8888";
 
     private Beneficiary beneficiary;
-
-    public static final String APPLICATION_CONTEXT_XML = "applicationContext-Web.xml";
-
-    @Before
-    public void setUp() {
-        ApplicationContext context = new ClassPathXmlApplicationContext(APPLICATION_CONTEXT_XML);
-        stepsovcCaseController = (StepsovcCaseController) context.getBean("stepsovcCaseController");
-        allBeneficiaries = (AllBeneficiaries) context.getBean("allBeneficiaries");
-        allReferrals = (AllReferrals) context.getBean("allReferrals");
-    }
 
     @Test
     public void shouldCreateBeneficiaryReferralAndUpdateReferral() {
