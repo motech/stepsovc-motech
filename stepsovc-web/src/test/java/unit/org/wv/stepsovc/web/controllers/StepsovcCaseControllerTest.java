@@ -15,14 +15,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 
-/**
- * Created with IntelliJ IDEA.
- * User: sathishkumar
- * Date: 23/04/12
- * Time: 6:14 PM
- * To change this template use File | Settings | File Templates.
- */
-
 public class StepsovcCaseControllerTest {
 
     @Mock

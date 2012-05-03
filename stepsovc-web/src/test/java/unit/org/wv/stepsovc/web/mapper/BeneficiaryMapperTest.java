@@ -10,7 +10,7 @@ import static org.junit.Assert.assertThat;
 public class BeneficiaryMapperTest {
 
     @Test
-    public void shouldMapBeneficiaryCaseToBeneficiary(){
+    public void shouldMapBeneficiaryCaseToBeneficiary() {
         BeneficiaryCase beneficiaryCase = new BeneficiaryCase();
 
         beneficiaryCase.setCaregiver_id("some ID");

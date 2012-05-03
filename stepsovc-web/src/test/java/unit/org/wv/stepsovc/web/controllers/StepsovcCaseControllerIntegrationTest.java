@@ -17,7 +17,7 @@ import static junit.framework.Assert.assertNotNull;
 import static org.wv.stepsovc.web.mapper.ReferralMapperTest.*;
 import static org.wv.stepsovc.web.request.CaseUpdateType.*;
 
-public class StepsovcCaseControllerIT {
+public class StepsovcCaseControllerIntegrationTest {
 
     StepsovcCaseController stepsovcCaseController;
 
@@ -40,7 +40,7 @@ public class StepsovcCaseControllerIT {
     }
 
     @Test
-    public void shouldCreateBeneficiaryReferralAndUpdateReferral(){
+    public void shouldCreateBeneficiaryReferralAndUpdateReferral() {
 
         BeneficiaryCase beneficiaryCase = createNewCase(beneficiaryCode);
 
@@ -55,29 +55,28 @@ public class StepsovcCaseControllerIT {
         stepsovcCaseController.createCase(beneficiaryCase);
         Referral activeReferral = allReferrals.findActiveReferral(beneficiaryCode);
         assertNotNull(activeReferral);
-        assertReferrals(beneficiaryCase,allReferrals.findActiveReferral(beneficiaryCode));
+        assertReferrals(beneficiaryCase, allReferrals.findActiveReferral(beneficiaryCode));
 
 
         beneficiaryCase.setService_date("2012-5-12");
         stepsovcCaseController.createCase(beneficiaryCase);
         activeReferral = allReferrals.findActiveReferral(beneficiaryCode);
         assertNotNull(activeReferral);
-        assertReferrals(beneficiaryCase,allReferrals.findActiveReferral(beneficiaryCode));
+        assertReferrals(beneficiaryCase, allReferrals.findActiveReferral(beneficiaryCode));
 
-        beneficiaryCase = createCaseForUpdateService(beneficiaryCode,"12-12-1987");
+        beneficiaryCase = createCaseForUpdateService(beneficiaryCode, "12-12-1987");
         beneficiaryCase.setForm_type(UPDATE_SERVICE.getType());
         stepsovcCaseController.createCase(beneficiaryCase);
         Assert.assertNotNull(allReferrals.findActiveReferral(beneficiaryCode));
-        assertServices(beneficiaryCase,allReferrals.findActiveReferral(beneficiaryCode));
+        assertServices(beneficiaryCase, allReferrals.findActiveReferral(beneficiaryCode));
 
         beneficiaryCase = createCaseForUpdateReferral(beneficiaryCode);
         beneficiaryCase.setForm_type(UPDATE_REFERRAL.getType());
         stepsovcCaseController.createCase(beneficiaryCase);
         Assert.assertNotNull(allBeneficiaries.findBeneficiary(beneficiaryCode));
-        assertReferralReasons(beneficiaryCase,allReferrals.findActiveReferral(beneficiaryCode));
+        assertReferralReasons(beneficiaryCase, allReferrals.findActiveReferral(beneficiaryCode));
 
     }
-
 
 
     @After

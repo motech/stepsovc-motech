@@ -2,33 +2,25 @@ package org.wv.stepsovc.gateway;
 
 import org.apache.velocity.app.VelocityEngine;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.motechproject.http.client.listener.HttpClientEventListener;
 import org.motechproject.http.client.service.HttpClientService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.wv.stepsovc.vo.*;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static junit.framework.Assert.assertEquals;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.wv.stepsovc.utils.ConstantUtils.BENEFICIARY;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath*:applicationContext-stepsovc-commcare-api.xml")
 public class CommcareGatewayTest {
 
-    @Autowired
+
     CommcareGateway commcareGateway;
 
 
@@ -48,13 +40,6 @@ public class CommcareGatewayTest {
     }
 
 
-    @Ignore
-    public void testSubmitForm() throws Exception {
-        final BeneficiaryFormRequest beneficiaryFormRequest = getBeneficiaryFormRequest("f98589102c60fcc2e0f3c422bb361ebd", "cg1", UUID.randomUUID().toString(), "Albie-case");
-        String url = "http://127.0.0.1:7000/a/stepsovc/receiver";
-        commcareGateway.submitForm(url, beneficiaryFormRequest);
-    }
-
     @Test
     public void testSubmitFormWithoutAnyException() throws Exception {
         final CommcareGateway spyCommcareGateway = spy(new CommcareGateway(mockHttpClientService, mockVelocityEngine, mockHttpClientEventListener));
@@ -66,15 +51,6 @@ public class CommcareGatewayTest {
         spyCommcareGateway.submitForm(url, beneficiaryFormRequest);
         verify(spyCommcareGateway).getXmlFromObject(anyString(), eq(model));
         verify(mockHttpClientService).post(url, getExpectedXml());
-    }
-
-    @Test
-    public void testObjectToXmlConverion() {
-        final BeneficiaryFormRequest beneficiaryFormRequest = getBeneficiaryFormRequest("f98589102c60fcc2e0f3c422bb361ebd", "cg1", "c7264b49-4e3d-4659-8df3-7316539829cb", "test-case");
-        final HashMap<String, Object> model = new HashMap<String, Object>();
-        model.put(BENEFICIARY, beneficiaryFormRequest);
-        String actual = commcareGateway.getXmlFromObject("/templates/beneficiary-form.xml", model);
-        assertEquals(getExpectedXml(), actual);
     }
 
 
