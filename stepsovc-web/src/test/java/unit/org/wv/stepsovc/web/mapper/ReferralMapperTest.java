@@ -56,6 +56,7 @@ public class ReferralMapperTest {
         beneficiaryCase.setVisit_date("1988-12-23");
         beneficiaryCase.setService_date(serviceDate);
         beneficiaryCase.setService_provider("FAC001");
+        beneficiaryCase.setUser_id("Userid001");
 
         return beneficiaryCase;
     }

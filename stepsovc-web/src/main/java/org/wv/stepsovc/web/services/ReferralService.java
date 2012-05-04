@@ -42,10 +42,7 @@ public class ReferralService {
 
         allReferrals.add(newReferral);
 
-        String groupId = allGroups.getIdByName(beneficiaryCase.getService_provider());
-        String ownerId = beneficiaryCase.getUser_id() + "," + groupId;
-        beneficiaryCase.setOwner_id(ownerId);
-        updateReferralOwner(beneficiaryCase);
+        assignToFacility(beneficiaryCase);
     }
 
     public void updateNotAvailedReasons(BeneficiaryCase beneficiaryCase) {
@@ -60,11 +57,28 @@ public class ReferralService {
         Referral existingReferral = allReferrals.findActiveReferral(beneficiaryCase.getBeneficiary_code());
 
         allReferrals.update(new ReferralMapper().updateServices(existingReferral, beneficiaryCase));
+
+        if(beneficiaryCase.getService_provider() != null) {
+            assignToFacility(beneficiaryCase);
+        } else {
+            removeFromFacility(beneficiaryCase);
+        }
     }
 
-    public void updateReferralOwner(BeneficiaryCase beneficiaryCase) {
+    void removeFromFacility(BeneficiaryCase beneficiaryCase) {
+        beneficiaryCase.setOwner_id(beneficiaryCase.getUser_id());
+        updateReferralOwner(beneficiaryCase);
+    }
+
+    void assignToFacility(BeneficiaryCase beneficiaryCase) {
+        String groupId = allGroups.getIdByName(beneficiaryCase.getService_provider());
+        String ownerId = beneficiaryCase.getUser_id() + "," + groupId;
+        beneficiaryCase.setOwner_id(ownerId);
+        updateReferralOwner(beneficiaryCase);
+    }
+
+    void updateReferralOwner(BeneficiaryCase beneficiaryCase) {
         BeneficiaryFormRequest beneficiaryFormRequest = new BeneficiaryMapper().createFormRequest(beneficiaryCase);
         commcareGateway.submitOwnerUpdateForm(COMMCARE_URL, beneficiaryFormRequest);
-
     }
 }
