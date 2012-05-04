@@ -26,7 +26,7 @@ public class CommcareGatewayIntegrationTest {
     public void testSubmitForm() throws Exception {
         final BeneficiaryFormRequest beneficiaryFormRequest = getBeneficiaryFormRequest("f98589102c60fcc2e0f3c422bb361ebd", "cg1", UUID.randomUUID().toString(), "Albie-case");
         String url = "http://127.0.0.1:7000/a/stepsovc/receiver";
-        commcareGateway.submitForm(url, beneficiaryFormRequest);
+        commcareGateway.submitNewBeneficiaryForm(url, beneficiaryFormRequest);
     }
 
     @Test
@@ -36,6 +36,11 @@ public class CommcareGatewayIntegrationTest {
         model.put(BENEFICIARY, beneficiaryFormRequest);
         String actual = commcareGateway.getXmlFromObject("/templates/beneficiary-form.xml", model);
         assertEquals(getExpectedXml(), actual);
+
+        actual = commcareGateway.getXmlFromObject("/templates/update-owner-form.xml", model);
+        assertEquals(getExpectedUpdateOwnerXml(), actual);
+
+
     }
 
     private BeneficiaryFormRequest getBeneficiaryFormRequest(String userId, String caregiveName, String caseId, String caseName) {
@@ -62,6 +67,7 @@ public class CommcareGatewayIntegrationTest {
         caseInformation.setExternalId(userId);
         caseInformation.setUserId(userId);
         caseInformation.setName(caseName);
+        caseInformation.setOwnerId("23asdf2342sdf");
 
 
         final MetaInformation metaInformation = new MetaInformation();
@@ -124,5 +130,27 @@ public class CommcareGatewayIntegrationTest {
                 "        <userID>f98589102c60fcc2e0f3c422bb361ebd</userID>\n" +
                 "    </meta>\n" +
                 "</data>";
+    }
+
+    private String getExpectedUpdateOwnerXml() {
+        return "<?xml version='1.0' ?><data uiVersion=\"1\" version=\"89\" name=\"update\" xmlns:jrm=\"http://dev.commcarehq.org/jr/xforms\" xmlns=\"http://openrosa.org/formdesigner/E45F3EFD-A7BE-42A6-97C2-5133E766A2AA\">\n" +
+                "    <owner_id>23asdf2342sdf</owner_id>\n" +
+                "    <form_type>custom_update</form_type>\n" +
+                "    <case>\n" +
+                "        <case_id>c7264b49-4e3d-4659-8df3-7316539829cb</case_id>\n" +
+                "        <date_modified>2012-05-02T22:18:45.071+05:30</date_modified>\n" +
+                "        <update>\n" +
+                "            <form_type>custom_update</form_type>\n" +
+                "            <owner_id>23asdf2342sdf</owner_id>\n" +
+                "        </update>\n" +
+                "    </case>\n" +
+                "    <meta>\n" +
+                "        <deviceID>sadsa</deviceID>\n" +
+                "        <timeStart>2012-05-02T22:18:45.071+05:30</timeStart>\n" +
+                "        <timeEnd>2012-05-02T22:18:45.071+05:30</timeEnd>\n" +
+                "        <username>cg1</username>\n" +
+                "        <userID>f98589102c60fcc2e0f3c422bb361ebd</userID>\n" +
+                "    </meta>\n" +
+                "</data>\n";
     }
 }

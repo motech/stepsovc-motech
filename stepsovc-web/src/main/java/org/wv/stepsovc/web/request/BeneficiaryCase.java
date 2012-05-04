@@ -1,6 +1,6 @@
 package org.wv.stepsovc.web.request;
 
-public class BeneficiaryCase{
+public class BeneficiaryCase {
 
     private String beneficiary_name;
     private String beneficiary_code;
@@ -36,6 +36,42 @@ public class BeneficiaryCase{
     private String end_of_life_hospice_na_reason;
     private String hiv_counseling_na_reason;
     private String pmtct_na_reason;
+    private String owner_id;
+    private String case_id;
+    private String date_modified;
+    private String user_id;
+
+    public String getOwner_id() {
+        return owner_id;
+    }
+
+    public void setOwner_id(String owner_id) {
+        this.owner_id = owner_id;
+    }
+
+    public String getCase_id() {
+        return case_id;
+    }
+
+    public void setCase_id(String case_id) {
+        this.case_id = case_id;
+    }
+
+    public String getDate_modified() {
+        return date_modified;
+    }
+
+    public void setDate_modified(String date_modified) {
+        this.date_modified = date_modified;
+    }
+
+    public String getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
+    }
 
     public String getOther_health_service_na_reason() {
         return other_health_service_na_reason;

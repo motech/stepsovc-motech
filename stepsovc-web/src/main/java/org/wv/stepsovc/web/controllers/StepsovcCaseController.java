@@ -4,17 +4,16 @@ import org.apache.log4j.Logger;
 import org.apache.velocity.app.VelocityEngine;
 import org.motechproject.casexml.service.CaseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.wv.stepsovc.web.handlers.BeneficiaryRegistrationHandler;
-import org.wv.stepsovc.web.handlers.NewReferralHandler;
-import org.wv.stepsovc.web.handlers.UpdateReferralHandler;
-import org.wv.stepsovc.web.handlers.UpdateServiceHandler;
 import org.wv.stepsovc.web.request.BeneficiaryCase;
 import org.wv.stepsovc.web.request.CaseUpdateType;
+import org.wv.stepsovc.web.services.BeneficiaryService;
+import org.wv.stepsovc.web.services.ReferralService;
 
 import java.io.IOException;
 
@@ -24,20 +23,14 @@ public class StepsovcCaseController extends CaseService<BeneficiaryCase> {
 
     private static Logger logger = Logger.getLogger(StepsovcCaseController.class);
 
-    private BeneficiaryRegistrationHandler beneficiaryRegistrationHandler;
-    private NewReferralHandler newReferralHandler;
-    private UpdateReferralHandler updateReferralHandler;
-    private UpdateServiceHandler updateServiceHandler;
+    private BeneficiaryService beneficiaryService;
+    private ReferralService referralService;
 
     @Autowired
-    public StepsovcCaseController(BeneficiaryRegistrationHandler beneficiaryRegistrationHandler,
-                                  NewReferralHandler newReferralHandler, UpdateReferralHandler updateReferralHandler,
-                                  UpdateServiceHandler updateServiceHandler) {
-        super(BeneficiaryCase.class, new VelocityEngine());
-        this.beneficiaryRegistrationHandler = beneficiaryRegistrationHandler;
-        this.newReferralHandler = newReferralHandler;
-        this.updateReferralHandler = updateReferralHandler;
-        this.updateServiceHandler = updateServiceHandler;
+    public StepsovcCaseController(BeneficiaryService beneficiaryService, ReferralService referralService, @Qualifier("velocityEngine") VelocityEngine velocityEngine) {
+        super(BeneficiaryCase.class,velocityEngine);
+        this.beneficiaryService = beneficiaryService;
+        this.referralService = referralService;
     }
 
     @Override
@@ -69,13 +62,13 @@ public class StepsovcCaseController extends CaseService<BeneficiaryCase> {
         logger.info("Inside create case \"" + beneficiaryCase.getForm_type() + "\"");
 
         if(CaseUpdateType.BENEFICIARY_REGISTRATION.getType().equals(beneficiaryCase.getForm_type()))
-            beneficiaryRegistrationHandler.handleCase(beneficiaryCase);
+            beneficiaryService.createBeneficiary(beneficiaryCase);
         else if(CaseUpdateType.NEW_REFERRAL.getType().equals(beneficiaryCase.getForm_type()))
-            newReferralHandler.handleCase(beneficiaryCase);
+            referralService.addNewReferral(beneficiaryCase);
         else if(CaseUpdateType.UPDATE_REFERRAL.getType().equals(beneficiaryCase.getForm_type()))
-            updateReferralHandler.handleCase(beneficiaryCase);
+            referralService.updateNotAvailedReasons(beneficiaryCase);
         else if(CaseUpdateType.UPDATE_SERVICE.getType().equals(beneficiaryCase.getForm_type()))
-            updateServiceHandler.handleCase(beneficiaryCase);
+            referralService.updateAvailedServices(beneficiaryCase);
     }
 }
 

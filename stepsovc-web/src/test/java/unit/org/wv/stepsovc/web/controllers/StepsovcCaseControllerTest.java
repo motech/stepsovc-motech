@@ -4,12 +4,10 @@ import org.apache.velocity.app.VelocityEngine;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.wv.stepsovc.web.handlers.BeneficiaryRegistrationHandler;
-import org.wv.stepsovc.web.handlers.NewReferralHandler;
-import org.wv.stepsovc.web.handlers.UpdateReferralHandler;
-import org.wv.stepsovc.web.handlers.UpdateServiceHandler;
 import org.wv.stepsovc.web.request.BeneficiaryCase;
 import org.wv.stepsovc.web.request.CaseUpdateType;
+import org.wv.stepsovc.web.services.BeneficiaryService;
+import org.wv.stepsovc.web.services.ReferralService;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -18,15 +16,11 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class StepsovcCaseControllerTest {
 
     @Mock
-    BeneficiaryRegistrationHandler mockBeneficiaryHandler;
-    @Mock
-    NewReferralHandler mockNewReferralHandler;
-    @Mock
-    UpdateReferralHandler mockUpdateReferralHandler;
-    @Mock
-    UpdateServiceHandler mockUpdateServiceHandler;
+    BeneficiaryService mockBeneficiaryService;
     @Mock
     VelocityEngine velocityEngine;
+    @Mock
+    ReferralService mockReferralService;
 
 
     StepsovcCaseController stepsovcCaseController;
@@ -36,7 +30,7 @@ public class StepsovcCaseControllerTest {
     @Before
     public void setup() {
         initMocks(this);
-        stepsovcCaseController = new StepsovcCaseController(mockBeneficiaryHandler, mockNewReferralHandler, mockUpdateReferralHandler, mockUpdateServiceHandler);
+        stepsovcCaseController = new StepsovcCaseController(mockBeneficiaryService, mockReferralService, null);
         beneficiaryCase = new BeneficiaryCase();
     }
 
@@ -45,27 +39,27 @@ public class StepsovcCaseControllerTest {
     public void ShouldCallBeneficiaryRegistrationHandler() throws Exception {
         beneficiaryCase.setForm_type(CaseUpdateType.BENEFICIARY_REGISTRATION.getType());
         stepsovcCaseController.createCase(beneficiaryCase);
-        verify(mockBeneficiaryHandler).handleCase(beneficiaryCase);
+        verify(mockBeneficiaryService).createBeneficiary(beneficiaryCase);
     }
 
     @Test
     public void ShouldCallNewReferralHandler() throws Exception {
         beneficiaryCase.setForm_type(CaseUpdateType.NEW_REFERRAL.getType());
         stepsovcCaseController.createCase(beneficiaryCase);
-        verify(mockNewReferralHandler).handleCase(beneficiaryCase);
+        verify(mockReferralService).addNewReferral(beneficiaryCase);
     }
 
     @Test
     public void ShouldCallUpdateReferralHandler() throws Exception {
         beneficiaryCase.setForm_type(CaseUpdateType.UPDATE_REFERRAL.getType());
         stepsovcCaseController.createCase(beneficiaryCase);
-        verify(mockUpdateReferralHandler).handleCase(beneficiaryCase);
+        verify(mockReferralService).updateNotAvailedReasons(beneficiaryCase);
     }
 
     @Test
     public void ShouldCallUpdateServiceHandler() throws Exception {
         beneficiaryCase.setForm_type(CaseUpdateType.UPDATE_SERVICE.getType());
         stepsovcCaseController.createCase(beneficiaryCase);
-        verify(mockUpdateServiceHandler).handleCase(beneficiaryCase);
+        verify(mockReferralService).updateAvailedServices(beneficiaryCase);
     }
 }

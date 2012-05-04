@@ -15,6 +15,7 @@ import java.util.List;
 
 @Repository
 public class AllReferrals extends MotechBaseRepository<Referral>{
+
     @Autowired
     protected AllReferrals(@Qualifier("stepsovcDbConnector") CouchDbConnector dbCouchDbConnector) {
         super(Referral.class, dbCouchDbConnector);

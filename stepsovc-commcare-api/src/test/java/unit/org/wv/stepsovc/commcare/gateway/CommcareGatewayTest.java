@@ -41,14 +41,27 @@ public class CommcareGatewayTest {
 
 
     @Test
-    public void testSubmitFormWithoutAnyException() throws Exception {
+    public void shouldSubmitFormWithoutAnyException() throws Exception {
         final CommcareGateway spyCommcareGateway = spy(new CommcareGateway(mockHttpClientService, mockVelocityEngine, mockHttpClientEventListener));
         final BeneficiaryFormRequest beneficiaryFormRequest = getBeneficiaryFormRequest("f98589102c60fcc2e0f3c422bb361ebd", "cg1", UUID.randomUUID().toString(), "Albie-case");
         Map model = new HashMap();
         model.put(BENEFICIARY, beneficiaryFormRequest);
         doReturn(getExpectedXml()).when(spyCommcareGateway).getXmlFromObject(anyString(), eq(model));
         String url = "someurl";
-        spyCommcareGateway.submitForm(url, beneficiaryFormRequest);
+        spyCommcareGateway.submitNewBeneficiaryForm(url, beneficiaryFormRequest);
+        verify(spyCommcareGateway).getXmlFromObject(anyString(), eq(model));
+        verify(mockHttpClientService).post(url, getExpectedXml());
+    }
+
+    @Test
+    public void shouldSubmitUpdateOwnerForm() {
+        final CommcareGateway spyCommcareGateway = spy(new CommcareGateway(mockHttpClientService, mockVelocityEngine, mockHttpClientEventListener));
+        final BeneficiaryFormRequest beneficiaryFormRequest = getBeneficiaryFormRequest("f98589102c60fcc2e0f3c422bb361ebd", "cg1", UUID.randomUUID().toString(), "Albie-case");
+        Map model = new HashMap();
+        model.put(BENEFICIARY, beneficiaryFormRequest);
+        doReturn(getExpectedXml()).when(spyCommcareGateway).getXmlFromObject(anyString(), eq(model));
+        String url = "someurl";
+        spyCommcareGateway.submitOwnerUpdateForm(url, beneficiaryFormRequest);
         verify(spyCommcareGateway).getXmlFromObject(anyString(), eq(model));
         verify(mockHttpClientService).post(url, getExpectedXml());
     }
@@ -78,6 +91,7 @@ public class CommcareGatewayTest {
         caseInformation.setExternalId(userId);
         caseInformation.setUserId(userId);
         caseInformation.setName(caseName);
+        caseInformation.setOwnerId("123asf32asdf32");
 
 
         final MetaInformation metaInformation = new MetaInformation();

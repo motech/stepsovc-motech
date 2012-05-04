@@ -33,8 +33,6 @@ public class StepsovcCaseControllerIntegrationTest {
 
     private Beneficiary beneficiary;
 
-    public static final String APPLICATION_CONTEXT_XML = "applicationContext-Web.xml";
-
     @Test
     public void shouldCreateBeneficiaryReferralAndUpdateReferral() {
 

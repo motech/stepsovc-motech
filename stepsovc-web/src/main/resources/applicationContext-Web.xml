@@ -12,15 +12,28 @@
     <util:properties id="stepovcProperties" location="classpath:/stepsovc.properties"/>
     <util:properties id="couchdbProperties" location="classpath:/couchdb.properties"/>
 
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath*:stepsovc.properties</value>
+            </list>
+        </property>
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+    </bean>
+
     <import resource="classpath:applicationContext-caseService.xml"/>
+    <import resource="classpath:applicationContext-stepsovc-commcare-api.xml"/>
+
     <context:component-scan base-package="org.wv.stepsovc"></context:component-scan>
     <context:spring-configured/>
     <context:annotation-config/>
 
-    <bean id="beneficiaryRegistrationHandler" class="org.wv.stepsovc.web.handlers.BeneficiaryRegistrationHandler"/>
-    <bean id="newReferralHandler" class="org.wv.stepsovc.web.handlers.NewReferralHandler"/>
-    <bean id="updateReferralHandler" class="org.wv.stepsovc.web.handlers.UpdateReferralHandler"/>
-    <bean id="updateServiceHandler" class="org.wv.stepsovc.web.handlers.UpdateServiceHandler"/>
+
+    <bean id="beneficiaryService" class="org.wv.stepsovc.web.services.BeneficiaryService"/>
+
+    <bean id="referralService" class="org.wv.stepsovc.web.services.ReferralService">
+        <constructor-arg index="0" value="${commcarehq.submission.url}" />
+    </bean>
 
     <bean id="stepsovcDbInstance" class="org.ektorp.impl.StdCouchDbInstance">
         <constructor-arg>
