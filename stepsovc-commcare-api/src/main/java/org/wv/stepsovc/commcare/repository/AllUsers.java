@@ -31,10 +31,6 @@ public class AllUsers  extends MotechBaseRepository<User> {
         return users.size() > 0 ? users.get(0) : null;
     }
 
-    public String getIdByName(String name) {
-        return getUserByName(name) == null ? null : getUserByName(name).getId();
-    }
-
     public void removeByName(String name) {
         remove(getUserByName(name));
     }

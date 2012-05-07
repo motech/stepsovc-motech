@@ -6,11 +6,12 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.wv.stepsovc.commcare.Factories.GroupFactory;
 import org.wv.stepsovc.commcare.domain.User;
 import org.wv.stepsovc.commcare.repository.AllGroups;
 import org.wv.stepsovc.commcare.repository.AllUsers;
 
-import static junit.framework.Assert.*;
+import static junit.framework.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath*:applicationContext-stepsovc-commcare-api.xml")
@@ -35,15 +36,13 @@ public class CommcareGroupIntegrationTest {
         allUsers.add(newUser1);
         allUsers.add(newUser2);
 
-        userId1 = allUsers.getIdByName(newUser1.getUsername());
-        userId2 = allUsers.getIdByName(newUser2.getUsername());
+        userId1 = allUsers.getUserByName(newUser1.getUsername()).getId();
+        userId2 = allUsers.getUserByName(newUser2.getUsername()).getId();
 
         String domainName = "stepsovc";
 
-        allGroups.createGroup(groupName, new String[]{userId1, userId2}, domainName);
-        assertNotNull(allGroups.getIdByName(groupName));
-
-        assertFalse(allGroups.createGroup(groupName,new String[]{newUser1.getId(),newUser2.getId()}, domainName));
+        allGroups.add(GroupFactory.createGroup(groupName, new String[]{userId1, userId2}, domainName));
+        assertNotNull(allGroups.getGroupByName(groupName));
     }
 
     private User createUser(String userName) {

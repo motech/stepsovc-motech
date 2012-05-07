@@ -25,8 +25,6 @@ public class ReferralServiceTest {
     @Mock
     AllReferrals allReferrals;
     @Mock
-    AllGroups allGroups;
-    @Mock
     ReferralService referralService;
 
     @Mock
@@ -37,7 +35,6 @@ public class ReferralServiceTest {
         initMocks(this);
         referralService = spy(new ReferralService(""));
         ReflectionTestUtils.setField(referralService, "allReferrals", allReferrals);
-        ReflectionTestUtils.setField(referralService, "allGroups", allGroups);
         ReflectionTestUtils.setField(referralService, "commcareGateway", commcareGateway);
     }
 
@@ -52,7 +49,7 @@ public class ReferralServiceTest {
 
         BeneficiaryCase beneficiaryCase = ReferralMapperTest.createCaseForReferral(code, "31-05-2012");
 
-        doReturn(groupId).when(allGroups).getIdByName(beneficiaryCase.getService_provider());
+        doReturn(groupId).when(commcareGateway).getGroupId(beneficiaryCase.getService_provider());
         doReturn(null).when(allReferrals).findActiveReferral(code);
 
 
@@ -61,11 +58,11 @@ public class ReferralServiceTest {
         verify(allReferrals).add(referralArgumentCaptor.capture());
 
         doNothing().when(allReferrals).add(referralArgumentCaptor.getValue());
-        verify(allGroups).getIdByName(beneficiaryCase.getService_provider());
+        verify(commcareGateway.getGroupId(beneficiaryCase.getService_provider()));
 
         verify(referralService).updateReferralOwner(updatedBeneficiary.capture());
 
-        doNothing().when(commcareGateway).submitOwnerUpdateForm(
+        doNothing().when(commcareGateway).updateReferralOwner(
                 anyString(), Matchers.<BeneficiaryFormRequest>any());
 
         assertThat(updatedBeneficiary.getValue().getOwner_id(), is(beneficiaryCase.getUser_id() + "," + groupId));
@@ -98,7 +95,7 @@ public class ReferralServiceTest {
 
         verify(referralService).removeFromCurrentFacility(updatedBeneficiary.capture());
 
-        doNothing().when(commcareGateway).submitOwnerUpdateForm(
+        doNothing().when(commcareGateway).updateReferralOwner(
                 anyString(), Matchers.<BeneficiaryFormRequest>any());
 
         assertThat(updatedBeneficiary.getValue().getOwner_id(), is(beneficiaryCase.getUser_id()));
@@ -121,7 +118,7 @@ public class ReferralServiceTest {
         String groupName = "groupName";
         beneficiaryCase.setService_provider(groupName);
 
-        doReturn(groupId2).when(allGroups).getIdByName(groupName);
+        doReturn(groupId2).when(commcareGateway).getGroupId(groupName);
 
         Referral referral = new ReferralMapper().map(beneficiaryCase);
 
@@ -135,7 +132,7 @@ public class ReferralServiceTest {
 
         verify(referralService).assignToFacility(updatedBeneficiary.capture());
 
-        doNothing().when(commcareGateway).submitOwnerUpdateForm(
+        doNothing().when(commcareGateway).updateReferralOwner(
                 anyString(), Matchers.<BeneficiaryFormRequest>any());
 
         assertThat(updatedBeneficiary.getValue().getOwner_id(), is(beneficiaryCase.getUser_id()+","+groupId2));

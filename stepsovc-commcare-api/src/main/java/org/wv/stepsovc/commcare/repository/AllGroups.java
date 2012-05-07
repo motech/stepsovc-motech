@@ -31,28 +31,6 @@ public class AllGroups extends MotechBaseRepository<Group> {
         return groups.size() > 0 ? groups.get(0) : null;
     }
 
-    public String getIdByName(String name) {
-        return this.getGroupByName(name) == null ? null : this.getGroupByName(name).getId();
-    }
-
-    public boolean createGroup(String groupName, String[] commcareUserIds, String domain) {
-
-        if(this.getGroupByName(groupName) != null)
-            return false;
-
-        Group newGroup = new Group();
-        newGroup.setName(groupName);
-        newGroup.setReporting(true);
-        newGroup.setUsers(commcareUserIds);
-        newGroup.setPath(new String[]{});
-        newGroup.setDoc_type("Group");
-        newGroup.setCase_sharing(true);
-        newGroup.setDomain(domain);
-        this.add(newGroup);
-
-        return true;
-    }
-
     public void removeByName(String name) {
         remove(getGroupByName(name));
     }

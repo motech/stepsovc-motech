@@ -23,10 +23,10 @@ public class CommcareGatewayIntegrationTest {
 
 
     @Ignore
-    public void testSubmitForm() throws Exception {
+    public void shouldCreateNewBeneficiary() throws Exception {
         final BeneficiaryFormRequest beneficiaryFormRequest = getBeneficiaryFormRequest("f98589102c60fcc2e0f3c422bb361ebd", "cg1", UUID.randomUUID().toString(), "Albie-case");
         String url = "http://127.0.0.1:7000/a/stepsovc/receiver";
-        commcareGateway.submitNewBeneficiaryForm(url, beneficiaryFormRequest);
+        commcareGateway.createNewBeneficiary(url, beneficiaryFormRequest);
     }
 
     @Test

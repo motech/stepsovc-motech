@@ -6,6 +6,8 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.http.client.listener.HttpClientEventListener;
 import org.motechproject.http.client.service.HttpClientService;
+import org.wv.stepsovc.commcare.repository.AllGroups;
+import org.wv.stepsovc.commcare.repository.AllUsers;
 import org.wv.stepsovc.vo.*;
 
 import java.util.HashMap;
@@ -33,6 +35,12 @@ public class CommcareGatewayTest {
     @Mock
     VelocityEngine mockVelocityEngine;
 
+    @Mock
+    AllGroups allGroups;
+
+    @Mock
+    private AllUsers allUsers;
+
 
     @Before
     public void setup() {
@@ -42,26 +50,26 @@ public class CommcareGatewayTest {
 
     @Test
     public void shouldSubmitFormWithoutAnyException() throws Exception {
-        final CommcareGateway spyCommcareGateway = spy(new CommcareGateway(mockHttpClientService, mockVelocityEngine, mockHttpClientEventListener));
+        final CommcareGateway spyCommcareGateway = spy(new CommcareGateway(mockHttpClientService, mockVelocityEngine, mockHttpClientEventListener, allGroups, allUsers));
         final BeneficiaryFormRequest beneficiaryFormRequest = getBeneficiaryFormRequest("f98589102c60fcc2e0f3c422bb361ebd", "cg1", UUID.randomUUID().toString(), "Albie-case");
-        Map model = new HashMap();
+        Map<String,Object> model = new HashMap<String, Object>();
         model.put(BENEFICIARY, beneficiaryFormRequest);
         doReturn(getExpectedXml()).when(spyCommcareGateway).getXmlFromObject(anyString(), eq(model));
         String url = "someurl";
-        spyCommcareGateway.submitNewBeneficiaryForm(url, beneficiaryFormRequest);
+        spyCommcareGateway.createNewBeneficiary(url, beneficiaryFormRequest);
         verify(spyCommcareGateway).getXmlFromObject(anyString(), eq(model));
         verify(mockHttpClientService).post(url, getExpectedXml());
     }
 
     @Test
     public void shouldSubmitUpdateOwnerForm() {
-        final CommcareGateway spyCommcareGateway = spy(new CommcareGateway(mockHttpClientService, mockVelocityEngine, mockHttpClientEventListener));
+        final CommcareGateway spyCommcareGateway = spy(new CommcareGateway(mockHttpClientService, mockVelocityEngine, mockHttpClientEventListener, allGroups, allUsers));
         final BeneficiaryFormRequest beneficiaryFormRequest = getBeneficiaryFormRequest("f98589102c60fcc2e0f3c422bb361ebd", "cg1", UUID.randomUUID().toString(), "Albie-case");
-        Map model = new HashMap();
+        Map<String,Object> model = new HashMap<String,Object>();
         model.put(BENEFICIARY, beneficiaryFormRequest);
         doReturn(getExpectedXml()).when(spyCommcareGateway).getXmlFromObject(anyString(), eq(model));
         String url = "someurl";
-        spyCommcareGateway.submitOwnerUpdateForm(url, beneficiaryFormRequest);
+        spyCommcareGateway.updateReferralOwner(url, beneficiaryFormRequest);
         verify(spyCommcareGateway).getXmlFromObject(anyString(), eq(model));
         verify(mockHttpClientService).post(url, getExpectedXml());
     }

@@ -3,7 +3,6 @@ package org.wv.stepsovc.web.services;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.wv.stepsovc.commcare.gateway.CommcareGateway;
-import org.wv.stepsovc.commcare.repository.AllGroups;
 import org.wv.stepsovc.vo.BeneficiaryFormRequest;
 import org.wv.stepsovc.web.domain.Referral;
 import org.wv.stepsovc.web.mapper.BeneficiaryMapper;
@@ -17,8 +16,6 @@ public class ReferralService {
 
     @Autowired
     private AllReferrals allReferrals;
-    @Autowired
-    private AllGroups allGroups;
 
     @Autowired
     private CommcareGateway commcareGateway;
@@ -71,7 +68,7 @@ public class ReferralService {
     }
 
     void assignToFacility(BeneficiaryCase beneficiaryCase) {
-        String groupId = allGroups.getIdByName(beneficiaryCase.getService_provider());
+        String groupId = commcareGateway.getGroupId(beneficiaryCase.getService_provider());
         String ownerId = beneficiaryCase.getUser_id() + "," + groupId;
         beneficiaryCase.setOwner_id(ownerId);
         updateReferralOwner(beneficiaryCase);
@@ -79,6 +76,6 @@ public class ReferralService {
 
     void updateReferralOwner(BeneficiaryCase beneficiaryCase) {
         BeneficiaryFormRequest beneficiaryFormRequest = new BeneficiaryMapper().createFormRequest(beneficiaryCase);
-        commcareGateway.submitOwnerUpdateForm(COMMCARE_URL, beneficiaryFormRequest);
+        commcareGateway.updateReferralOwner(COMMCARE_URL, beneficiaryFormRequest);
     }
 }
