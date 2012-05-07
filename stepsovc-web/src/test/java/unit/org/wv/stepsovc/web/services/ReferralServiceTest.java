@@ -58,7 +58,7 @@ public class ReferralServiceTest {
         verify(allReferrals).add(referralArgumentCaptor.capture());
 
         doNothing().when(allReferrals).add(referralArgumentCaptor.getValue());
-        verify(commcareGateway.getGroupId(beneficiaryCase.getService_provider()));
+        verify(commcareGateway).getGroupId(beneficiaryCase.getService_provider());
 
         verify(referralService).updateReferralOwner(updatedBeneficiary.capture());
 
