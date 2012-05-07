@@ -58,14 +58,14 @@ public class ReferralService {
 
         allReferrals.update(new ReferralMapper().updateServices(existingReferral, beneficiaryCase));
 
-        if(beneficiaryCase.getService_provider() != null) {
+        if(beneficiaryCase.getService_provider() != null && !"".equals(beneficiaryCase.getService_provider().trim())) {
             assignToFacility(beneficiaryCase);
         } else {
-            removeFromFacility(beneficiaryCase);
+            removeFromCurrentFacility(beneficiaryCase);
         }
     }
 
-    void removeFromFacility(BeneficiaryCase beneficiaryCase) {
+    void removeFromCurrentFacility(BeneficiaryCase beneficiaryCase) {
         beneficiaryCase.setOwner_id(beneficiaryCase.getUser_id());
         updateReferralOwner(beneficiaryCase);
     }

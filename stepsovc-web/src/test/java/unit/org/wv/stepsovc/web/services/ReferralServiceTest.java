@@ -96,7 +96,7 @@ public class ReferralServiceTest {
 
         doNothing().when(allReferrals).update(referralArgumentCaptor.getValue());
 
-        verify(referralService).removeFromFacility(updatedBeneficiary.capture());
+        verify(referralService).removeFromCurrentFacility(updatedBeneficiary.capture());
 
         doNothing().when(commcareGateway).submitOwnerUpdateForm(
                 anyString(), Matchers.<BeneficiaryFormRequest>any());
