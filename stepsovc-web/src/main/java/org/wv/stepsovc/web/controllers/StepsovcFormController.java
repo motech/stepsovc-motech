@@ -1,7 +1,6 @@
 package org.wv.stepsovc.web.controllers;
 
 import org.apache.log4j.Logger;
-import org.apache.velocity.app.VelocityEngine;
 import org.motechproject.casexml.service.CaseService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,7 +13,7 @@ public class StepsovcFormController extends CaseService<CustomForm> {
     private static Logger logger = Logger.getLogger(StepsovcFormController.class);
 
     public StepsovcFormController() {
-        super(CustomForm.class, new VelocityEngine());
+        super(CustomForm.class);
     }
 
     @Override

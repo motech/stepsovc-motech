@@ -30,7 +30,7 @@ public class StepsovcCaseControllerTest {
     @Before
     public void setup() {
         initMocks(this);
-        stepsovcCaseController = new StepsovcCaseController(mockBeneficiaryService, mockReferralService, null);
+        stepsovcCaseController = new StepsovcCaseController(mockBeneficiaryService, mockReferralService);
         beneficiaryCase = new BeneficiaryCase();
     }
 

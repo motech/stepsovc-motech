@@ -1,10 +1,8 @@
 package org.wv.stepsovc.web.controllers;
 
 import org.apache.log4j.Logger;
-import org.apache.velocity.app.VelocityEngine;
 import org.motechproject.casexml.service.CaseService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,8 +25,8 @@ public class StepsovcCaseController extends CaseService<BeneficiaryCase> {
     private ReferralService referralService;
 
     @Autowired
-    public StepsovcCaseController(BeneficiaryService beneficiaryService, ReferralService referralService, @Qualifier("velocityEngine") VelocityEngine velocityEngine) {
-        super(BeneficiaryCase.class,velocityEngine);
+    public StepsovcCaseController(BeneficiaryService beneficiaryService, ReferralService referralService) {
+        super(BeneficiaryCase.class);
         this.beneficiaryService = beneficiaryService;
         this.referralService = referralService;
     }

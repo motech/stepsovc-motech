@@ -21,7 +21,6 @@
         <property name="ignoreUnresolvablePlaceholders" value="true"/>
     </bean>
 
-    <import resource="classpath:applicationContext-caseService.xml"/>
     <import resource="classpath:applicationContext-stepsovc-commcare-api.xml"/>
 
     <context:component-scan base-package="org.wv.stepsovc"></context:component-scan>
