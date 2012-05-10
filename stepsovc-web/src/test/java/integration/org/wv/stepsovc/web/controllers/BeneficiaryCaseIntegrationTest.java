@@ -20,7 +20,7 @@ import static org.wv.stepsovc.web.request.BeneficiaryCaseUpdateType.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath*:applicationContext-Web.xml")
-public class StepsovcCaseControllerIntegrationTest {
+public class BeneficiaryCaseIntegrationTest {
 
     @Autowired
     StepsovcCaseController stepsovcCaseController;

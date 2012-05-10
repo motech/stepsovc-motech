@@ -8,6 +8,7 @@ import org.wv.stepsovc.web.request.BeneficiaryCaseUpdateType;
 import org.wv.stepsovc.web.request.CaseType;
 import org.wv.stepsovc.web.request.StepsovcCase;
 import org.wv.stepsovc.web.services.BeneficiaryService;
+import org.wv.stepsovc.web.services.FacilityService;
 import org.wv.stepsovc.web.services.ReferralService;
 
 import static org.mockito.Mockito.verify;
@@ -25,12 +26,14 @@ public class StepsovcCaseControllerTest {
 
     StepsovcCaseController stepsovcCaseController;
     private StepsovcCase stepsovcCase;
+    @Mock
+    private FacilityService facilityService;
 
 
     @Before
     public void setup() {
         initMocks(this);
-        stepsovcCaseController = new StepsovcCaseController(mockBeneficiaryService, mockReferralService);
+        stepsovcCaseController = new StepsovcCaseController(mockBeneficiaryService, mockReferralService, facilityService);
         stepsovcCase = new StepsovcCase();
     }
 

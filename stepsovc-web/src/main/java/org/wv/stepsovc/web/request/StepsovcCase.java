@@ -7,6 +7,7 @@ public class StepsovcCase {
 
     /* Facility Case starts */
     private String facility_id;
+    private String facility_name;
     private String service_unavailable_from;
     private String service_unavailable_to;
     private String service_unavailable_reason;
@@ -51,6 +52,14 @@ public class StepsovcCase {
     private String date_modified;
     private String user_id;
     /* Beneficiary Case ends */
+
+    public String getFacility_name() {
+        return facility_name;
+    }
+
+    public void setFacility_name(String facility_name) {
+        this.facility_name = facility_name;
+    }
 
     public String getCase_type() {
         return case_type;

@@ -12,6 +12,7 @@ import org.wv.stepsovc.web.request.BeneficiaryCaseUpdateType;
 import org.wv.stepsovc.web.request.CaseType;
 import org.wv.stepsovc.web.request.StepsovcCase;
 import org.wv.stepsovc.web.services.BeneficiaryService;
+import org.wv.stepsovc.web.services.FacilityService;
 import org.wv.stepsovc.web.services.ReferralService;
 
 import java.io.IOException;
@@ -24,12 +25,14 @@ public class StepsovcCaseController extends CaseService<StepsovcCase> {
 
     private BeneficiaryService beneficiaryService;
     private ReferralService referralService;
+    private FacilityService facilityService;
 
     @Autowired
-    public StepsovcCaseController(BeneficiaryService beneficiaryService, ReferralService referralService) {
+    public StepsovcCaseController(BeneficiaryService beneficiaryService, ReferralService referralService, FacilityService facilityService) {
         super(StepsovcCase.class);
         this.beneficiaryService = beneficiaryService;
         this.referralService = referralService;
+        this.facilityService = facilityService;
     }
 
     @Override
@@ -69,6 +72,8 @@ public class StepsovcCaseController extends CaseService<StepsovcCase> {
                 referralService.updateNotAvailedReasons(stepsovcCase);
             else if(BeneficiaryCaseUpdateType.UPDATE_SERVICE.getType().equals(stepsovcCase.getForm_type()))
                 referralService.updateAvailedServices(stepsovcCase);
+        } else if (CaseType.FACILITY_CASE.getType().equals(stepsovcCase.getCase_type())){
+            facilityService.makeFacilityUnavailable(stepsovcCase);
         }
     }
 }

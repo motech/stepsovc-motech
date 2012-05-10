@@ -34,6 +34,8 @@
         <constructor-arg index="0" value="${commcarehq.submission.url}" />
     </bean>
 
+    <bean id="facilityService" class="org.wv.stepsovc.web.services.FacilityService"/>
+
     <bean id="stepsovcDbInstance" class="org.ektorp.impl.StdCouchDbInstance">
         <constructor-arg>
             <bean id="httpClient" class="org.ektorp.spring.HttpClientFactoryBean"/>
