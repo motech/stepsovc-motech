@@ -14,6 +14,10 @@ import org.wv.stepsovc.web.mapper.ReferralMapperTest;
 import org.wv.stepsovc.web.repository.AllReferrals;
 import org.wv.stepsovc.web.request.StepsovcCase;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
@@ -22,7 +26,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class ReferralServiceTest {
     @Mock
-    AllReferrals allReferrals;
+    AllReferrals mockAllReferrals;
     @Mock
     ReferralService referralService;
 
@@ -33,7 +37,7 @@ public class ReferralServiceTest {
     public void setup() {
         initMocks(this);
         referralService = spy(new ReferralService(""));
-        ReflectionTestUtils.setField(referralService, "allReferrals", allReferrals);
+        ReflectionTestUtils.setField(referralService, "allReferrals", mockAllReferrals);
         ReflectionTestUtils.setField(referralService, "commcareGateway", commcareGateway);
     }
 
@@ -46,17 +50,17 @@ public class ReferralServiceTest {
         String code = "ben001";
         String groupId = "group001";
 
-        StepsovcCase stepsovcCase = ReferralMapperTest.createCaseForReferral(code, "31-05-2012");
+        StepsovcCase stepsovcCase = ReferralMapperTest.createCaseForReferral(code, "31-05-2012", "FAC001");
 
         doReturn(groupId).when(commcareGateway).getGroupId(stepsovcCase.getService_provider());
-        doReturn(null).when(allReferrals).findActiveReferral(code);
+        doReturn(null).when(mockAllReferrals).findActiveReferral(code);
 
 
         referralService.addNewReferral(stepsovcCase);
 
-        verify(allReferrals).add(referralArgumentCaptor.capture());
+        verify(mockAllReferrals).add(referralArgumentCaptor.capture());
 
-        doNothing().when(allReferrals).add(referralArgumentCaptor.getValue());
+        doNothing().when(mockAllReferrals).add(referralArgumentCaptor.getValue());
         verify(commcareGateway).getGroupId(stepsovcCase.getService_provider());
 
         verify(referralService).updateReferralOwner(updatedBeneficiary.capture());
@@ -84,13 +88,13 @@ public class ReferralServiceTest {
 
         Referral referral = new ReferralMapper().map(stepsovcCase);
 
-        doReturn(referral).when(allReferrals).findActiveReferral(code);
+        doReturn(referral).when(mockAllReferrals).findActiveReferral(code);
 
         referralService.updateAvailedServices(stepsovcCase);
 
-        verify(allReferrals).update(referralArgumentCaptor.capture());
+        verify(mockAllReferrals).update(referralArgumentCaptor.capture());
 
-        doNothing().when(allReferrals).update(referralArgumentCaptor.getValue());
+        doNothing().when(mockAllReferrals).update(referralArgumentCaptor.getValue());
 
         verify(referralService).removeFromCurrentFacility(updatedBeneficiary.capture());
 
@@ -121,13 +125,13 @@ public class ReferralServiceTest {
 
         Referral referral = new ReferralMapper().map(stepsovcCase);
 
-        doReturn(referral).when(allReferrals).findActiveReferral(code);
+        doReturn(referral).when(mockAllReferrals).findActiveReferral(code);
 
         referralService.updateAvailedServices(stepsovcCase);
 
-        verify(allReferrals).update(referralArgumentCaptor.capture());
+        verify(mockAllReferrals).update(referralArgumentCaptor.capture());
 
-        doNothing().when(allReferrals).update(referralArgumentCaptor.getValue());
+        doNothing().when(mockAllReferrals).update(referralArgumentCaptor.getValue());
 
         verify(referralService).assignToFacility(updatedBeneficiary.capture());
 
@@ -143,17 +147,39 @@ public class ReferralServiceTest {
 
         String code = "ben001";
 
-        StepsovcCase stepsovcCase = ReferralMapperTest.createCaseForReferral(code,"31-05-2012");
+        StepsovcCase stepsovcCase = ReferralMapperTest.createCaseForReferral(code,"31-05-2012", "FAC001");
 
-        doReturn(new Referral()).when(allReferrals).findActiveReferral(code);
-        doNothing().when(allReferrals).add(Matchers.<Referral>any());
-        doNothing().when(allReferrals).update(Matchers.<Referral>any());
+        doReturn(new Referral()).when(mockAllReferrals).findActiveReferral(code);
+        doNothing().when(mockAllReferrals).add(Matchers.<Referral>any());
+        doNothing().when(mockAllReferrals).update(Matchers.<Referral>any());
 
         referralService.addNewReferral(stepsovcCase);
 
-        verify(allReferrals).update(referralArgumentCaptor.capture());
+        verify(mockAllReferrals).update(referralArgumentCaptor.capture());
 
         assertFalse(referralArgumentCaptor.getValue().isActive());
+    }
+
+    @Test
+    public void shouldUpdateServiceDateForReferralsWhichFallOnServiceUnavailableDates(){
+        String facilityId="123";
+        String fromDateStr="2012-05-01";
+        String toDateStr="2012-05-04";
+        String nextAvailDate="2012-05-05";
+
+        ArgumentCaptor<Referral> referralArgumentCaptor = ArgumentCaptor.forClass(Referral.class);
+        doReturn(Arrays.asList(new Referral(),new Referral())).when(mockAllReferrals).findActiveReferrals(facilityId,fromDateStr);
+        doReturn(Arrays.asList(new Referral())).when(mockAllReferrals).findActiveReferrals(facilityId,"2012-05-02");
+        doReturn(new ArrayList<Referral>()).when(mockAllReferrals).findActiveReferrals(facilityId,"2012-05-03");
+        doReturn(Arrays.asList(new Referral())).when(mockAllReferrals).findActiveReferrals(facilityId,toDateStr);
+
+        referralService.updateReferralsServiceDate(facilityId, fromDateStr, toDateStr, nextAvailDate);
+
+        verify(mockAllReferrals,times(4)).update(referralArgumentCaptor.capture());
+        List<Referral> actualReferrals = referralArgumentCaptor.getAllValues();
+        for (Referral actualReferral : actualReferrals) {
+            assertThat(actualReferral.getServiceDate(),is(nextAvailDate));
+        }
     }
 
 }

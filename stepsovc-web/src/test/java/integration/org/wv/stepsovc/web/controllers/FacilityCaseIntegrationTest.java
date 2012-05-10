@@ -7,7 +7,10 @@ import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.wv.stepsovc.web.mapper.ReferralMapperTest;
 import org.wv.stepsovc.web.repository.AllFacilities;
+import org.wv.stepsovc.web.repository.AllReferrals;
+import org.wv.stepsovc.web.request.BeneficiaryCaseUpdateType;
 import org.wv.stepsovc.web.request.CaseType;
 import org.wv.stepsovc.web.request.StepsovcCase;
 
@@ -23,20 +26,44 @@ public class FacilityCaseIntegrationTest {
 
     @Autowired
     AllFacilities allFacilities;
+    @Autowired
+    AllReferrals allReferrals;
     private String facilityId = "testId";
+    private String benCode1 = "BEN001";
+    private String benCode2 = "BEN002";
+    private String benCode3 = "BEN003";
 
     @Test
     public void shouldCreateOrUpdateFacilityWithServiceUnavailability() {
-        StepsovcCase stepsovcCase = createFacilityCase(facilityId, "2012-01-01", "2012-01-01");
+        String mayFirst = "2012-05-01";
+        String maySecond = "2012-05-02";
+        StepsovcCase caseForReferral1 = ReferralMapperTest.createCaseForReferral(benCode1, mayFirst, facilityId);
+        StepsovcCase caseForReferral2 = ReferralMapperTest.createCaseForReferral(benCode2, mayFirst, facilityId);
+        StepsovcCase caseForReferral3 = ReferralMapperTest.createCaseForReferral(benCode3, "2012-01-03", facilityId);
+        StepsovcCase facilityCase = createFacilityCase(facilityId, mayFirst, mayFirst);
 
+        caseForReferral1.setForm_type(BeneficiaryCaseUpdateType.NEW_REFERRAL.getType());
+        caseForReferral2.setForm_type(BeneficiaryCaseUpdateType.NEW_REFERRAL.getType());
+        caseForReferral3.setForm_type(BeneficiaryCaseUpdateType.NEW_REFERRAL.getType());
+
+        stepsovcCaseController.createCase(caseForReferral1);
+        stepsovcCaseController.createCase(caseForReferral2);
+        stepsovcCaseController.createCase(caseForReferral3);
+
+        int maySecondReferralsBefore = allReferrals.findActiveReferrals(facilityId,maySecond).size();
         assertNull(allFacilities.findFacilityById(facilityId));
-        stepsovcCaseController.createCase(stepsovcCase);
+
+        stepsovcCaseController.createCase(facilityCase);
         assertNotNull(allFacilities.findFacilityById(facilityId));
 
-        stepsovcCase = createFacilityCase(facilityId, "2012-02-01", "2012-02-01");
-        stepsovcCaseController.createCase(stepsovcCase);
+        int maySecondReferralsAfter = allReferrals.findActiveReferrals(facilityId,maySecond).size();
+        assertThat(maySecondReferralsAfter, is(maySecondReferralsBefore+2));
 
+        facilityCase = createFacilityCase(facilityId, "2012-02-01", "2012-02-01");
+        stepsovcCaseController.createCase(facilityCase);
         assertThat(2, is(allFacilities.findFacilityById(facilityId).getServiceUnavailabilities().size()));
+
+
     }
 
     private StepsovcCase createFacilityCase(String facilityId, String from, String toDate) {
@@ -53,5 +80,8 @@ public class FacilityCaseIntegrationTest {
     @After
     public void clearAll() throws SchedulerException {
         allFacilities.remove(allFacilities.findFacilityById(facilityId));
+        allReferrals.removeAllByBeneficiary(benCode1);
+        allReferrals.removeAllByBeneficiary(benCode2);
+        allReferrals.removeAllByBeneficiary(benCode3);
     }
 }

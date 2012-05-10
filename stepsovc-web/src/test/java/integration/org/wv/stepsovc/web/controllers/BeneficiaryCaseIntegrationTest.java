@@ -43,7 +43,7 @@ public class BeneficiaryCaseIntegrationTest {
         beneficiary = allBeneficiaries.findBeneficiary(beneficiaryCode);
         assertNotNull(beneficiary);
 
-        stepsovcCase = createCaseForReferral(beneficiaryCode, "2012-4-12");
+        stepsovcCase = createCaseForReferral(beneficiaryCode, "2012-4-12", "FAC001");
 
         stepsovcCase.setForm_type(NEW_REFERRAL.getType());
         stepsovcCaseController.createCase(stepsovcCase);

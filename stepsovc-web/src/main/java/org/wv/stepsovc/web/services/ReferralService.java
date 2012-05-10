@@ -1,14 +1,18 @@
 package org.wv.stepsovc.web.services;
 
 import org.apache.log4j.Logger;
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.wv.stepsovc.commcare.gateway.CommcareGateway;
+import org.wv.stepsovc.utils.DateUtils;
 import org.wv.stepsovc.vo.BeneficiaryFormRequest;
 import org.wv.stepsovc.web.domain.Referral;
 import org.wv.stepsovc.web.mapper.BeneficiaryMapper;
 import org.wv.stepsovc.web.mapper.ReferralMapper;
 import org.wv.stepsovc.web.repository.AllReferrals;
 import org.wv.stepsovc.web.request.StepsovcCase;
+
+import java.util.List;
 
 public class ReferralService {
 
@@ -59,6 +63,24 @@ public class ReferralService {
             assignToFacility(stepsovcCase);
         } else {
             removeFromCurrentFacility(stepsovcCase);
+        }
+    }
+
+    public void updateReferralsServiceDate(String facilityId, String fromDateStr, String toDateStr, String nextAvailableDate) {
+        LocalDate fromDate = DateUtils.getLocalDate(fromDateStr);
+        LocalDate toDate = DateUtils.getLocalDate(toDateStr);
+
+        while(!fromDate.isAfter(toDate)) {
+            List<Referral> referrals = allReferrals.findActiveReferrals(facilityId, DateUtils.getFormattedDate(fromDate.toDate()));
+            updateReferrals(nextAvailableDate, referrals);
+            fromDate = fromDate.plusDays(1);
+        }
+    }
+
+    private void updateReferrals(String nextAvailableDate, List<Referral> referrals) {
+        for (Referral referral : referrals) {
+            referral.setServiceDate(nextAvailableDate);
+            allReferrals.update(referral);
         }
     }
 

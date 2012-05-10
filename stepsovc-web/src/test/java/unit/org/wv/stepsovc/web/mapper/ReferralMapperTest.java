@@ -14,7 +14,7 @@ public class ReferralMapperTest {
 
     @Test
     public void shouldMapBeneficiaryCaseToReferral() throws ParseException {
-        StepsovcCase stepsovcCase = createCaseForReferral("Ben_Code", "2012-4-12");
+        StepsovcCase stepsovcCase = createCaseForReferral("Ben_Code", "2012-4-12", "FAC001");
         Referral newReferral = null;
 
         newReferral = new ReferralMapper().map(stepsovcCase);
@@ -40,7 +40,7 @@ public class ReferralMapperTest {
         assertThat(newReferral.getFollowupDate(), is(stepsovcCase.getFollowup_date()));
     }
 
-    public static StepsovcCase createCaseForReferral(String code, String serviceDate) {
+    public static StepsovcCase createCaseForReferral(String code, String serviceDate, String facilityId) {
         StepsovcCase stepsovcCase = createNewCase(code);
         stepsovcCase.setCondoms("Referred");
         stepsovcCase.setArt_adherence_counseling("Referred");
@@ -56,7 +56,7 @@ public class ReferralMapperTest {
         stepsovcCase.setOther_health_services("Referred");
         stepsovcCase.setVisit_date("1988-12-23");
         stepsovcCase.setService_date(serviceDate);
-        stepsovcCase.setService_provider("FAC001");
+        stepsovcCase.setService_provider(facilityId);
         stepsovcCase.setUser_id("Userid001");
 
         return stepsovcCase;
@@ -143,7 +143,7 @@ public class ReferralMapperTest {
     }
 
     public static StepsovcCase createCaseForUpdateService(String code, String visitDate) {
-        StepsovcCase stepsovcCase = createCaseForReferral(code, null);
+        StepsovcCase stepsovcCase = createCaseForReferral(code, null, "FAC001");
         stepsovcCase.setCondoms("Received");
         stepsovcCase.setEnd_of_life_hospice("Not Availed");
         stepsovcCase.setFamily_planning("Received");

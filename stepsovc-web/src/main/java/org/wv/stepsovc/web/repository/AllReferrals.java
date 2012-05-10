@@ -28,6 +28,13 @@ public class AllReferrals extends MotechBaseRepository<Referral>{
         return CollectionUtils.isEmpty(latestReferral) ? null : latestReferral.get(0);
     }
 
+    @View(name = "by_facility_and_service_date", map = "function(doc){ if(doc.type === 'Referral'  && doc.active == true) emit([doc.facilityId, doc.serviceDate],doc) }")
+    public List<Referral> findActiveReferrals(String facilityId, String date) {
+        ViewQuery viewQuery = createQuery("by_facility_and_service_date").key(ComplexKey.of(facilityId, date)).includeDocs(true);
+        List<Referral> referrals = db.queryView(viewQuery, Referral.class);
+        return referrals;
+    }
+
     @View(name = "all_by_beneficiary", map = "function(doc){ if(doc.type === 'Referral') emit([doc.beneficiaryCode],doc) }")
     public void removeAllByBeneficiary(String beneficiaryCode) {
         ViewQuery viewQuery = createQuery("all_by_beneficiary").key(ComplexKey.of(beneficiaryCode)).includeDocs(true);
@@ -36,3 +43,4 @@ public class AllReferrals extends MotechBaseRepository<Referral>{
             this.remove(referral);
     }
 }
+

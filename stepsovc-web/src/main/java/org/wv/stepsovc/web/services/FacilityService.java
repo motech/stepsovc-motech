@@ -20,6 +20,8 @@ public class FacilityService {
 
     @Autowired
     private AllFacilities allFacilities;
+    @Autowired
+    private ReferralService referralService;
 
     public FacilityAvailability getFacilityAvailability(String facilityId, String serviceDateStr) {
 
@@ -30,7 +32,8 @@ public class FacilityService {
     public void makeFacilityUnavailable(StepsovcCase facilityCase) {
         Facility facility = allFacilities.findFacilityById(facilityCase.getFacility_id());
 
-        ServiceUnavailability serviceUnavailability = new ServiceUnavailability(facilityCase.getService_unavailable_reason(), facilityCase.getService_unavailable_from(), facilityCase.getService_unavailable_to());
+        String serviceUnavailableTo = facilityCase.getService_unavailable_to();
+        ServiceUnavailability serviceUnavailability = new ServiceUnavailability(facilityCase.getService_unavailable_reason(), facilityCase.getService_unavailable_from(), serviceUnavailableTo);
         if(facility == null) {
             List<ServiceUnavailability> serviceUnavailabilities = Arrays.asList(serviceUnavailability);
             facility = new Facility(facilityCase.getFacility_id(), facilityCase.getFacility_name(), serviceUnavailabilities);
@@ -38,9 +41,10 @@ public class FacilityService {
         } else {
             //TODO: check for overlapping unavailable dates
             facility.getServiceUnavailabilities().add(serviceUnavailability);
-
             allFacilities.update(facility);
         }
+        String nextAvailableDate = DateUtils.getFormattedDate(DateUtils.getLocalDate(serviceUnavailableTo).plusDays(1).toDate());
+        referralService.updateReferralsServiceDate(facilityCase.getFacility_id(),facilityCase.getService_unavailable_from(),facilityCase.getService_unavailable_to(), nextAvailableDate);
     }
 
     private FacilityAvailability getFacilityAvailability(String serviceDateStr, Facility facility) {

@@ -18,4 +18,16 @@ public class DateUtils {
 
         return simpleDateFormat.format(localDate.plusDays(1).toDate());
     }
+
+    public static String getFormattedDate(Date date) {
+        return simpleDateFormat.format(date);
+    }
+
+    public static LocalDate getLocalDate(String fromDate) {
+        try {
+            return LocalDate.fromDateFields(DateUtils.getDate(fromDate));
+        } catch (ParseException e) {
+        }
+        return null;
+    }
 }
