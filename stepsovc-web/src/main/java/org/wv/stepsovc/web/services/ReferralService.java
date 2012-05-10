@@ -8,7 +8,7 @@ import org.wv.stepsovc.web.domain.Referral;
 import org.wv.stepsovc.web.mapper.BeneficiaryMapper;
 import org.wv.stepsovc.web.mapper.ReferralMapper;
 import org.wv.stepsovc.web.repository.AllReferrals;
-import org.wv.stepsovc.web.request.BeneficiaryCase;
+import org.wv.stepsovc.web.request.StepsovcCase;
 
 public class ReferralService {
 
@@ -26,56 +26,56 @@ public class ReferralService {
         this.COMMCARE_URL = COMMCARE_URL;
     }
 
-    public void addNewReferral(BeneficiaryCase beneficiaryCase) {
+    public void addNewReferral(StepsovcCase stepsovcCase) {
         logger.info("Handling new referral");
-        Referral oldActiveReferral = allReferrals.findActiveReferral(beneficiaryCase.getBeneficiary_code());
+        Referral oldActiveReferral = allReferrals.findActiveReferral(stepsovcCase.getBeneficiary_code());
         if(oldActiveReferral != null) {
             oldActiveReferral.setActive(false);
             allReferrals.update(oldActiveReferral);
         }
 
-        Referral newReferral = new ReferralMapper().map(beneficiaryCase);
+        Referral newReferral = new ReferralMapper().map(stepsovcCase);
         newReferral.setActive(true);
 
         allReferrals.add(newReferral);
 
-        assignToFacility(beneficiaryCase);
+        assignToFacility(stepsovcCase);
     }
 
-    public void updateNotAvailedReasons(BeneficiaryCase beneficiaryCase) {
+    public void updateNotAvailedReasons(StepsovcCase stepsovcCase) {
         logger.info("Handling update referral");
-        Referral existingReferral = allReferrals.findActiveReferral(beneficiaryCase.getBeneficiary_code());
+        Referral existingReferral = allReferrals.findActiveReferral(stepsovcCase.getBeneficiary_code());
 
-        allReferrals.update(new ReferralMapper().updateReferral(existingReferral, beneficiaryCase));
+        allReferrals.update(new ReferralMapper().updateReferral(existingReferral, stepsovcCase));
     }
 
-    public void updateAvailedServices(BeneficiaryCase beneficiaryCase) {
+    public void updateAvailedServices(StepsovcCase stepsovcCase) {
         logger.info("Handling update service");
-        Referral existingReferral = allReferrals.findActiveReferral(beneficiaryCase.getBeneficiary_code());
+        Referral existingReferral = allReferrals.findActiveReferral(stepsovcCase.getBeneficiary_code());
 
-        allReferrals.update(new ReferralMapper().updateServices(existingReferral, beneficiaryCase));
+        allReferrals.update(new ReferralMapper().updateServices(existingReferral, stepsovcCase));
 
-        if(beneficiaryCase.getService_provider() != null && !"".equals(beneficiaryCase.getService_provider().trim())) {
-            assignToFacility(beneficiaryCase);
+        if(stepsovcCase.getService_provider() != null && !"".equals(stepsovcCase.getService_provider().trim())) {
+            assignToFacility(stepsovcCase);
         } else {
-            removeFromCurrentFacility(beneficiaryCase);
+            removeFromCurrentFacility(stepsovcCase);
         }
     }
 
-    void removeFromCurrentFacility(BeneficiaryCase beneficiaryCase) {
-        beneficiaryCase.setOwner_id(beneficiaryCase.getUser_id());
-        updateReferralOwner(beneficiaryCase);
+    void removeFromCurrentFacility(StepsovcCase stepsovcCase) {
+        stepsovcCase.setOwner_id(stepsovcCase.getUser_id());
+        updateReferralOwner(stepsovcCase);
     }
 
-    void assignToFacility(BeneficiaryCase beneficiaryCase) {
-        String groupId = commcareGateway.getGroupId(beneficiaryCase.getService_provider());
-        String ownerId = beneficiaryCase.getUser_id() + "," + groupId;
-        beneficiaryCase.setOwner_id(ownerId);
-        updateReferralOwner(beneficiaryCase);
+    void assignToFacility(StepsovcCase stepsovcCase) {
+        String groupId = commcareGateway.getGroupId(stepsovcCase.getService_provider());
+        String ownerId = stepsovcCase.getUser_id() + "," + groupId;
+        stepsovcCase.setOwner_id(ownerId);
+        updateReferralOwner(stepsovcCase);
     }
 
-    void updateReferralOwner(BeneficiaryCase beneficiaryCase) {
-        BeneficiaryFormRequest beneficiaryFormRequest = new BeneficiaryMapper().createFormRequest(beneficiaryCase);
+    void updateReferralOwner(StepsovcCase stepsovcCase) {
+        BeneficiaryFormRequest beneficiaryFormRequest = new BeneficiaryMapper().createFormRequest(stepsovcCase);
         commcareGateway.updateReferralOwner(COMMCARE_URL, beneficiaryFormRequest);
     }
 }

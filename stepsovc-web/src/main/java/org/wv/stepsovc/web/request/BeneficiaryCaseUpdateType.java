@@ -1,6 +1,6 @@
 package org.wv.stepsovc.web.request;
 
-public enum CaseUpdateType {
+public enum BeneficiaryCaseUpdateType {
     BENEFICIARY_REGISTRATION("beneficiary_registration"),
     NEW_REFERRAL("new_referral"),
     UPDATE_SERVICE("update_service"),
@@ -9,7 +9,7 @@ public enum CaseUpdateType {
 
     private String type;
 
-    CaseUpdateType(String type) {
+    BeneficiaryCaseUpdateType(String type) {
         this.type = type;
     }
 

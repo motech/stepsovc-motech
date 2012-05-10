@@ -8,8 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.wv.stepsovc.web.request.BeneficiaryCase;
-import org.wv.stepsovc.web.request.CaseUpdateType;
+import org.wv.stepsovc.web.request.BeneficiaryCaseUpdateType;
+import org.wv.stepsovc.web.request.CaseType;
+import org.wv.stepsovc.web.request.StepsovcCase;
 import org.wv.stepsovc.web.services.BeneficiaryService;
 import org.wv.stepsovc.web.services.ReferralService;
 
@@ -17,7 +18,7 @@ import java.io.IOException;
 
 @Controller
 @RequestMapping("/case/**")
-public class StepsovcCaseController extends CaseService<BeneficiaryCase> {
+public class StepsovcCaseController extends CaseService<StepsovcCase> {
 
     private static Logger logger = Logger.getLogger(StepsovcCaseController.class);
 
@@ -26,7 +27,7 @@ public class StepsovcCaseController extends CaseService<BeneficiaryCase> {
 
     @Autowired
     public StepsovcCaseController(BeneficiaryService beneficiaryService, ReferralService referralService) {
-        super(BeneficiaryCase.class);
+        super(StepsovcCase.class);
         this.beneficiaryService = beneficiaryService;
         this.referralService = referralService;
     }
@@ -46,27 +47,29 @@ public class StepsovcCaseController extends CaseService<BeneficiaryCase> {
     }
 
     @Override
-    public void closeCase(BeneficiaryCase beneficiaryCase) {
+    public void closeCase(StepsovcCase stepsovcCase) {
         logger.info("Inside close case");
     }
 
     @Override
-    public void updateCase(BeneficiaryCase beneficiaryCase) {
+    public void updateCase(StepsovcCase stepsovcCase) {
         logger.info("Inside update case");
     }
 
     @Override
-    public void createCase(BeneficiaryCase beneficiaryCase) {
-        logger.info("Inside create case \"" + beneficiaryCase.getForm_type() + "\"");
+    public void createCase(StepsovcCase stepsovcCase) {
+        logger.info("Inside create case \"" + stepsovcCase.getForm_type() + "\"");
 
-        if(CaseUpdateType.BENEFICIARY_REGISTRATION.getType().equals(beneficiaryCase.getForm_type()))
-            beneficiaryService.createBeneficiary(beneficiaryCase);
-        else if(CaseUpdateType.NEW_REFERRAL.getType().equals(beneficiaryCase.getForm_type()))
-            referralService.addNewReferral(beneficiaryCase);
-        else if(CaseUpdateType.UPDATE_REFERRAL.getType().equals(beneficiaryCase.getForm_type()))
-            referralService.updateNotAvailedReasons(beneficiaryCase);
-        else if(CaseUpdateType.UPDATE_SERVICE.getType().equals(beneficiaryCase.getForm_type()))
-            referralService.updateAvailedServices(beneficiaryCase);
+        if(CaseType.BENEFICIARY_CASE.getType().equals(stepsovcCase.getCase_type())) {
+            if(BeneficiaryCaseUpdateType.BENEFICIARY_REGISTRATION.getType().equals(stepsovcCase.getForm_type()))
+                beneficiaryService.createBeneficiary(stepsovcCase);
+            else if(BeneficiaryCaseUpdateType.NEW_REFERRAL.getType().equals(stepsovcCase.getForm_type()))
+                referralService.addNewReferral(stepsovcCase);
+            else if(BeneficiaryCaseUpdateType.UPDATE_REFERRAL.getType().equals(stepsovcCase.getForm_type()))
+                referralService.updateNotAvailedReasons(stepsovcCase);
+            else if(BeneficiaryCaseUpdateType.UPDATE_SERVICE.getType().equals(stepsovcCase.getForm_type()))
+                referralService.updateAvailedServices(stepsovcCase);
+        }
     }
 }
 

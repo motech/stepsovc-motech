@@ -1,10 +1,21 @@
 package org.wv.stepsovc.web.request;
 
-public class BeneficiaryCase {
+public class StepsovcCase {
 
+    private String case_type;
+    private String case_id;
+
+    /* Facility Case starts */
+    private String facility_id;
+    private String service_unavailable_from;
+    private String service_unavailable_to;
+    private String service_unavailable_reason;
+    /* Facility Case ends */
+
+    /* Beneficiary Case starts */
     private String beneficiary_name;
-    private String beneficiary_code;
     private String beneficiary_dob;
+
     private String title;
     private String sex;
     private String caregiver_name;
@@ -37,9 +48,17 @@ public class BeneficiaryCase {
     private String hiv_counseling_na_reason;
     private String pmtct_na_reason;
     private String owner_id;
-    private String case_id;
     private String date_modified;
     private String user_id;
+    /* Beneficiary Case ends */
+
+    public String getCase_type() {
+        return case_type;
+    }
+
+    public void setCase_type(String case_type) {
+        this.case_type = case_type;
+    }
 
     public String getOwner_id() {
         return owner_id;
@@ -71,6 +90,39 @@ public class BeneficiaryCase {
 
     public void setUser_id(String user_id) {
         this.user_id = user_id;
+    }
+
+    private String beneficiary_code;
+    public String getFacility_id() {
+        return facility_id;
+    }
+
+    public void setFacility_id(String facility_id) {
+        this.facility_id = facility_id;
+    }
+
+    public String getService_unavailable_from() {
+        return service_unavailable_from;
+    }
+
+    public void setService_unavailable_from(String service_unavailable_from) {
+        this.service_unavailable_from = service_unavailable_from;
+    }
+
+    public String getService_unavailable_to() {
+        return service_unavailable_to;
+    }
+
+    public void setService_unavailable_to(String service_unavailable_to) {
+        this.service_unavailable_to = service_unavailable_to;
+    }
+
+    public String getService_unavailable_reason() {
+        return service_unavailable_reason;
+    }
+
+    public void setService_unavailable_reason(String service_unavailable_reason) {
+        this.service_unavailable_reason = service_unavailable_reason;
     }
 
     public String getOther_health_service_na_reason() {

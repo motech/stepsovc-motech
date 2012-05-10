@@ -7,13 +7,12 @@ import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.wv.stepsovc.commcare.gateway.CommcareGateway;
-import org.wv.stepsovc.commcare.repository.AllGroups;
 import org.wv.stepsovc.vo.BeneficiaryFormRequest;
 import org.wv.stepsovc.web.domain.Referral;
 import org.wv.stepsovc.web.mapper.ReferralMapper;
 import org.wv.stepsovc.web.mapper.ReferralMapperTest;
 import org.wv.stepsovc.web.repository.AllReferrals;
-import org.wv.stepsovc.web.request.BeneficiaryCase;
+import org.wv.stepsovc.web.request.StepsovcCase;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertFalse;
@@ -42,30 +41,30 @@ public class ReferralServiceTest {
     public void shouldUpdateReferralOwnerWhileCreatingNewReferral(){
 
         ArgumentCaptor<Referral> referralArgumentCaptor = ArgumentCaptor.forClass(Referral.class);
-        ArgumentCaptor<BeneficiaryCase> updatedBeneficiary = ArgumentCaptor.forClass(BeneficiaryCase.class);
+        ArgumentCaptor<StepsovcCase> updatedBeneficiary = ArgumentCaptor.forClass(StepsovcCase.class);
 
         String code = "ben001";
         String groupId = "group001";
 
-        BeneficiaryCase beneficiaryCase = ReferralMapperTest.createCaseForReferral(code, "31-05-2012");
+        StepsovcCase stepsovcCase = ReferralMapperTest.createCaseForReferral(code, "31-05-2012");
 
-        doReturn(groupId).when(commcareGateway).getGroupId(beneficiaryCase.getService_provider());
+        doReturn(groupId).when(commcareGateway).getGroupId(stepsovcCase.getService_provider());
         doReturn(null).when(allReferrals).findActiveReferral(code);
 
 
-        referralService.addNewReferral(beneficiaryCase);
+        referralService.addNewReferral(stepsovcCase);
 
         verify(allReferrals).add(referralArgumentCaptor.capture());
 
         doNothing().when(allReferrals).add(referralArgumentCaptor.getValue());
-        verify(commcareGateway).getGroupId(beneficiaryCase.getService_provider());
+        verify(commcareGateway).getGroupId(stepsovcCase.getService_provider());
 
         verify(referralService).updateReferralOwner(updatedBeneficiary.capture());
 
         doNothing().when(commcareGateway).updateReferralOwner(
                 anyString(), Matchers.<BeneficiaryFormRequest>any());
 
-        assertThat(updatedBeneficiary.getValue().getOwner_id(), is(beneficiaryCase.getUser_id() + "," + groupId));
+        assertThat(updatedBeneficiary.getValue().getOwner_id(), is(stepsovcCase.getUser_id() + "," + groupId));
 
     }
 
@@ -73,21 +72,21 @@ public class ReferralServiceTest {
     public void shouldRemoveFacilityFromOwnersWhileUpdatingReferralServices(){
 
         ArgumentCaptor<Referral> referralArgumentCaptor = ArgumentCaptor.forClass(Referral.class);
-        ArgumentCaptor<BeneficiaryCase> updatedBeneficiary = ArgumentCaptor.forClass(BeneficiaryCase.class);
+        ArgumentCaptor<StepsovcCase> updatedBeneficiary = ArgumentCaptor.forClass(StepsovcCase.class);
 
         String code = "ben001";
         String groupId = "group001";
 
-        BeneficiaryCase beneficiaryCase = ReferralMapperTest.createCaseForUpdateService(code, "31-05-2012");
+        StepsovcCase stepsovcCase = ReferralMapperTest.createCaseForUpdateService(code, "31-05-2012");
         String ownerId = "userid" + "," + groupId;
-        beneficiaryCase.setOwner_id(ownerId);
-        beneficiaryCase.setService_provider(null);
+        stepsovcCase.setOwner_id(ownerId);
+        stepsovcCase.setService_provider(null);
 
-        Referral referral = new ReferralMapper().map(beneficiaryCase);
+        Referral referral = new ReferralMapper().map(stepsovcCase);
 
         doReturn(referral).when(allReferrals).findActiveReferral(code);
 
-        referralService.updateAvailedServices(beneficiaryCase);
+        referralService.updateAvailedServices(stepsovcCase);
 
         verify(allReferrals).update(referralArgumentCaptor.capture());
 
@@ -98,33 +97,33 @@ public class ReferralServiceTest {
         doNothing().when(commcareGateway).updateReferralOwner(
                 anyString(), Matchers.<BeneficiaryFormRequest>any());
 
-        assertThat(updatedBeneficiary.getValue().getOwner_id(), is(beneficiaryCase.getUser_id()));
+        assertThat(updatedBeneficiary.getValue().getOwner_id(), is(stepsovcCase.getUser_id()));
     }
 
     @Test
     public void shouldAssignToNewFacilityWhileUpdatingReferralServicesWithServiceProvider(){
 
         ArgumentCaptor<Referral> referralArgumentCaptor = ArgumentCaptor.forClass(Referral.class);
-        ArgumentCaptor<BeneficiaryCase> updatedBeneficiary = ArgumentCaptor.forClass(BeneficiaryCase.class);
+        ArgumentCaptor<StepsovcCase> updatedBeneficiary = ArgumentCaptor.forClass(StepsovcCase.class);
 
         String code = "ben001";
         String groupId1 = "group001";
         String groupId2 = "group002";
 
-        BeneficiaryCase beneficiaryCase = ReferralMapperTest.createCaseForUpdateService(code, "31-05-2012");
+        StepsovcCase stepsovcCase = ReferralMapperTest.createCaseForUpdateService(code, "31-05-2012");
         String ownerId = "userid" + "," + groupId1;
-        beneficiaryCase.setOwner_id(ownerId);
+        stepsovcCase.setOwner_id(ownerId);
 
         String groupName = "groupName";
-        beneficiaryCase.setService_provider(groupName);
+        stepsovcCase.setService_provider(groupName);
 
         doReturn(groupId2).when(commcareGateway).getGroupId(groupName);
 
-        Referral referral = new ReferralMapper().map(beneficiaryCase);
+        Referral referral = new ReferralMapper().map(stepsovcCase);
 
         doReturn(referral).when(allReferrals).findActiveReferral(code);
 
-        referralService.updateAvailedServices(beneficiaryCase);
+        referralService.updateAvailedServices(stepsovcCase);
 
         verify(allReferrals).update(referralArgumentCaptor.capture());
 
@@ -135,7 +134,7 @@ public class ReferralServiceTest {
         doNothing().when(commcareGateway).updateReferralOwner(
                 anyString(), Matchers.<BeneficiaryFormRequest>any());
 
-        assertThat(updatedBeneficiary.getValue().getOwner_id(), is(beneficiaryCase.getUser_id()+","+groupId2));
+        assertThat(updatedBeneficiary.getValue().getOwner_id(), is(stepsovcCase.getUser_id()+","+groupId2));
     }
 
     @Test
@@ -144,13 +143,13 @@ public class ReferralServiceTest {
 
         String code = "ben001";
 
-        BeneficiaryCase beneficiaryCase = ReferralMapperTest.createCaseForReferral(code,"31-05-2012");
+        StepsovcCase stepsovcCase = ReferralMapperTest.createCaseForReferral(code,"31-05-2012");
 
         doReturn(new Referral()).when(allReferrals).findActiveReferral(code);
         doNothing().when(allReferrals).add(Matchers.<Referral>any());
         doNothing().when(allReferrals).update(Matchers.<Referral>any());
 
-        referralService.addNewReferral(beneficiaryCase);
+        referralService.addNewReferral(stepsovcCase);
 
         verify(allReferrals).update(referralArgumentCaptor.capture());
 

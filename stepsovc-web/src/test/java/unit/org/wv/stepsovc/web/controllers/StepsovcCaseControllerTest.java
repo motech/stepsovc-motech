@@ -4,8 +4,9 @@ import org.apache.velocity.app.VelocityEngine;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.wv.stepsovc.web.request.BeneficiaryCase;
-import org.wv.stepsovc.web.request.CaseUpdateType;
+import org.wv.stepsovc.web.request.BeneficiaryCaseUpdateType;
+import org.wv.stepsovc.web.request.CaseType;
+import org.wv.stepsovc.web.request.StepsovcCase;
 import org.wv.stepsovc.web.services.BeneficiaryService;
 import org.wv.stepsovc.web.services.ReferralService;
 
@@ -22,44 +23,47 @@ public class StepsovcCaseControllerTest {
     @Mock
     ReferralService mockReferralService;
 
-
     StepsovcCaseController stepsovcCaseController;
-    private BeneficiaryCase beneficiaryCase;
+    private StepsovcCase stepsovcCase;
 
 
     @Before
     public void setup() {
         initMocks(this);
         stepsovcCaseController = new StepsovcCaseController(mockBeneficiaryService, mockReferralService);
-        beneficiaryCase = new BeneficiaryCase();
+        stepsovcCase = new StepsovcCase();
     }
 
 
     @Test
     public void ShouldCallBeneficiaryRegistrationHandler() throws Exception {
-        beneficiaryCase.setForm_type(CaseUpdateType.BENEFICIARY_REGISTRATION.getType());
-        stepsovcCaseController.createCase(beneficiaryCase);
-        verify(mockBeneficiaryService).createBeneficiary(beneficiaryCase);
+        stepsovcCase.setCase_type(CaseType.BENEFICIARY_CASE.getType());
+        stepsovcCase.setForm_type(BeneficiaryCaseUpdateType.BENEFICIARY_REGISTRATION.getType());
+        stepsovcCaseController.createCase(stepsovcCase);
+        verify(mockBeneficiaryService).createBeneficiary(stepsovcCase);
     }
 
     @Test
     public void ShouldCallNewReferralHandler() throws Exception {
-        beneficiaryCase.setForm_type(CaseUpdateType.NEW_REFERRAL.getType());
-        stepsovcCaseController.createCase(beneficiaryCase);
-        verify(mockReferralService).addNewReferral(beneficiaryCase);
+        stepsovcCase.setCase_type(CaseType.BENEFICIARY_CASE.getType());
+        stepsovcCase.setForm_type(BeneficiaryCaseUpdateType.NEW_REFERRAL.getType());
+        stepsovcCaseController.createCase(stepsovcCase);
+        verify(mockReferralService).addNewReferral(stepsovcCase);
     }
 
     @Test
     public void ShouldCallUpdateReferralHandler() throws Exception {
-        beneficiaryCase.setForm_type(CaseUpdateType.UPDATE_REFERRAL.getType());
-        stepsovcCaseController.createCase(beneficiaryCase);
-        verify(mockReferralService).updateNotAvailedReasons(beneficiaryCase);
+        stepsovcCase.setCase_type(CaseType.BENEFICIARY_CASE.getType());
+        stepsovcCase.setForm_type(BeneficiaryCaseUpdateType.UPDATE_REFERRAL.getType());
+        stepsovcCaseController.createCase(stepsovcCase);
+        verify(mockReferralService).updateNotAvailedReasons(stepsovcCase);
     }
 
     @Test
     public void ShouldCallUpdateServiceHandler() throws Exception {
-        beneficiaryCase.setForm_type(CaseUpdateType.UPDATE_SERVICE.getType());
-        stepsovcCaseController.createCase(beneficiaryCase);
-        verify(mockReferralService).updateAvailedServices(beneficiaryCase);
+        stepsovcCase.setCase_type(CaseType.BENEFICIARY_CASE.getType());
+        stepsovcCase.setForm_type(BeneficiaryCaseUpdateType.UPDATE_SERVICE.getType());
+        stepsovcCaseController.createCase(stepsovcCase);
+        verify(mockReferralService).updateAvailedServices(stepsovcCase);
     }
 }

@@ -4,7 +4,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.wv.stepsovc.web.mapper.BeneficiaryMapper;
 import org.wv.stepsovc.web.repository.AllBeneficiaries;
-import org.wv.stepsovc.web.request.BeneficiaryCase;
+import org.wv.stepsovc.web.request.StepsovcCase;
 
 public class BeneficiaryService {
 
@@ -13,12 +13,12 @@ public class BeneficiaryService {
 
     private static Logger logger = Logger.getLogger(BeneficiaryService.class);
 
-    public void createBeneficiary(BeneficiaryCase beneficiaryCase) {
-        logger.info("Handling beneficiary registration for "+beneficiaryCase.getBeneficiary_name());
+    public void createBeneficiary(StepsovcCase stepsovcCase) {
+        logger.info("Handling beneficiary registration for "+ stepsovcCase.getBeneficiary_name());
 
-        if(allBeneficiaries.findBeneficiary(beneficiaryCase.getBeneficiary_code()) == null)
-            allBeneficiaries.add(new BeneficiaryMapper().map(beneficiaryCase));
+        if(allBeneficiaries.findBeneficiary(stepsovcCase.getBeneficiary_code()) == null)
+            allBeneficiaries.add(new BeneficiaryMapper().map(stepsovcCase));
         else
-            logger.error("Beneficiary already present in database, "+beneficiaryCase.getBeneficiary_code());
+            logger.error("Beneficiary already present in database, "+ stepsovcCase.getBeneficiary_code());
     }
 }

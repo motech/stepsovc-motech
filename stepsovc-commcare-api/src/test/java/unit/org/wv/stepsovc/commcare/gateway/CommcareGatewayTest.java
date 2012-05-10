@@ -22,9 +22,7 @@ import static org.wv.stepsovc.utils.ConstantUtils.BENEFICIARY;
 
 public class CommcareGatewayTest {
 
-
     CommcareGateway commcareGateway;
-
 
     @Mock
     HttpClientService mockHttpClientService;
