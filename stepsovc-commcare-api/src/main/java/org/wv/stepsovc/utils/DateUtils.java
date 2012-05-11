@@ -13,10 +13,28 @@ public class DateUtils {
         return simpleDateFormat.parse(dateStr);
     }
 
-    public static String nextDate(Date date){
+    public static String nextDateStr(Date date){
         LocalDate localDate = LocalDate.fromDateFields(date);
 
         return simpleDateFormat.format(localDate.plusDays(1).toDate());
+    }
+
+    public static String nextDateStr(String dateStr) throws ParseException {
+        LocalDate localDate = LocalDate.fromDateFields(getDate(dateStr));
+
+        return simpleDateFormat.format(localDate.plusDays(1).toDate());
+    }
+
+    public static Date nextDate(Date date){
+        LocalDate localDate = LocalDate.fromDateFields(date);
+
+        return localDate.plusDays(1).toDate();
+    }
+
+    public static Date nextDate(String dateStr) throws ParseException {
+        LocalDate localDate = LocalDate.fromDateFields(getDate(dateStr));
+
+        return localDate.plusDays(1).toDate();
     }
 
     public static String getFormattedDate(Date date) {

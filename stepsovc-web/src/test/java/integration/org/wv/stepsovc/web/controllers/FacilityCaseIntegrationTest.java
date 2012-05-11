@@ -61,8 +61,14 @@ public class FacilityCaseIntegrationTest {
 
         facilityCase = createFacilityCase(facilityId, "2012-02-01", "2012-02-01");
         stepsovcCaseController.createCase(facilityCase);
-        assertThat(2, is(allFacilities.findFacilityById(facilityId).getServiceUnavailabilities().size()));
+        assertThat(allFacilities.findFacilityById(facilityId).getServiceUnavailabilities().size(), is(2));
 
+        StepsovcCase caseForReferral4 = ReferralMapperTest.createCaseForReferral(benCode3, "2012-02-01", facilityId);
+        caseForReferral4.setForm_type(BeneficiaryCaseUpdateType.NEW_REFERRAL.getType());
+
+        stepsovcCaseController.createCase(caseForReferral4);
+
+        assertThat(allReferrals.findActiveReferral(benCode3).getServiceDate(),is("2012-02-02"));
 
     }
 
@@ -82,6 +88,6 @@ public class FacilityCaseIntegrationTest {
         allFacilities.remove(allFacilities.findFacilityById(facilityId));
         allReferrals.removeAllByBeneficiary(benCode1);
         allReferrals.removeAllByBeneficiary(benCode2);
-        allReferrals.removeAllByBeneficiary(benCode3);
+        //allReferrals.removeAllByBeneficiary(benCode3);
     }
 }

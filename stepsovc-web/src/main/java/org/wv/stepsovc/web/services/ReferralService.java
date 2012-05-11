@@ -11,6 +11,7 @@ import org.wv.stepsovc.web.mapper.BeneficiaryMapper;
 import org.wv.stepsovc.web.mapper.ReferralMapper;
 import org.wv.stepsovc.web.repository.AllReferrals;
 import org.wv.stepsovc.web.request.StepsovcCase;
+import org.wv.stepsovc.web.vo.FacilityAvailability;
 
 import java.util.List;
 
@@ -24,6 +25,9 @@ public class ReferralService {
     @Autowired
     private CommcareGateway commcareGateway;
 
+    @Autowired
+    private FacilityService facilityService;
+
     private String COMMCARE_URL;
 
     public ReferralService(String COMMCARE_URL) {
@@ -32,18 +36,27 @@ public class ReferralService {
 
     public void addNewReferral(StepsovcCase stepsovcCase) {
         logger.info("Handling new referral");
+        inactivateOldReferral(stepsovcCase);
+
+        Referral newReferral = new ReferralMapper().map(stepsovcCase);
+        checkForAvailableDate(newReferral);
+        assignToFacility(stepsovcCase);
+        allReferrals.add(newReferral);
+    }
+
+    private void checkForAvailableDate(Referral referral) {
+        FacilityAvailability facilityAvailability = facilityService.getFacilityAvailability(referral.getFacilityId(), referral.getServiceDate());
+        if(!facilityAvailability.isAvailable()) {
+            referral.setServiceDate(facilityAvailability.getNextAvailableDate());
+        }
+    }
+
+    private void inactivateOldReferral(StepsovcCase stepsovcCase) {
         Referral oldActiveReferral = allReferrals.findActiveReferral(stepsovcCase.getBeneficiary_code());
         if(oldActiveReferral != null) {
             oldActiveReferral.setActive(false);
             allReferrals.update(oldActiveReferral);
         }
-
-        Referral newReferral = new ReferralMapper().map(stepsovcCase);
-        newReferral.setActive(true);
-
-        allReferrals.add(newReferral);
-
-        assignToFacility(stepsovcCase);
     }
 
     public void updateNotAvailedReasons(StepsovcCase stepsovcCase) {
@@ -58,7 +71,10 @@ public class ReferralService {
         Referral existingReferral = allReferrals.findActiveReferral(stepsovcCase.getBeneficiary_code());
 
         allReferrals.update(new ReferralMapper().updateServices(existingReferral, stepsovcCase));
+        checkForNewReferral(stepsovcCase);
+    }
 
+    private void checkForNewReferral(StepsovcCase stepsovcCase) {
         if(stepsovcCase.getService_provider() != null && !"".equals(stepsovcCase.getService_provider().trim())) {
             assignToFacility(stepsovcCase);
         } else {

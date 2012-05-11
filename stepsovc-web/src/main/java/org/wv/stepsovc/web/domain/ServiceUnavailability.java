@@ -2,7 +2,7 @@ package org.wv.stepsovc.web.domain;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
-public class ServiceUnavailability {
+public class ServiceUnavailability implements Comparable<ServiceUnavailability>{
     @JsonProperty
     private String unavailableReason;
     @JsonProperty
@@ -43,4 +43,9 @@ public class ServiceUnavailability {
         this.toDate = toDate;
     }
 
+    @Override
+    public int compareTo(ServiceUnavailability serviceUnavailability) {
+        return fromDate.compareTo(serviceUnavailability.fromDate) == 0 ?
+            serviceUnavailability.toDate.compareTo(toDate) : fromDate.compareTo(serviceUnavailability.fromDate);
+    }
 }

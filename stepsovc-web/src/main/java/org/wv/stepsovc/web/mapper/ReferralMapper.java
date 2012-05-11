@@ -32,6 +32,7 @@ public class ReferralMapper {
         newReferral.setPainManagement(new Service(REFERRED.equals(stepsovcCase.getPain_management())));
         newReferral.setPmtct(new Service(REFERRED.equals(stepsovcCase.getPmtct())));
         newReferral.setSexuallyTransmittedInfection(new Service(REFERRED.equals(stepsovcCase.getSexually_transmitted_infection())));
+        newReferral.setActive(true);
 
         return newReferral;
     }

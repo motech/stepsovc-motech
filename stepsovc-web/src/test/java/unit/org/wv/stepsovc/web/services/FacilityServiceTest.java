@@ -57,7 +57,7 @@ public class FacilityServiceTest {
 
         doReturn(facility).when(mockAllFacilities).findFacilityById(facilityId);
         assertTrue(facilityService.getFacilityAvailability(facilityId, "2011-12-30").isAvailable());
-        assertTrue(facilityService.getFacilityAvailability(facilityId, "2012-01-05").isAvailable());
+        assertTrue(facilityService.getFacilityAvailability(facilityId, "2012-01-08").isAvailable());
     }
 
     @Test
@@ -67,14 +67,16 @@ public class FacilityServiceTest {
 
         doReturn(facility).when(mockAllFacilities).findFacilityById(facilityId);
         String availableDate = facilityService.getFacilityAvailability(facilityId, unavailableDate).getNextAvailableDate();
-        assertThat(availableDate, is("2012-01-04"));
+        assertThat(availableDate, is("2012-01-07"));
     }
 
     private Facility getFacilityWithServiceUnavailability() {
         Facility facility = new Facility();
         ServiceUnavailability serviceUnavailability1 = new ServiceUnavailability("test","2012-01-01","2012-01-03");
-        ServiceUnavailability serviceUnavailability2 = new ServiceUnavailability("test","2012-02-01","2012-02-03");
-        List<ServiceUnavailability> serviceUnavailabilities = Arrays.asList(serviceUnavailability1, serviceUnavailability2);
+        ServiceUnavailability serviceUnavailability2 = new ServiceUnavailability("test","2012-01-04","2012-01-06");
+        ServiceUnavailability serviceUnavailability3 = new ServiceUnavailability("test","2012-01-09","2012-01-20");
+        ServiceUnavailability serviceUnavailability4 = new ServiceUnavailability("test","2012-02-01","2012-02-03");
+        List<ServiceUnavailability> serviceUnavailabilities = Arrays.asList(serviceUnavailability2, serviceUnavailability1,serviceUnavailability3,serviceUnavailability4);
         facility.setServiceUnavailabilities(serviceUnavailabilities);
         return facility;
     }

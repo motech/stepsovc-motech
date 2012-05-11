@@ -11,6 +11,7 @@ import org.wv.stepsovc.web.vo.FacilityAvailability;
 
 import java.text.ParseException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -23,44 +24,56 @@ public class FacilityService {
     @Autowired
     private ReferralService referralService;
 
-    public FacilityAvailability getFacilityAvailability(String facilityId, String serviceDateStr) {
-
-        Facility facility = allFacilities.findFacilityById(facilityId);
-        return facility == null ? new FacilityAvailability(true, null ) : getFacilityAvailability(serviceDateStr, facility);
-    }
-
     public void makeFacilityUnavailable(StepsovcCase facilityCase) {
+        String nextAvailableDate = null;
+        String serviceUnavailableTo = facilityCase.getService_unavailable_to();
         Facility facility = allFacilities.findFacilityById(facilityCase.getFacility_id());
 
-        String serviceUnavailableTo = facilityCase.getService_unavailable_to();
         ServiceUnavailability serviceUnavailability = new ServiceUnavailability(facilityCase.getService_unavailable_reason(), facilityCase.getService_unavailable_from(), serviceUnavailableTo);
         if(facility == null) {
             List<ServiceUnavailability> serviceUnavailabilities = Arrays.asList(serviceUnavailability);
             facility = new Facility(facilityCase.getFacility_id(), facilityCase.getFacility_name(), serviceUnavailabilities);
             allFacilities.add(facility);
         } else {
-            //TODO: check for overlapping unavailable dates
             facility.getServiceUnavailabilities().add(serviceUnavailability);
             allFacilities.update(facility);
         }
-        String nextAvailableDate = DateUtils.getFormattedDate(DateUtils.getLocalDate(serviceUnavailableTo).plusDays(1).toDate());
+
+        try {
+            nextAvailableDate = getFacilityAvailability(DateUtils.nextDateStr(serviceUnavailableTo), facility).getNextAvailableDate();
+        } catch (ParseException e) {
+        }
         referralService.updateReferralsServiceDate(facilityCase.getFacility_id(),facilityCase.getService_unavailable_from(),facilityCase.getService_unavailable_to(), nextAvailableDate);
     }
 
-    private FacilityAvailability getFacilityAvailability(String serviceDateStr, Facility facility) {
-        try {
-            Date serviceDate = DateUtils.getDate(serviceDateStr);
+    public FacilityAvailability getFacilityAvailability(String facilityId, String serviceDateStr) {
 
-            for(ServiceUnavailability serviceUnavailability : facility.getServiceUnavailabilities()) {
+        Facility facility = allFacilities.findFacilityById(facilityId);
+        return facility == null ? new FacilityAvailability(true, null ) : getFacilityAvailability(serviceDateStr, facility);
+    }
+
+    private FacilityAvailability getFacilityAvailability(String serviceDateStr, Facility facility) {
+        boolean isAvailable = true;
+
+        Date serviceDate = null;
+        try {
+            serviceDate = DateUtils.getDate(serviceDateStr);
+            Collections.sort(facility.getServiceUnavailabilities());
+
+            for (ServiceUnavailability serviceUnavailability : facility.getServiceUnavailabilities()) {
                 Date fromDate = DateUtils.getDate(serviceUnavailability.getFromDate());
                 Date toDate = DateUtils.getDate(serviceUnavailability.getToDate());
 
-                if((serviceDate.equals(fromDate) || serviceDate.equals(toDate)) ||
-                        (serviceDate.after(fromDate) && serviceDate.before(toDate)))
-                    return new FacilityAvailability(false, DateUtils.nextDate(toDate));
+                if ((serviceDate.equals(fromDate) || serviceDate.equals(toDate)) ||
+                        (serviceDate.after(fromDate) && serviceDate.before(toDate))) {
+                    serviceDate = DateUtils.nextDate(toDate);
+                    isAvailable = false;
+                } else if(!isAvailable) {
+                    break;
+                }
             }
         } catch (ParseException e) {
         }
-        return new FacilityAvailability(true, null);
+        return new FacilityAvailability(isAvailable, DateUtils.getFormattedDate(serviceDate));
     }
 }
