@@ -88,6 +88,6 @@ public class FacilityCaseIntegrationTest {
         allFacilities.remove(allFacilities.findFacilityById(facilityId));
         allReferrals.removeAllByBeneficiary(benCode1);
         allReferrals.removeAllByBeneficiary(benCode2);
-        //allReferrals.removeAllByBeneficiary(benCode3);
+        allReferrals.removeAllByBeneficiary(benCode3);
     }
 }
