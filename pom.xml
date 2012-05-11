@@ -10,6 +10,7 @@
     <modules>
         <module>stepsovc-web</module>
         <module>stepsovc-commcare-api</module>
+        <module>stepsovc-tools</module>
     </modules>
     <properties>
         <spring.version>3.0.5.RELEASE</spring.version>

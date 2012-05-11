@@ -9,7 +9,7 @@ import java.util.List;
 @TypeDiscriminator("doc.type == 'Facility'")
 public class Facility extends MotechBaseDataObject {
     @JsonProperty
-    private String facilityId;
+    private String facilityCode;
     @JsonProperty
     private String facilityName;
     @JsonProperty
@@ -19,18 +19,18 @@ public class Facility extends MotechBaseDataObject {
 
     }
 
-    public Facility(String facilityId, String facilityName, List<ServiceUnavailability> serviceUnavailabilities) {
-        this.facilityId = facilityId;
+    public Facility(String facilityCode, String facilityName, List<ServiceUnavailability> serviceUnavailabilities) {
+        this.facilityCode = facilityCode;
         this.facilityName = facilityName;
         this.serviceUnavailabilities = serviceUnavailabilities;
     }
 
-    public String getFacilityId() {
-        return facilityId;
+    public String getFacilityCode() {
+        return facilityCode;
     }
 
-    public void setFacilityId(String facilityId) {
-        this.facilityId = facilityId;
+    public void setFacilityCode(String facilityCode) {
+        this.facilityCode = facilityCode;
     }
 
     public String getFacilityName() {

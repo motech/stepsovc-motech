@@ -4,6 +4,7 @@ import org.bouncycastle.crypto.digests.SHA1Digest;
 import org.bouncycastle.crypto.generators.PKCS5S1ParametersGenerator;
 import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.springframework.stereotype.Component;
 import org.wv.stepsovc.crypto.PasswordDeriveBytes;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
@@ -18,6 +19,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.Security;
 import java.security.spec.InvalidKeySpecException;
 
+@Component
 public class DMISDataProcessor {
 
     public static final String PASSWORD = "STEPSOVC";
@@ -37,16 +39,16 @@ public class DMISDataProcessor {
         generator.init(password, salt, 2);
 
         byte[] key = ((KeyParameter)
-                generator.generateDerivedParameters(32*8)).getKey();
+                generator.generateDerivedParameters(32 * 8)).getKey();
 
         //"MyBzxx8aq4u9AxqKEmE69nWq+0g2TAfroRQGuLd6QWY="
         final BASE64Decoder base64Decoder = new BASE64Decoder();
         Cipher cipher = Cipher.getInstance(PADDING);
         SecretKey secret = new SecretKeySpec(key, ALGORITHM);
-        cipher.init(Cipher.DECRYPT_MODE,secret, new IvParameterSpec(iv));
+        cipher.init(Cipher.DECRYPT_MODE, secret, new IvParameterSpec(iv));
         final byte[] bytes = cipher.doFinal(base64Decoder.decodeBuffer(cipherStr));
 
-        return new String(bytes,UTF_8);
+        return new String(bytes, UTF_8);
     }
 
     public String encrypt(String plainStr) throws IOException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
@@ -59,20 +61,20 @@ public class DMISDataProcessor {
         generator.init(password, salt, 2);
 
         byte[] key = ((KeyParameter)
-                generator.generateDerivedParameters(32*8)).getKey();
+                generator.generateDerivedParameters(32 * 8)).getKey();
 
         //"MyBzxx8aq4u9AxqKEmE69nWq+0g2TAfroRQGuLd6QWY="
         final BASE64Decoder base64Decoder = new BASE64Decoder();
         final BASE64Encoder base64Encoder = new BASE64Encoder();
         Cipher cipher = Cipher.getInstance(PADDING);
         SecretKey secret = new SecretKeySpec(key, ALGORITHM);
-        cipher.init(Cipher.ENCRYPT_MODE,secret, new IvParameterSpec(iv));
+        cipher.init(Cipher.ENCRYPT_MODE, secret, new IvParameterSpec(iv));
         final byte[] bytes = cipher.doFinal(plainStr.getBytes(UTF_8));
 
         return base64Encoder.encode(bytes);
     }
 
-    private String processKey(String strKey){
+    private String processKey(String strKey) {
         return strKey.replaceAll("o", "0").replaceAll("O", "0").replaceAll("l", "1").replaceAll("L", "1").replaceAll("e", "3").replaceAll("E", "3").replaceAll("a", "4").replaceAll("A", "4").replaceAll("s", "5").replaceAll("S", "5");
     }
 

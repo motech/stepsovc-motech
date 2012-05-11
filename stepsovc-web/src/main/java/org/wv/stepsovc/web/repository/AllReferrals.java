@@ -14,7 +14,7 @@ import org.wv.stepsovc.web.domain.Referral;
 import java.util.List;
 
 @Repository
-public class AllReferrals extends MotechBaseRepository<Referral>{
+public class AllReferrals extends MotechBaseRepository<Referral> {
 
     @Autowired
     protected AllReferrals(@Qualifier("stepsovcDbConnector") CouchDbConnector dbCouchDbConnector) {
@@ -28,9 +28,9 @@ public class AllReferrals extends MotechBaseRepository<Referral>{
         return CollectionUtils.isEmpty(latestReferral) ? null : latestReferral.get(0);
     }
 
-    @View(name = "by_facility_and_service_date", map = "function(doc){ if(doc.type === 'Referral'  && doc.active == true) emit([doc.facilityId, doc.serviceDate],doc) }")
-    public List<Referral> findActiveReferrals(String facilityId, String date) {
-        ViewQuery viewQuery = createQuery("by_facility_and_service_date").key(ComplexKey.of(facilityId, date)).includeDocs(true);
+    @View(name = "by_facility_and_service_date", map = "function(doc){ if(doc.type === 'Referral'  && doc.active == true) emit([doc.facilityCode, doc.serviceDate],doc) }")
+    public List<Referral> findActiveReferrals(String facilityCode, String date) {
+        ViewQuery viewQuery = createQuery("by_facility_and_service_date").key(ComplexKey.of(facilityCode, date)).includeDocs(true);
         List<Referral> referrals = db.queryView(viewQuery, Referral.class);
         return referrals;
     }
@@ -39,7 +39,7 @@ public class AllReferrals extends MotechBaseRepository<Referral>{
     public void removeAllByBeneficiary(String beneficiaryCode) {
         ViewQuery viewQuery = createQuery("all_by_beneficiary").key(ComplexKey.of(beneficiaryCode)).includeDocs(true);
         List<Referral> allReferrals = db.queryView(viewQuery, Referral.class);
-        for(Referral referral: allReferrals)
+        for (Referral referral : allReferrals)
             this.remove(referral);
     }
 }

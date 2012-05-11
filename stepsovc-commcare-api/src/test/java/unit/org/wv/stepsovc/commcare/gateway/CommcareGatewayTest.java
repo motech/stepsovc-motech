@@ -49,8 +49,8 @@ public class CommcareGatewayTest {
     @Test
     public void shouldSubmitFormWithoutAnyException() throws Exception {
         final CommcareGateway spyCommcareGateway = spy(new CommcareGateway(mockHttpClientService, mockVelocityEngine, mockHttpClientEventListener, allGroups, allUsers));
-        final BeneficiaryFormRequest beneficiaryFormRequest = getBeneficiaryFormRequest("f98589102c60fcc2e0f3c422bb361ebd", "cg1", UUID.randomUUID().toString(), "Albie-case");
-        Map<String,Object> model = new HashMap<String, Object>();
+        final BeneficiaryFormRequest beneficiaryFormRequest = getBeneficiaryFormRequest("f98589102c60fcc2e0f3c422bb361ebd", "cg1", UUID.randomUUID().toString(), "Albie-case", null);
+        Map<String, Object> model = new HashMap<String, Object>();
         model.put(BENEFICIARY, beneficiaryFormRequest);
         doReturn(getExpectedXml()).when(spyCommcareGateway).getXmlFromObject(anyString(), eq(model));
         String url = "someurl";
@@ -62,8 +62,8 @@ public class CommcareGatewayTest {
     @Test
     public void shouldSubmitUpdateOwnerForm() {
         final CommcareGateway spyCommcareGateway = spy(new CommcareGateway(mockHttpClientService, mockVelocityEngine, mockHttpClientEventListener, allGroups, allUsers));
-        final BeneficiaryFormRequest beneficiaryFormRequest = getBeneficiaryFormRequest("f98589102c60fcc2e0f3c422bb361ebd", "cg1", UUID.randomUUID().toString(), "Albie-case");
-        Map<String,Object> model = new HashMap<String,Object>();
+        final BeneficiaryFormRequest beneficiaryFormRequest = getBeneficiaryFormRequest("f98589102c60fcc2e0f3c422bb361ebd", "cg1", UUID.randomUUID().toString(), "Albie-case", null);
+        Map<String, Object> model = new HashMap<String, Object>();
         model.put(BENEFICIARY, beneficiaryFormRequest);
         doReturn(getExpectedXml()).when(spyCommcareGateway).getXmlFromObject(anyString(), eq(model));
         String url = "someurl";
@@ -73,7 +73,7 @@ public class CommcareGatewayTest {
     }
 
 
-    private BeneficiaryFormRequest getBeneficiaryFormRequest(String userId, String caregiveName, String caseId, String caseName) {
+    private BeneficiaryFormRequest getBeneficiaryFormRequest(String userId, String caregiveName, String caseId, String caseName, String code) {
 
         BeneficiaryFormRequest beneficiaryFormRequest = new BeneficiaryFormRequest();
 
@@ -87,17 +87,15 @@ public class CommcareGatewayTest {
 
 
         final CareGiverInformation careGiverInformation = new CareGiverInformation();
-        careGiverInformation.setId(userId);
+        careGiverInformation.setCode(code);
         careGiverInformation.setName(caregiveName);
+        careGiverInformation.setCommcareUserId(userId);
 
         final CaseInformation caseInformation = new CaseInformation();
-        caseInformation.setCaseTypeId("Beneficiary");
+        caseInformation.setCaseTypeId("beneficiary");
         caseInformation.setId(caseId);
         caseInformation.setDateModified("2012-05-02T22:18:45.071+05:30");
-        caseInformation.setExternalId(userId);
         caseInformation.setUserId(userId);
-        caseInformation.setName(caseName);
-        caseInformation.setOwnerId("123asf32asdf32");
 
 
         final MetaInformation metaInformation = new MetaInformation();

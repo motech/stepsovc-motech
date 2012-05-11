@@ -7,13 +7,10 @@ public class CaseInformation {
 
     private String dateModified;
 
-    private String name;
-
     private String caseTypeId;
 
     private String userId;
 
-    private String externalId;
 
     private String ownerId;
 
@@ -41,13 +38,6 @@ public class CaseInformation {
         this.dateModified = dateModified;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public String getCaseTypeId() {
         return caseTypeId;
@@ -65,11 +55,4 @@ public class CaseInformation {
         this.userId = userId;
     }
 
-    public String getExternalId() {
-        return externalId;
-    }
-
-    public void setExternalId(String externalId) {
-        this.externalId = externalId;
-    }
 }

@@ -10,7 +10,7 @@
         <title>$beneficiary.beneficiaryInformation.title</title>
     </beneficiary_information>
     <caregiver_information>
-        <caregiver_id>$beneficiary.caregiverInformation.id</caregiver_id>
+        <caregiver_code>$beneficiary.caregiverInformation.code</caregiver_code>
         <caregiver_name>$beneficiary.caregiverInformation.name</caregiver_name>
     </caregiver_information>
     <form_type>beneficiary_registration</form_type>
@@ -19,9 +19,9 @@
         <date_modified>$beneficiary.caseInformation.dateModified</date_modified>
         <create>
             <case_type_id>$beneficiary.caseInformation.caseTypeId</case_type_id>
-            <case_name>$beneficiary.caseInformation.name</case_name>
-            <user_id>$beneficiary.caseInformation.userId</user_id>
-            <external_id>$beneficiary.caseInformation.externalId</external_id>
+            <case_name>$beneficiary.beneficiaryInformation.code</case_name>
+            <user_id>$beneficiary.caregiverInformation.commcareUserId</user_id>
+            <external_id>$beneficiary.beneficiaryInformation.code</external_id>
         </create>
         <update>
             <beneficiary_dob>$beneficiary.beneficiaryInformation.dob</beneficiary_dob>
@@ -32,14 +32,14 @@
             <sex>$beneficiary.beneficiaryInformation.sex</sex>
             <form_type>beneficiary_registration</form_type>
             <beneficiary_code>$beneficiary.beneficiaryInformation.code</beneficiary_code>
-            <caregiver_id>$beneficiary.caregiverInformation.id</caregiver_id>
+            <caregiver_code>$beneficiary.caregiverInformation.code</caregiver_code>
         </update>
     </case>
     <meta>
         <deviceID>$beneficiary.metaInformation.deviceId</deviceID>
         <timeStart>$beneficiary.metaInformation.timeStart</timeStart>
         <timeEnd>$beneficiary.metaInformation.timeEnd</timeEnd>
-        <username>$beneficiary.caregiverInformation.name</username>
-        <userID>$beneficiary.caregiverInformation.id</userID>
+        <username>$beneficiary.caregiverInformation.code</username>
+        <userID>$beneficiary.caregiverInformation.commcareUserId</userID>
     </meta>
 </data>

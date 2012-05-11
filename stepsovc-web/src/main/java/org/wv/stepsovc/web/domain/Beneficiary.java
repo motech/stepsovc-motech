@@ -17,7 +17,7 @@ public class Beneficiary extends MotechBaseDataObject {
     @JsonProperty
     private String sex;
     @JsonProperty
-    private String caregiverId;
+    private String caregiverCode;
 
     public String getName() {
         return name;
@@ -59,11 +59,11 @@ public class Beneficiary extends MotechBaseDataObject {
         this.sex = sex;
     }
 
-    public String getCaregiverId() {
-        return caregiverId;
+    public String getCaregiverCode() {
+        return caregiverCode;
     }
 
-    public void setCaregiverId(String caregiverId) {
-        this.caregiverId = caregiverId;
+    public void setCaregiverCode(String caregiverCode) {
+        this.caregiverCode = caregiverCode;
     }
 }

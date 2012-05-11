@@ -17,7 +17,7 @@ public class ReferralMapper {
     public Referral map(StepsovcCase stepsovcCase) {
         Referral newReferral = new Referral();
         newReferral.setBeneficiaryCode(stepsovcCase.getBeneficiary_code());
-        newReferral.setFacilityId(stepsovcCase.getService_provider());
+        newReferral.setFacilityCode(stepsovcCase.getFacility_code());
         newReferral.setServiceDate(stepsovcCase.getService_date());
         newReferral.setFollowupDate(stepsovcCase.getFollowup_date());
         newReferral.setVisitDate(stepsovcCase.getVisit_date());
@@ -50,7 +50,7 @@ public class ReferralMapper {
         referral.getSexuallyTransmittedInfection().setProvided(SERVICE_RECEIVED.equals(stepsovcCase.getSexually_transmitted_infection()));
         referral.setVisitDate(stepsovcCase.getVisit_date());
 
-        referral.setFacilityId(stepsovcCase.getService_provider());
+        referral.setFacilityCode(stepsovcCase.getFacility_code());
         referral.setServiceDate(stepsovcCase.getService_date());
 
         return referral;

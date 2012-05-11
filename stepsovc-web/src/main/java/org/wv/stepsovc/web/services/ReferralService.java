@@ -45,15 +45,15 @@ public class ReferralService {
     }
 
     private void checkForAvailableDate(Referral referral) {
-        FacilityAvailability facilityAvailability = facilityService.getFacilityAvailability(referral.getFacilityId(), referral.getServiceDate());
-        if(!facilityAvailability.isAvailable()) {
+        FacilityAvailability facilityAvailability = facilityService.getFacilityAvailability(referral.getFacilityCode(), referral.getServiceDate());
+        if (!facilityAvailability.isAvailable()) {
             referral.setServiceDate(facilityAvailability.getNextAvailableDate());
         }
     }
 
     private void inactivateOldReferral(StepsovcCase stepsovcCase) {
         Referral oldActiveReferral = allReferrals.findActiveReferral(stepsovcCase.getBeneficiary_code());
-        if(oldActiveReferral != null) {
+        if (oldActiveReferral != null) {
             oldActiveReferral.setActive(false);
             allReferrals.update(oldActiveReferral);
         }
@@ -75,7 +75,7 @@ public class ReferralService {
     }
 
     private void checkForNewReferral(StepsovcCase stepsovcCase) {
-        if(stepsovcCase.getService_provider() != null && !"".equals(stepsovcCase.getService_provider().trim())) {
+        if (stepsovcCase.getFacility_code() != null && !"".equals(stepsovcCase.getFacility_code().trim())) {
             assignToFacility(stepsovcCase);
         } else {
             removeFromCurrentFacility(stepsovcCase);
@@ -86,7 +86,7 @@ public class ReferralService {
         LocalDate fromDate = DateUtils.getLocalDate(fromDateStr);
         LocalDate toDate = DateUtils.getLocalDate(toDateStr);
 
-        while(!fromDate.isAfter(toDate)) {
+        while (!fromDate.isAfter(toDate)) {
             List<Referral> referrals = allReferrals.findActiveReferrals(facilityId, DateUtils.getFormattedDate(fromDate.toDate()));
             updateReferrals(nextAvailableDate, referrals);
             fromDate = fromDate.plusDays(1);
@@ -106,7 +106,7 @@ public class ReferralService {
     }
 
     void assignToFacility(StepsovcCase stepsovcCase) {
-        String groupId = commcareGateway.getGroupId(stepsovcCase.getService_provider());
+        String groupId = commcareGateway.getGroupId(stepsovcCase.getFacility_code());
         String ownerId = stepsovcCase.getUser_id() + "," + groupId;
         stepsovcCase.setOwner_id(ownerId);
         updateReferralOwner(stepsovcCase);

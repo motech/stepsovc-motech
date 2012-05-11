@@ -45,7 +45,7 @@ public class ReferralServiceTest {
     }
 
     @Test
-    public void shouldUpdateReferralOwnerWhileCreatingNewReferral(){
+    public void shouldUpdateReferralOwnerWhileCreatingNewReferral() {
 
         ArgumentCaptor<Referral> referralArgumentCaptor = ArgumentCaptor.forClass(Referral.class);
         ArgumentCaptor<StepsovcCase> updatedBeneficiary = ArgumentCaptor.forClass(StepsovcCase.class);
@@ -55,16 +55,16 @@ public class ReferralServiceTest {
 
         StepsovcCase stepsovcCase = ReferralMapperTest.createCaseForReferral(code, "2012-05-30", "FAC001");
 
-        doReturn(groupId).when(commcareGateway).getGroupId(stepsovcCase.getService_provider());
+        doReturn(groupId).when(commcareGateway).getGroupId(stepsovcCase.getFacility_code());
         doReturn(null).when(mockAllReferrals).findActiveReferral(code);
-        doReturn(new FacilityAvailability(true, null)).when(facilityService).getFacilityAvailability(stepsovcCase.getService_provider(),stepsovcCase.getService_date());
+        doReturn(new FacilityAvailability(true, null)).when(facilityService).getFacilityAvailability(stepsovcCase.getFacility_code(), stepsovcCase.getService_date());
 
         referralService.addNewReferral(stepsovcCase);
 
         verify(mockAllReferrals).add(referralArgumentCaptor.capture());
 
         doNothing().when(mockAllReferrals).add(referralArgumentCaptor.getValue());
-        verify(commcareGateway).getGroupId(stepsovcCase.getService_provider());
+        verify(commcareGateway).getGroupId(stepsovcCase.getFacility_code());
 
         verify(referralService).updateReferralOwner(updatedBeneficiary.capture());
 
@@ -76,7 +76,7 @@ public class ReferralServiceTest {
     }
 
     @Test
-    public void shouldMoveReferralToAvailableDateIfFacilityIsUnavailable(){
+    public void shouldMoveReferralToAvailableDateIfFacilityIsUnavailable() {
 
         ArgumentCaptor<Referral> referralArgumentCaptor = ArgumentCaptor.forClass(Referral.class);
 
@@ -85,9 +85,9 @@ public class ReferralServiceTest {
 
         StepsovcCase stepsovcCase = ReferralMapperTest.createCaseForReferral(code, "2012-05-30", "FAC001");
 
-        doReturn(groupId).when(commcareGateway).getGroupId(stepsovcCase.getService_provider());
+        doReturn(groupId).when(commcareGateway).getGroupId(stepsovcCase.getFacility_code());
         doReturn(null).when(mockAllReferrals).findActiveReferral(code);
-        doReturn(new FacilityAvailability(false, "2012-06-01")).when(facilityService).getFacilityAvailability(stepsovcCase.getService_provider(),stepsovcCase.getService_date());
+        doReturn(new FacilityAvailability(false, "2012-06-01")).when(facilityService).getFacilityAvailability(stepsovcCase.getFacility_code(), stepsovcCase.getService_date());
 
         referralService.addNewReferral(stepsovcCase);
 
@@ -98,12 +98,12 @@ public class ReferralServiceTest {
         doNothing().when(commcareGateway).updateReferralOwner(
                 anyString(), Matchers.<BeneficiaryFormRequest>any());
 
-        assertThat(referralArgumentCaptor.getValue().getServiceDate(),is("2012-06-01"));
+        assertThat(referralArgumentCaptor.getValue().getServiceDate(), is("2012-06-01"));
 
     }
 
     @Test
-    public void shouldRemoveFacilityFromOwnersWhileUpdatingReferralServices(){
+    public void shouldRemoveFacilityFromOwnersWhileUpdatingReferralServices() {
 
         ArgumentCaptor<Referral> referralArgumentCaptor = ArgumentCaptor.forClass(Referral.class);
         ArgumentCaptor<StepsovcCase> updatedBeneficiary = ArgumentCaptor.forClass(StepsovcCase.class);
@@ -114,7 +114,7 @@ public class ReferralServiceTest {
         StepsovcCase stepsovcCase = ReferralMapperTest.createCaseForUpdateService(code, "2012-05-31");
         String ownerId = "userid" + "," + groupId;
         stepsovcCase.setOwner_id(ownerId);
-        stepsovcCase.setService_provider(null);
+        stepsovcCase.setFacility_code(null);
 
         Referral referral = new ReferralMapper().map(stepsovcCase);
 
@@ -135,7 +135,7 @@ public class ReferralServiceTest {
     }
 
     @Test
-    public void shouldAssignToNewFacilityWhileUpdatingReferralServicesWithServiceProvider(){
+    public void shouldAssignToNewFacilityWhileUpdatingReferralServicesWithServiceProvider() {
 
         ArgumentCaptor<Referral> referralArgumentCaptor = ArgumentCaptor.forClass(Referral.class);
         ArgumentCaptor<StepsovcCase> updatedBeneficiary = ArgumentCaptor.forClass(StepsovcCase.class);
@@ -149,7 +149,7 @@ public class ReferralServiceTest {
         stepsovcCase.setOwner_id(ownerId);
 
         String groupName = "groupName";
-        stepsovcCase.setService_provider(groupName);
+        stepsovcCase.setFacility_code(groupName);
 
         doReturn(groupId2).when(commcareGateway).getGroupId(groupName);
 
@@ -168,7 +168,7 @@ public class ReferralServiceTest {
         doNothing().when(commcareGateway).updateReferralOwner(
                 anyString(), Matchers.<BeneficiaryFormRequest>any());
 
-        assertThat(updatedBeneficiary.getValue().getOwner_id(), is(stepsovcCase.getUser_id()+","+groupId2));
+        assertThat(updatedBeneficiary.getValue().getOwner_id(), is(stepsovcCase.getUser_id() + "," + groupId2));
     }
 
     @Test
@@ -177,12 +177,12 @@ public class ReferralServiceTest {
 
         String code = "ben001";
 
-        StepsovcCase stepsovcCase = ReferralMapperTest.createCaseForReferral(code,"2012-05-31", "FAC001");
+        StepsovcCase stepsovcCase = ReferralMapperTest.createCaseForReferral(code, "2012-05-31", "FAC001");
 
         doReturn(new Referral()).when(mockAllReferrals).findActiveReferral(code);
         doNothing().when(mockAllReferrals).add(Matchers.<Referral>any());
         doNothing().when(mockAllReferrals).update(Matchers.<Referral>any());
-        doReturn(new FacilityAvailability(true, null)).when(facilityService).getFacilityAvailability(stepsovcCase.getService_provider(),stepsovcCase.getService_date());
+        doReturn(new FacilityAvailability(true, null)).when(facilityService).getFacilityAvailability(stepsovcCase.getFacility_code(), stepsovcCase.getService_date());
 
         referralService.addNewReferral(stepsovcCase);
 
@@ -192,24 +192,24 @@ public class ReferralServiceTest {
     }
 
     @Test
-    public void shouldUpdateServiceDateForReferralsWhichFallOnServiceUnavailableDates(){
-        String facilityId="123";
-        String fromDateStr="2012-05-01";
-        String toDateStr="2012-05-04";
-        String nextAvailDate="2012-05-05";
+    public void shouldUpdateServiceDateForReferralsWhichFallOnServiceUnavailableDates() {
+        String facilityId = "123";
+        String fromDateStr = "2012-05-01";
+        String toDateStr = "2012-05-04";
+        String nextAvailDate = "2012-05-05";
 
         ArgumentCaptor<Referral> referralArgumentCaptor = ArgumentCaptor.forClass(Referral.class);
-        doReturn(Arrays.asList(new Referral(),new Referral())).when(mockAllReferrals).findActiveReferrals(facilityId,fromDateStr);
-        doReturn(Arrays.asList(new Referral())).when(mockAllReferrals).findActiveReferrals(facilityId,"2012-05-02");
-        doReturn(new ArrayList<Referral>()).when(mockAllReferrals).findActiveReferrals(facilityId,"2012-05-03");
-        doReturn(Arrays.asList(new Referral())).when(mockAllReferrals).findActiveReferrals(facilityId,toDateStr);
+        doReturn(Arrays.asList(new Referral(), new Referral())).when(mockAllReferrals).findActiveReferrals(facilityId, fromDateStr);
+        doReturn(Arrays.asList(new Referral())).when(mockAllReferrals).findActiveReferrals(facilityId, "2012-05-02");
+        doReturn(new ArrayList<Referral>()).when(mockAllReferrals).findActiveReferrals(facilityId, "2012-05-03");
+        doReturn(Arrays.asList(new Referral())).when(mockAllReferrals).findActiveReferrals(facilityId, toDateStr);
 
         referralService.updateReferralsServiceDate(facilityId, fromDateStr, toDateStr, nextAvailDate);
 
-        verify(mockAllReferrals,times(4)).update(referralArgumentCaptor.capture());
+        verify(mockAllReferrals, times(4)).update(referralArgumentCaptor.capture());
         List<Referral> actualReferrals = referralArgumentCaptor.getAllValues();
         for (Referral actualReferral : actualReferrals) {
-            assertThat(actualReferral.getServiceDate(),is(nextAvailDate));
+            assertThat(actualReferral.getServiceDate(), is(nextAvailDate));
         }
     }
 

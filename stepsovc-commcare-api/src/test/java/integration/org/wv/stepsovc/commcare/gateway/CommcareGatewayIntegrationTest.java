@@ -24,7 +24,7 @@ public class CommcareGatewayIntegrationTest {
 
     @Ignore
     public void shouldCreateNewBeneficiary() throws Exception {
-        final BeneficiaryFormRequest beneficiaryFormRequest = getBeneficiaryFormRequest("f98589102c60fcc2e0f3c422bb361ebd", "cg1", UUID.randomUUID().toString(), "Albie-case");
+        final BeneficiaryFormRequest beneficiaryFormRequest = getBeneficiaryFormRequest("7ac0b33f0dac4a81c6d1fbf1bd9dfee0", "cg1", UUID.randomUUID().toString(), "Albie2-case");
         String url = "http://127.0.0.1:7000/a/stepsovc/receiver";
         commcareGateway.createNewBeneficiary(url, beneficiaryFormRequest);
     }
@@ -57,16 +57,15 @@ public class CommcareGatewayIntegrationTest {
 
 
         final CareGiverInformation careGiverInformation = new CareGiverInformation();
-        careGiverInformation.setId(userId);
         careGiverInformation.setName(caregiveName);
+        careGiverInformation.setCode("WS/123");
+        careGiverInformation.setCommcareUserId(userId);
 
         final CaseInformation caseInformation = new CaseInformation();
         caseInformation.setCaseTypeId("Beneficiary");
         caseInformation.setId(caseId);
         caseInformation.setDateModified("2012-05-02T22:18:45.071+05:30");
-        caseInformation.setExternalId(userId);
         caseInformation.setUserId(userId);
-        caseInformation.setName(caseName);
         caseInformation.setOwnerId("23asdf2342sdf");
 
 
@@ -97,7 +96,7 @@ public class CommcareGatewayIntegrationTest {
                 "        <title>MR</title>\n" +
                 "    </beneficiary_information>\n" +
                 "    <caregiver_information>\n" +
-                "        <caregiver_id>f98589102c60fcc2e0f3c422bb361ebd</caregiver_id>\n" +
+                "        <caregiver_code>WS/123</caregiver_code>\n" +
                 "        <caregiver_name>cg1</caregiver_name>\n" +
                 "    </caregiver_information>\n" +
                 "    <form_type>beneficiary_registration</form_type>\n" +
@@ -106,9 +105,9 @@ public class CommcareGatewayIntegrationTest {
                 "        <date_modified>2012-05-02T22:18:45.071+05:30</date_modified>\n" +
                 "        <create>\n" +
                 "            <case_type_id>Beneficiary</case_type_id>\n" +
-                "            <case_name>test-case</case_name>\n" +
+                "            <case_name>XYZ</case_name>\n" +
                 "            <user_id>f98589102c60fcc2e0f3c422bb361ebd</user_id>\n" +
-                "            <external_id>f98589102c60fcc2e0f3c422bb361ebd</external_id>\n" +
+                "            <external_id>XYZ</external_id>\n" +
                 "        </create>\n" +
                 "        <update>\n" +
                 "            <beneficiary_dob>12-12-1988</beneficiary_dob>\n" +
@@ -119,14 +118,14 @@ public class CommcareGatewayIntegrationTest {
                 "            <sex>male</sex>\n" +
                 "            <form_type>beneficiary_registration</form_type>\n" +
                 "            <beneficiary_code>XYZ</beneficiary_code>\n" +
-                "            <caregiver_id>f98589102c60fcc2e0f3c422bb361ebd</caregiver_id>\n" +
+                "            <caregiver_code>WS/123</caregiver_code>\n" +
                 "        </update>\n" +
                 "    </case>\n" +
                 "    <meta>\n" +
                 "        <deviceID>sadsa</deviceID>\n" +
                 "        <timeStart>2012-05-02T22:18:45.071+05:30</timeStart>\n" +
                 "        <timeEnd>2012-05-02T22:18:45.071+05:30</timeEnd>\n" +
-                "        <username>cg1</username>\n" +
+                "        <username>WS/123</username>\n" +
                 "        <userID>f98589102c60fcc2e0f3c422bb361ebd</userID>\n" +
                 "    </meta>\n" +
                 "</data>";
@@ -148,7 +147,7 @@ public class CommcareGatewayIntegrationTest {
                 "        <deviceID>sadsa</deviceID>\n" +
                 "        <timeStart>2012-05-02T22:18:45.071+05:30</timeStart>\n" +
                 "        <timeEnd>2012-05-02T22:18:45.071+05:30</timeEnd>\n" +
-                "        <username>cg1</username>\n" +
+                "        <username>WS/123</username>\n" +
                 "        <userID>f98589102c60fcc2e0f3c422bb361ebd</userID>\n" +
                 "    </meta>\n" +
                 "</data>\n";

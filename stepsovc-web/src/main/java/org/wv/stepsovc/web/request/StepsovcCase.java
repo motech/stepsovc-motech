@@ -6,7 +6,7 @@ public class StepsovcCase {
     private String case_id;
 
     /* Facility Case starts */
-    private String facility_id;
+    private String facility_code;
     private String facility_name;
     private String service_unavailable_from;
     private String service_unavailable_to;
@@ -20,10 +20,9 @@ public class StepsovcCase {
     private String title;
     private String sex;
     private String caregiver_name;
-    private String caregiver_id;
+    private String caregiver_code;
     private String receiving_organization;
     private String form_type;
-    private String service_provider;
     private String service_date;
     private String followup_required;
     private String followup_date;
@@ -102,12 +101,13 @@ public class StepsovcCase {
     }
 
     private String beneficiary_code;
-    public String getFacility_id() {
-        return facility_id;
+
+    public String getFacility_code() {
+        return facility_code;
     }
 
-    public void setFacility_id(String facility_id) {
-        this.facility_id = facility_id;
+    public void setFacility_code(String facility_code) {
+        this.facility_code = facility_code;
     }
 
     public String getService_unavailable_from() {
@@ -212,14 +212,6 @@ public class StepsovcCase {
 
     public void setPmtct_na_reason(String pmtct_na_reason) {
         this.pmtct_na_reason = pmtct_na_reason;
-    }
-
-    public String getService_provider() {
-        return service_provider;
-    }
-
-    public void setService_provider(String service_provider) {
-        this.service_provider = service_provider;
     }
 
     public String getService_date() {
@@ -390,12 +382,12 @@ public class StepsovcCase {
         this.beneficiary_code = beneficiary_code;
     }
 
-    public String getCaregiver_id() {
-        return caregiver_id;
+    public String getCaregiver_code() {
+        return caregiver_code;
     }
 
-    public void setCaregiver_id(String caregiver_id) {
-        this.caregiver_id = caregiver_id;
+    public void setCaregiver_code(String caregiver_code) {
+        this.caregiver_code = caregiver_code;
     }
 
     public String getForm_type() {

@@ -6,8 +6,8 @@ import org.motechproject.http.client.service.HttpClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.velocity.VelocityEngineUtils;
-import org.wv.stepsovc.commcare.Factories.GroupFactory;
 import org.wv.stepsovc.commcare.domain.Group;
+import org.wv.stepsovc.commcare.factories.GroupFactory;
 import org.wv.stepsovc.commcare.repository.AllGroups;
 import org.wv.stepsovc.commcare.repository.AllUsers;
 import org.wv.stepsovc.utils.ConstantUtils;
@@ -56,7 +56,7 @@ public class CommcareGateway {
 
     public boolean createGroup(String groupName, String[] commcareUserIds, String domain) {
 
-        if(allGroups.getGroupByName(groupName) != null)
+        if (allGroups.getGroupByName(groupName) != null)
             return false;
 
         Group newGroup = GroupFactory.createGroup(groupName, commcareUserIds, domain);
@@ -64,6 +64,7 @@ public class CommcareGateway {
 
         return true;
     }
+
 
     public void createNewBeneficiary(String url, BeneficiaryFormRequest beneficiaryFormRequest) {
         model = new HashMap<String, Object>();
@@ -77,6 +78,7 @@ public class CommcareGateway {
         String xmlFromObject = getXmlFromObject(OWNER_UPDATE_FORM_TEMPLATE_PATH, model);
         httpClientService.post(url, xmlFromObject);
     }
+
 
     String getXmlFromObject(String templatePath, Map model) {
         return VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, templatePath, "UTF-8", model);

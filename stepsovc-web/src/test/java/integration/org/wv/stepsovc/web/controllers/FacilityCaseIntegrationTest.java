@@ -50,32 +50,32 @@ public class FacilityCaseIntegrationTest {
         stepsovcCaseController.createCase(caseForReferral2);
         stepsovcCaseController.createCase(caseForReferral3);
 
-        int maySecondReferralsBefore = allReferrals.findActiveReferrals(facilityId,maySecond).size();
-        assertNull(allFacilities.findFacilityById(facilityId));
+        int maySecondReferralsBefore = allReferrals.findActiveReferrals(facilityId, maySecond).size();
+        assertNull(allFacilities.findFacilityByCode(facilityId));
 
         stepsovcCaseController.createCase(facilityCase);
-        assertNotNull(allFacilities.findFacilityById(facilityId));
+        assertNotNull(allFacilities.findFacilityByCode(facilityId));
 
-        int maySecondReferralsAfter = allReferrals.findActiveReferrals(facilityId,maySecond).size();
-        assertThat(maySecondReferralsAfter, is(maySecondReferralsBefore+2));
+        int maySecondReferralsAfter = allReferrals.findActiveReferrals(facilityId, maySecond).size();
+        assertThat(maySecondReferralsAfter, is(maySecondReferralsBefore + 2));
 
         facilityCase = createFacilityCase(facilityId, "2012-02-01", "2012-02-01");
         stepsovcCaseController.createCase(facilityCase);
-        assertThat(allFacilities.findFacilityById(facilityId).getServiceUnavailabilities().size(), is(2));
+        assertThat(allFacilities.findFacilityByCode(facilityId).getServiceUnavailabilities().size(), is(2));
 
         StepsovcCase caseForReferral4 = ReferralMapperTest.createCaseForReferral(benCode3, "2012-02-01", facilityId);
         caseForReferral4.setForm_type(BeneficiaryCaseUpdateType.NEW_REFERRAL.getType());
 
         stepsovcCaseController.createCase(caseForReferral4);
 
-        assertThat(allReferrals.findActiveReferral(benCode3).getServiceDate(),is("2012-02-02"));
+        assertThat(allReferrals.findActiveReferral(benCode3).getServiceDate(), is("2012-02-02"));
 
     }
 
     private StepsovcCase createFacilityCase(String facilityId, String from, String toDate) {
         StepsovcCase stepsovcCase = new StepsovcCase();
         stepsovcCase.setCase_type(CaseType.FACILITY_CASE.getType());
-        stepsovcCase.setFacility_id(facilityId);
+        stepsovcCase.setFacility_code(facilityId);
         stepsovcCase.setFacility_name("testName");
         stepsovcCase.setService_unavailable_reason("testReason");
         stepsovcCase.setService_unavailable_from(from);
@@ -85,7 +85,7 @@ public class FacilityCaseIntegrationTest {
 
     @After
     public void clearAll() throws SchedulerException {
-        allFacilities.remove(allFacilities.findFacilityById(facilityId));
+        allFacilities.remove(allFacilities.findFacilityByCode(facilityId));
         allReferrals.removeAllByBeneficiary(benCode1);
         allReferrals.removeAllByBeneficiary(benCode2);
         allReferrals.removeAllByBeneficiary(benCode3);

@@ -11,13 +11,24 @@
     <properties>
         <motech-platform.version>0.10-SNAPSHOT</motech-platform.version>
     </properties>
-    <artifactId>stepsovc-commcare-api</artifactId>
+    <artifactId>stepsovc-tools</artifactId>
     <dependencies>
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk16</artifactId>
             <version>1.46</version>
         </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>1.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wv.stepsovc</groupId>
+            <artifactId>stepsovc-commcare-api</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
     </dependencies>
     <build>
         <plugins>

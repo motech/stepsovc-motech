@@ -3,16 +3,26 @@ package org.wv.stepsovc.vo;
 
 public class CareGiverInformation {
 
-    private String id;
+    private String code;
 
     private String name;
 
-    public String getId() {
-        return id;
+    private String commcareUserId;
+
+    public String getCommcareUserId() {
+        return commcareUserId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setCommcareUserId(String commcareUserId) {
+        this.commcareUserId = commcareUserId;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getName() {

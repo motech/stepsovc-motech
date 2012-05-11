@@ -26,7 +26,7 @@ public class ReferralMapperTest {
         assertThat(newReferral.getBeneficiaryCode(), is(stepsovcCase.getBeneficiary_code()));
         assertThat(newReferral.getCondoms().isReferred(), is(ReferralMapper.REFERRED.equals(stepsovcCase.getCondoms())));
         assertThat(newReferral.getEndOfLifeHospice().isReferred(), is(ReferralMapper.REFERRED.equals(stepsovcCase.getEnd_of_life_hospice())));
-        assertThat(newReferral.getFacilityId(), is(stepsovcCase.getService_provider()));
+        assertThat(newReferral.getFacilityCode(), is(stepsovcCase.getFacility_code()));
         assertThat(newReferral.getFamilyPlanning().isReferred(), is(ReferralMapper.REFERRED.equals(stepsovcCase.getFamily_planning())));
         assertThat(newReferral.getHivCounseling().isReferred(), is(ReferralMapper.REFERRED.equals(stepsovcCase.getHiv_counseling())));
         assertThat(newReferral.getNewDiagnosis().isReferred(), is(ReferralMapper.REFERRED.equals(stepsovcCase.getNew_diagnosis())));
@@ -56,7 +56,7 @@ public class ReferralMapperTest {
         stepsovcCase.setOther_health_services("Referred");
         stepsovcCase.setVisit_date("1988-12-23");
         stepsovcCase.setService_date(serviceDate);
-        stepsovcCase.setService_provider(facilityId);
+        stepsovcCase.setFacility_code(facilityId);
         stepsovcCase.setUser_id("Userid001");
 
         return stepsovcCase;
@@ -69,7 +69,7 @@ public class ReferralMapperTest {
         stepsovcCase.setBeneficiary_code(code);
         stepsovcCase.setBeneficiary_dob("10-10-1967");
         stepsovcCase.setBeneficiary_name("Ben_Name");
-        stepsovcCase.setCaregiver_id("CareGiverID");
+        stepsovcCase.setCaregiver_code("CareGiverID");
         stepsovcCase.setCaregiver_name("CareGiverName");
         return stepsovcCase;
     }
@@ -98,7 +98,7 @@ public class ReferralMapperTest {
         assertThat(newReferral.getPmtct().isProvided(), is(ReferralMapper.SERVICE_RECEIVED.equals(stepsovcCase.getPmtct())));
         assertThat(newReferral.getSexuallyTransmittedInfection().isProvided(), is(ReferralMapper.SERVICE_RECEIVED.equals(stepsovcCase.getSexually_transmitted_infection())));
 
-        assertThat(newReferral.getFacilityId(), is(stepsovcCase.getService_provider()));
+        assertThat(newReferral.getFacilityCode(), is(stepsovcCase.getFacility_code()));
         assertThat(newReferral.getServiceDate(), is(stepsovcCase.getService_date()));
     }
 
@@ -156,7 +156,7 @@ public class ReferralMapperTest {
         stepsovcCase.setPain_management("Received");
         stepsovcCase.setOther_health_services("Received");
         stepsovcCase.setArt_adherence_counseling("Received");
-        stepsovcCase.setService_provider("ABC");
+        stepsovcCase.setFacility_code("ABC");
         stepsovcCase.setService_date(null);
         stepsovcCase.setVisit_date(visitDate);
 

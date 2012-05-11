@@ -27,12 +27,12 @@ public class FacilityService {
     public void makeFacilityUnavailable(StepsovcCase facilityCase) {
         String nextAvailableDate = null;
         String serviceUnavailableTo = facilityCase.getService_unavailable_to();
-        Facility facility = allFacilities.findFacilityById(facilityCase.getFacility_id());
+        Facility facility = allFacilities.findFacilityByCode(facilityCase.getFacility_code());
 
         ServiceUnavailability serviceUnavailability = new ServiceUnavailability(facilityCase.getService_unavailable_reason(), facilityCase.getService_unavailable_from(), serviceUnavailableTo);
-        if(facility == null) {
+        if (facility == null) {
             List<ServiceUnavailability> serviceUnavailabilities = Arrays.asList(serviceUnavailability);
-            facility = new Facility(facilityCase.getFacility_id(), facilityCase.getFacility_name(), serviceUnavailabilities);
+            facility = new Facility(facilityCase.getFacility_code(), facilityCase.getFacility_name(), serviceUnavailabilities);
             allFacilities.add(facility);
         } else {
             facility.getServiceUnavailabilities().add(serviceUnavailability);
@@ -43,13 +43,13 @@ public class FacilityService {
             nextAvailableDate = getFacilityAvailability(DateUtils.nextDateStr(serviceUnavailableTo), facility).getNextAvailableDate();
         } catch (ParseException e) {
         }
-        referralService.updateReferralsServiceDate(facilityCase.getFacility_id(),facilityCase.getService_unavailable_from(),facilityCase.getService_unavailable_to(), nextAvailableDate);
+        referralService.updateReferralsServiceDate(facilityCase.getFacility_code(), facilityCase.getService_unavailable_from(), facilityCase.getService_unavailable_to(), nextAvailableDate);
     }
 
     public FacilityAvailability getFacilityAvailability(String facilityId, String serviceDateStr) {
 
-        Facility facility = allFacilities.findFacilityById(facilityId);
-        return facility == null ? new FacilityAvailability(true, null ) : getFacilityAvailability(serviceDateStr, facility);
+        Facility facility = allFacilities.findFacilityByCode(facilityId);
+        return facility == null ? new FacilityAvailability(true, null) : getFacilityAvailability(serviceDateStr, facility);
     }
 
     private FacilityAvailability getFacilityAvailability(String serviceDateStr, Facility facility) {
@@ -68,7 +68,7 @@ public class FacilityService {
                         (serviceDate.after(fromDate) && serviceDate.before(toDate))) {
                     serviceDate = DateUtils.nextDate(toDate);
                     isAvailable = false;
-                } else if(!isAvailable) {
+                } else if (!isAvailable) {
                     break;
                 }
             }

@@ -11,7 +11,7 @@ public class Referral extends MotechBaseDataObject {
     @JsonProperty
     private String beneficiaryCode;
     @JsonProperty
-    private String facilityId;
+    private String facilityCode;
     @JsonProperty
     private String visitDate;
     @JsonProperty
@@ -153,12 +153,12 @@ public class Referral extends MotechBaseDataObject {
         this.beneficiaryCode = beneficiaryCode;
     }
 
-    public String getFacilityId() {
-        return facilityId;
+    public String getFacilityCode() {
+        return facilityCode;
     }
 
-    public void setFacilityId(String facilityId) {
-        this.facilityId = facilityId;
+    public void setFacilityCode(String facilityCode) {
+        this.facilityCode = facilityCode;
     }
 
     public String getVisitDate() {

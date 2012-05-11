@@ -11,5 +11,7 @@ public class Caregiver extends MotechBaseDataObject {
     @JsonProperty
     private String id;
     @JsonProperty
+    private String code;
+    @JsonProperty
     private String phoneNumber;
 }

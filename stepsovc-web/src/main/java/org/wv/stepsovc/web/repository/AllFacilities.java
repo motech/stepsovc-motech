@@ -14,16 +14,16 @@ import org.wv.stepsovc.web.domain.Facility;
 import java.util.List;
 
 @Repository
-public class AllFacilities extends MotechBaseRepository<Facility>{
+public class AllFacilities extends MotechBaseRepository<Facility> {
 
     @Autowired
     protected AllFacilities(@Qualifier("stepsovcDbConnector") CouchDbConnector dbCouchDbConnector) {
         super(Facility.class, dbCouchDbConnector);
     }
 
-    @View(name = "by_facilityId", map = "function(doc){ if(doc.type === 'Facility') emit([doc.facilityId],doc) }")
-    public Facility findFacilityById(String facilityId) {
-        ViewQuery viewQuery = createQuery("by_facilityId").key(ComplexKey.of(facilityId)).includeDocs(true);
+    @View(name = "by_facilityCode", map = "function(doc){ if(doc.type === 'Facility') emit([doc.facilityCode],doc) }")
+    public Facility findFacilityByCode(String facilityCode) {
+        ViewQuery viewQuery = createQuery("by_facilityCode").key(ComplexKey.of(facilityCode)).includeDocs(true);
         List<Facility> facilities = db.queryView(viewQuery, Facility.class);
         return CollectionUtils.isEmpty(facilities) ? null : facilities.get(0);
     }
