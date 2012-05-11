@@ -132,7 +132,9 @@ public class CommcareGatewayIntegrationTest {
     }
 
     private String getExpectedUpdateOwnerXml() {
-        return "<?xml version='1.0' ?><data uiVersion=\"1\" version=\"89\" name=\"update\" xmlns:jrm=\"http://dev.commcarehq.org/jr/xforms\" xmlns=\"http://openrosa.org/formdesigner/E45F3EFD-A7BE-42A6-97C2-5133E766A2AA\">\n" +
+        return "<?xml version='1.0' ?>\n" +
+                "<data uiVersion=\"1\" version=\"89\" name=\"update\"\n" +
+                "      xmlns=\"http://openrosa.org/formdesigner/E45F3EFD-A7BE-42A6-97C2-5133E766A2AA\">\n" +
                 "    <owner_id>23asdf2342sdf</owner_id>\n" +
                 "    <form_type>custom_update</form_type>\n" +
                 "    <case>\n" +
@@ -152,4 +154,5 @@ public class CommcareGatewayIntegrationTest {
                 "    </meta>\n" +
                 "</data>\n";
     }
+
 }
