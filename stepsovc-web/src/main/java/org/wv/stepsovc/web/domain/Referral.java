@@ -41,6 +41,9 @@ public class Referral extends MotechBaseDataObject {
     @JsonProperty
     private Service sexuallyTransmittedInfection;
 
+    public static final String META_FACILITY_ID = "facilityId";
+    public static final String VISIT_NAME = "Referral";
+
     public void setActive(boolean active) {
         this.active = active;
     }

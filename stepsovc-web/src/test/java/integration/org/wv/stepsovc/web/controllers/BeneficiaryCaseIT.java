@@ -19,8 +19,8 @@ import static org.wv.stepsovc.web.mapper.ReferralMapperTest.*;
 import static org.wv.stepsovc.web.request.BeneficiaryCaseUpdateType.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath*:applicationContext-Web.xml")
-public class BeneficiaryCaseIntegrationTest {
+@ContextConfiguration("classpath*:testApplicationContext.xml")
+public class BeneficiaryCaseIT {
 
     @Autowired
     StepsovcCaseController stepsovcCaseController;
@@ -74,7 +74,7 @@ public class BeneficiaryCaseIntegrationTest {
 
     @After
     public void clearAll() throws SchedulerException {
-        allBeneficiaries.remove(beneficiary);
+        allBeneficiaries.removeAll();
         allReferrals.removeAllByBeneficiary(beneficiaryCode);
     }
 
