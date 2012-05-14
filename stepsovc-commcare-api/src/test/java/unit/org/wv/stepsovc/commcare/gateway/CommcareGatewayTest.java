@@ -48,8 +48,8 @@ public class CommcareGatewayTest {
 
     @Test
     public void shouldSubmitFormWithoutAnyException() throws Exception {
-        final CommcareGateway spyCommcareGateway = spy(new CommcareGateway(mockHttpClientService, mockVelocityEngine, mockHttpClientEventListener, allGroups, allUsers));
-        final BeneficiaryFormRequest beneficiaryFormRequest = getBeneficiaryFormRequest("f98589102c60fcc2e0f3c422bb361ebd", "cg1", UUID.randomUUID().toString(), "Albie-case", null);
+        CommcareGateway spyCommcareGateway = spy(new CommcareGateway(mockHttpClientService, mockVelocityEngine, mockHttpClientEventListener, allGroups, allUsers));
+        BeneficiaryFormRequest beneficiaryFormRequest = getBeneficiaryFormRequest("f98589102c60fcc2e0f3c422bb361ebd", "cg1", UUID.randomUUID().toString(), "Albie-case", null);
         Map<String, Object> model = new HashMap<String, Object>();
         model.put(BENEFICIARY, beneficiaryFormRequest);
         doReturn(getExpectedXml()).when(spyCommcareGateway).getXmlFromObject(anyString(), eq(model));
@@ -61,8 +61,8 @@ public class CommcareGatewayTest {
 
     @Test
     public void shouldSubmitUpdateOwnerForm() {
-        final CommcareGateway spyCommcareGateway = spy(new CommcareGateway(mockHttpClientService, mockVelocityEngine, mockHttpClientEventListener, allGroups, allUsers));
-        final BeneficiaryFormRequest beneficiaryFormRequest = getBeneficiaryFormRequest("f98589102c60fcc2e0f3c422bb361ebd", "cg1", UUID.randomUUID().toString(), "Albie-case", null);
+        CommcareGateway spyCommcareGateway = spy(new CommcareGateway(mockHttpClientService, mockVelocityEngine, mockHttpClientEventListener, allGroups, allUsers));
+        BeneficiaryFormRequest beneficiaryFormRequest = getBeneficiaryFormRequest("f98589102c60fcc2e0f3c422bb361ebd", "cg1", UUID.randomUUID().toString(), "Albie-case", null);
         Map<String, Object> model = new HashMap<String, Object>();
         model.put(BENEFICIARY, beneficiaryFormRequest);
         doReturn(getExpectedXml()).when(spyCommcareGateway).getXmlFromObject(anyString(), eq(model));
@@ -77,7 +77,7 @@ public class CommcareGatewayTest {
 
         BeneficiaryFormRequest beneficiaryFormRequest = new BeneficiaryFormRequest();
 
-        final BeneficiaryInformation beneficiaryInformation = new BeneficiaryInformation();
+        BeneficiaryInformation beneficiaryInformation = new BeneficiaryInformation();
         beneficiaryInformation.setCode("XYZ");
         beneficiaryInformation.setName("Albie");
         beneficiaryInformation.setDob("12-12-1988");
@@ -86,19 +86,19 @@ public class CommcareGatewayTest {
         beneficiaryInformation.setReceivingOrganization("XAQ");
 
 
-        final CareGiverInformation careGiverInformation = new CareGiverInformation();
+        CareGiverInformation careGiverInformation = new CareGiverInformation();
         careGiverInformation.setCode(code);
         careGiverInformation.setName(caregiveName);
         careGiverInformation.setCommcareUserId(userId);
 
-        final CaseInformation caseInformation = new CaseInformation();
+        CaseInformation caseInformation = new CaseInformation();
         caseInformation.setCaseTypeId("beneficiary");
         caseInformation.setId(caseId);
         caseInformation.setDateModified("2012-05-02T22:18:45.071+05:30");
         caseInformation.setUserId(userId);
 
 
-        final MetaInformation metaInformation = new MetaInformation();
+        MetaInformation metaInformation = new MetaInformation();
         metaInformation.setDeviceId("sadsa");
         metaInformation.setTimeStart("2012-05-02T22:18:45.071+05:30");
         metaInformation.setTimeEnd("2012-05-02T22:18:45.071+05:30");
