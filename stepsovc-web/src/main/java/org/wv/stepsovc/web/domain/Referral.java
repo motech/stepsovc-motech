@@ -4,10 +4,15 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.ektorp.support.TypeDiscriminator;
 import org.motechproject.model.MotechBaseDataObject;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @TypeDiscriminator("doc.type == 'Referral'")
 public class Referral extends MotechBaseDataObject {
+
     @JsonProperty
-    private boolean active;
+    private String ovcId;
+
     @JsonProperty
     private String beneficiaryCode;
     @JsonProperty
@@ -40,6 +45,18 @@ public class Referral extends MotechBaseDataObject {
     private Service pmtct;
     @JsonProperty
     private Service sexuallyTransmittedInfection;
+    public static final String META_FACILITY_ID = "facilityId";
+
+    public static final String VISIT_NAME = "Referral";
+    @JsonProperty
+    private boolean active;
+    public String getOvcId() {
+        return ovcId;
+    }
+
+    public void setOvcId(String ovcId) {
+        this.ovcId = ovcId;
+    }
 
     public void setActive(boolean active) {
         this.active = active;
@@ -175,5 +192,11 @@ public class Referral extends MotechBaseDataObject {
 
     public void setServiceDate(String serviceDate) {
         this.serviceDate = serviceDate;
+    }
+
+    public Map<String,Object> appointmentDataMap() {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put(META_FACILITY_ID, facilityCode);
+        return params;
     }
 }

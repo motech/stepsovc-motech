@@ -18,8 +18,8 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath*:applicationContext-Web.xml")
-public class FacilityCaseIntegrationTest {
+@ContextConfiguration("classpath*:testApplicationContext.xml")
+public class FacilityCaseIT {
 
     @Autowired
     StepsovcCaseController stepsovcCaseController;
@@ -85,9 +85,7 @@ public class FacilityCaseIntegrationTest {
 
     @After
     public void clearAll() throws SchedulerException {
-        allFacilities.remove(allFacilities.findFacilityByCode(facilityId));
-        allReferrals.removeAllByBeneficiary(benCode1);
-        allReferrals.removeAllByBeneficiary(benCode2);
-        allReferrals.removeAllByBeneficiary(benCode3);
+        allFacilities.removeAll();
+        allReferrals.removeAll();
     }
 }

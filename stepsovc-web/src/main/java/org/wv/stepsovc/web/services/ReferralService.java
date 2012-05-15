@@ -9,6 +9,7 @@ import org.wv.stepsovc.vo.BeneficiaryFormRequest;
 import org.wv.stepsovc.web.domain.Referral;
 import org.wv.stepsovc.web.mapper.BeneficiaryMapper;
 import org.wv.stepsovc.web.mapper.ReferralMapper;
+import org.wv.stepsovc.web.repository.AllAppointments;
 import org.wv.stepsovc.web.repository.AllReferrals;
 import org.wv.stepsovc.web.request.StepsovcCase;
 import org.wv.stepsovc.web.vo.FacilityAvailability;
@@ -28,6 +29,9 @@ public class ReferralService {
     @Autowired
     private FacilityService facilityService;
 
+    @Autowired
+    private AllAppointments allAppointments;
+
     private String COMMCARE_URL;
 
     public ReferralService(String COMMCARE_URL) {
@@ -36,11 +40,13 @@ public class ReferralService {
 
     public void addNewReferral(StepsovcCase stepsovcCase) {
         logger.info("Handling new referral");
-        inactivateOldReferral(stepsovcCase);
+        inactivateOldReferral(stepsovcCase); // Todo : remove existing appointments
 
         Referral newReferral = new ReferralMapper().map(stepsovcCase);
         checkForAvailableDate(newReferral);
         assignToFacility(stepsovcCase);
+
+        allAppointments.scheduleNewReferral(newReferral.getOvcId(), newReferral.appointmentDataMap(), DateUtils.getDateTime(newReferral.getServiceDate()));
         allReferrals.add(newReferral);
     }
 

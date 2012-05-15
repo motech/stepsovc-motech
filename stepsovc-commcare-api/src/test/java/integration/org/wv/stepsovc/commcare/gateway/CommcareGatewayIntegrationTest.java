@@ -24,15 +24,15 @@ public class CommcareGatewayIntegrationTest {
 
     @Ignore
     public void shouldCreateNewBeneficiary() throws Exception {
-        final BeneficiaryFormRequest beneficiaryFormRequest = getBeneficiaryFormRequest("7ac0b33f0dac4a81c6d1fbf1bd9dfee0", "cg1", UUID.randomUUID().toString(), "Albie2-case");
+        BeneficiaryFormRequest beneficiaryFormRequest = getBeneficiaryFormRequest("7ac0b33f0dac4a81c6d1fbf1bd9dfee0", "cg1", UUID.randomUUID().toString(), "Albie2-case");
         String url = "http://127.0.0.1:7000/a/stepsovc/receiver";
         commcareGateway.createNewBeneficiary(url, beneficiaryFormRequest);
     }
 
     @Test
     public void testObjectToXmlConverion() {
-        final BeneficiaryFormRequest beneficiaryFormRequest = getBeneficiaryFormRequest("f98589102c60fcc2e0f3c422bb361ebd", "cg1", "c7264b49-4e3d-4659-8df3-7316539829cb", "test-case");
-        final HashMap<String, Object> model = new HashMap<String, Object>();
+        BeneficiaryFormRequest beneficiaryFormRequest = getBeneficiaryFormRequest("f98589102c60fcc2e0f3c422bb361ebd", "cg1", "c7264b49-4e3d-4659-8df3-7316539829cb", "test-case");
+        HashMap<String, Object> model = new HashMap<String, Object>();
         model.put(BENEFICIARY, beneficiaryFormRequest);
         String actual = commcareGateway.getXmlFromObject("/templates/beneficiary-form.xml", model);
         assertEquals(getExpectedXml(), actual);
@@ -47,7 +47,7 @@ public class CommcareGatewayIntegrationTest {
 
         BeneficiaryFormRequest beneficiaryFormRequest = new BeneficiaryFormRequest();
 
-        final BeneficiaryInformation beneficiaryInformation = new BeneficiaryInformation();
+        BeneficiaryInformation beneficiaryInformation = new BeneficiaryInformation();
         beneficiaryInformation.setCode("XYZ");
         beneficiaryInformation.setName("Albie");
         beneficiaryInformation.setDob("12-12-1988");
@@ -56,12 +56,12 @@ public class CommcareGatewayIntegrationTest {
         beneficiaryInformation.setReceivingOrganization("XAQ");
 
 
-        final CareGiverInformation careGiverInformation = new CareGiverInformation();
+        CareGiverInformation careGiverInformation = new CareGiverInformation();
         careGiverInformation.setName(caregiveName);
         careGiverInformation.setCode("WS/123");
         careGiverInformation.setId(userId);
 
-        final CaseInformation caseInformation = new CaseInformation();
+        CaseInformation caseInformation = new CaseInformation();
         caseInformation.setCaseTypeId("Beneficiary");
         caseInformation.setId(caseId);
         caseInformation.setDateModified("2012-05-02T22:18:45.071+05:30");
@@ -69,7 +69,7 @@ public class CommcareGatewayIntegrationTest {
         caseInformation.setOwnerId("23asdf2342sdf");
 
 
-        final MetaInformation metaInformation = new MetaInformation();
+        MetaInformation metaInformation = new MetaInformation();
         metaInformation.setDeviceId("sadsa");
         metaInformation.setTimeStart("2012-05-02T22:18:45.071+05:30");
         metaInformation.setTimeEnd("2012-05-02T22:18:45.071+05:30");
