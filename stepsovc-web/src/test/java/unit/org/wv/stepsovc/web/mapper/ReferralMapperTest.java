@@ -142,7 +142,7 @@ public class ReferralMapperTest {
 
     }
 
-    public static StepsovcCase createCaseForUpdateService(String code, String visitDate) {
+    public static StepsovcCase createCaseForUpdateService(String code, String serviceDate) {
         StepsovcCase stepsovcCase = createCaseForReferral(code, null, "FAC001");
         stepsovcCase.setCondoms("Received");
         stepsovcCase.setEnd_of_life_hospice("Not Availed");
@@ -158,7 +158,7 @@ public class ReferralMapperTest {
         stepsovcCase.setArt_adherence_counseling("Received");
         stepsovcCase.setFacility_code("ABC");
         stepsovcCase.setService_date(null);
-        stepsovcCase.setVisit_date(visitDate);
+        stepsovcCase.setService_date(serviceDate);
 
         return stepsovcCase;
     }

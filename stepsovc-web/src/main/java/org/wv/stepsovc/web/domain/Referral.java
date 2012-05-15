@@ -54,8 +54,9 @@ public class Referral extends MotechBaseDataObject {
         return ovcId;
     }
 
-    public void setOvcId(String ovcId) {
+    public Referral setOvcId(String ovcId) {
         this.ovcId = ovcId;
+        return this;
     }
 
     public void setActive(boolean active) {
@@ -190,8 +191,9 @@ public class Referral extends MotechBaseDataObject {
         return serviceDate;
     }
 
-    public void setServiceDate(String serviceDate) {
+    public Referral setServiceDate(String serviceDate) {
         this.serviceDate = serviceDate;
+        return this;
     }
 
     public Map<String,Object> appointmentDataMap() {
