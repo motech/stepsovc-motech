@@ -1,5 +1,6 @@
 package org.wv.stepsovc.web.services;
 
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -7,10 +8,12 @@ import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.wv.stepsovc.commcare.gateway.CommcareGateway;
+import org.wv.stepsovc.utils.DateUtils;
 import org.wv.stepsovc.vo.BeneficiaryFormRequest;
 import org.wv.stepsovc.web.domain.Referral;
 import org.wv.stepsovc.web.mapper.ReferralMapper;
 import org.wv.stepsovc.web.mapper.ReferralMapperTest;
+import org.wv.stepsovc.web.repository.AllAppointments;
 import org.wv.stepsovc.web.repository.AllReferrals;
 import org.wv.stepsovc.web.request.StepsovcCase;
 import org.wv.stepsovc.web.vo.FacilityAvailability;
@@ -34,6 +37,8 @@ public class ReferralServiceTest {
     FacilityService facilityService;
     @Mock
     CommcareGateway commcareGateway;
+    @Mock
+    AllAppointments allAppointments;
 
     @Before
     public void setup() {
@@ -42,6 +47,7 @@ public class ReferralServiceTest {
         ReflectionTestUtils.setField(referralService, "allReferrals", mockAllReferrals);
         ReflectionTestUtils.setField(referralService, "commcareGateway", commcareGateway);
         ReflectionTestUtils.setField(referralService, "facilityService", facilityService);
+        ReflectionTestUtils.setField(referralService, "allAppointments", allAppointments);
     }
 
     @Test
@@ -62,6 +68,9 @@ public class ReferralServiceTest {
         referralService.addNewReferral(stepsovcCase);
 
         verify(mockAllReferrals).add(referralArgumentCaptor.capture());
+        DateTime appointmentDate = DateUtils.getDateTime(referralArgumentCaptor.getValue().getServiceDate());
+
+        verify(allAppointments).scheduleNewReferral(referralArgumentCaptor.getValue().getOvcId(), referralArgumentCaptor.getValue().appointmentDataMap(), appointmentDate);
 
         doNothing().when(mockAllReferrals).add(referralArgumentCaptor.getValue());
         verify(commcareGateway).getGroupId(stepsovcCase.getFacility_code());

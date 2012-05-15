@@ -1,6 +1,8 @@
 package org.wv.stepsovc.utils;
 
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+import org.motechproject.util.DateUtil;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -47,5 +49,13 @@ public class DateUtils {
         } catch (ParseException e) {
         }
         return null;
+    }
+
+    public static DateTime getDateTime(String serviceDate) {
+        try {
+            return DateUtil.newDateTime(simpleDateFormat.parse(serviceDate));
+        } catch (ParseException e) {
+            throw new RuntimeException("Date format wrong:" + serviceDate, e);
+        }
     }
 }

@@ -5,6 +5,7 @@ import org.wv.stepsovc.web.domain.Service;
 import org.wv.stepsovc.web.request.StepsovcCase;
 
 import java.text.SimpleDateFormat;
+import java.util.UUID;
 
 public class ReferralMapper {
 
@@ -13,6 +14,7 @@ public class ReferralMapper {
     static String NOT_REFERRED = "Not Referred";
     static String SERVICE_RECEIVED = "Received";
     static String SERVICE_NOT_AVAILED = "Not Availed";
+    public static final String RRID_PREFIX = "OVC-REF-";
 
     public Referral map(StepsovcCase stepsovcCase) {
         Referral newReferral = new Referral();
@@ -33,6 +35,7 @@ public class ReferralMapper {
         newReferral.setPmtct(new Service(REFERRED.equals(stepsovcCase.getPmtct())));
         newReferral.setSexuallyTransmittedInfection(new Service(REFERRED.equals(stepsovcCase.getSexually_transmitted_infection())));
         newReferral.setActive(true);
+        newReferral.setOvcId(RRID_PREFIX + UUID.randomUUID().toString());
 
         return newReferral;
     }

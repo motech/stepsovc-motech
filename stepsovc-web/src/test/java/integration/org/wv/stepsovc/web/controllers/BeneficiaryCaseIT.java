@@ -4,15 +4,21 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.motechproject.appointments.api.service.contract.VisitResponse;
+import org.motechproject.appointments.api.service.contract.VisitsQuery;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.wv.stepsovc.utils.DateUtils;
 import org.wv.stepsovc.web.domain.Beneficiary;
 import org.wv.stepsovc.web.domain.Referral;
+import org.wv.stepsovc.web.repository.AllAppointments;
 import org.wv.stepsovc.web.repository.AllBeneficiaries;
 import org.wv.stepsovc.web.repository.AllReferrals;
 import org.wv.stepsovc.web.request.StepsovcCase;
+
+import java.util.List;
 
 import static junit.framework.Assert.assertNotNull;
 import static org.wv.stepsovc.web.mapper.ReferralMapperTest.*;
@@ -33,6 +39,9 @@ public class BeneficiaryCaseIT {
 
     private Beneficiary beneficiary;
 
+    @Autowired
+    private AllAppointments allAppointments;
+
     @Test
     public void shouldCreateBeneficiaryReferralAndUpdateReferral() {
 
@@ -49,8 +58,10 @@ public class BeneficiaryCaseIT {
         stepsovcCaseController.createCase(stepsovcCase);
         Referral activeReferral = allReferrals.findActiveReferral(beneficiaryCode);
         assertNotNull(activeReferral);
-        assertReferrals(stepsovcCase, allReferrals.findActiveReferral(beneficiaryCode));
+        assertReferrals(stepsovcCase, activeReferral);
 
+        List<VisitResponse> visitResponses = allAppointments.find(new VisitsQuery().havingExternalId(activeReferral.getOvcId()));
+        org.wv.stepsovc.web.repository.AllAppointmentsIT.assertReferralAppointments(activeReferral.getOvcId(),DateUtils.getDateTime(activeReferral.getServiceDate()),activeReferral.appointmentDataMap(),visitResponses);
 
         stepsovcCase.setService_date("2012-5-12");
         stepsovcCaseController.createCase(stepsovcCase);
