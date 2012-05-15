@@ -9,15 +9,11 @@ import org.wv.stepsovc.crypto.PasswordDeriveBytes;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 
-import javax.crypto.*;
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-import java.io.IOException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.security.Security;
-import java.security.spec.InvalidKeySpecException;
 
 @Component
 public class DMISDataProcessor {
@@ -29,49 +25,62 @@ public class DMISDataProcessor {
     private String SALT_STR = "Kosher";
     private String INITIAL_VECTOR_STR = "#FZ/Pv%mXYB[mQq<";
 
-    public String decrypt(String cipherStr) throws Exception, InvalidKeyException, InvalidKeySpecException, NoSuchAlgorithmException, NoSuchPaddingException, BadPaddingException, InvalidAlgorithmParameterException {
-        final byte[] password = processKey(PASSWORD).getBytes(UTF_8);
-        final byte[] salt = SALT_STR.getBytes();
-        final byte[] iv = INITIAL_VECTOR_STR.getBytes();
-        Security.addProvider(new BouncyCastleProvider());
-        final SHA1Digest sha1Digest = new SHA1Digest();
-        PKCS5S1ParametersGenerator generator = new PasswordDeriveBytes(sha1Digest);
-        generator.init(password, salt, 2);
+    public String decrypt(String cipherStr) {
+        String decryptedString;
+        try {
+            byte[] password = processKey(PASSWORD).getBytes(UTF_8);
 
-        byte[] key = ((KeyParameter)
-                generator.generateDerivedParameters(32 * 8)).getKey();
+            final byte[] salt = SALT_STR.getBytes();
+            final byte[] iv = INITIAL_VECTOR_STR.getBytes();
+            Security.addProvider(new BouncyCastleProvider());
+            final SHA1Digest sha1Digest = new SHA1Digest();
+            PKCS5S1ParametersGenerator generator = new PasswordDeriveBytes(sha1Digest);
+            generator.init(password, salt, 2);
 
-        //"MyBzxx8aq4u9AxqKEmE69nWq+0g2TAfroRQGuLd6QWY="
-        final BASE64Decoder base64Decoder = new BASE64Decoder();
-        Cipher cipher = Cipher.getInstance(PADDING);
-        SecretKey secret = new SecretKeySpec(key, ALGORITHM);
-        cipher.init(Cipher.DECRYPT_MODE, secret, new IvParameterSpec(iv));
-        final byte[] bytes = cipher.doFinal(base64Decoder.decodeBuffer(cipherStr));
+            byte[] key = ((KeyParameter)
+                    generator.generateDerivedParameters(32 * 8)).getKey();
 
-        return new String(bytes, UTF_8);
+            //"MyBzxx8aq4u9AxqKEmE69nWq+0g2TAfroRQGuLd6QWY="
+            final BASE64Decoder base64Decoder = new BASE64Decoder();
+            Cipher cipher = Cipher.getInstance(PADDING);
+            SecretKey secret = new SecretKeySpec(key, ALGORITHM);
+            cipher.init(Cipher.DECRYPT_MODE, secret, new IvParameterSpec(iv));
+            byte[] bytes = cipher.doFinal(base64Decoder.decodeBuffer(cipherStr));
+            decryptedString = new String(bytes, UTF_8);
+        } catch (Exception e) {
+            decryptedString = cipherStr;
+            e.printStackTrace();
+        }
+        return decryptedString;
     }
 
-    public String encrypt(String plainStr) throws IOException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
-        final byte[] password = processKey(PASSWORD).getBytes(UTF_8);
-        final byte[] salt = SALT_STR.getBytes();
-        final byte[] iv = INITIAL_VECTOR_STR.getBytes();
-        Security.addProvider(new BouncyCastleProvider());
-        final SHA1Digest sha1Digest = new SHA1Digest();
-        PKCS5S1ParametersGenerator generator = new PasswordDeriveBytes(sha1Digest);
-        generator.init(password, salt, 2);
+    public String encrypt(String plainStr) {
+        String encryptedString;
+        try {
+            final byte[] password = processKey(PASSWORD).getBytes(UTF_8);
+            final byte[] salt = SALT_STR.getBytes();
+            final byte[] iv = INITIAL_VECTOR_STR.getBytes();
+            Security.addProvider(new BouncyCastleProvider());
+            final SHA1Digest sha1Digest = new SHA1Digest();
+            PKCS5S1ParametersGenerator generator = new PasswordDeriveBytes(sha1Digest);
+            generator.init(password, salt, 2);
 
-        byte[] key = ((KeyParameter)
-                generator.generateDerivedParameters(32 * 8)).getKey();
+            byte[] key = ((KeyParameter)
+                    generator.generateDerivedParameters(32 * 8)).getKey();
 
-        //"MyBzxx8aq4u9AxqKEmE69nWq+0g2TAfroRQGuLd6QWY="
-        final BASE64Decoder base64Decoder = new BASE64Decoder();
-        final BASE64Encoder base64Encoder = new BASE64Encoder();
-        Cipher cipher = Cipher.getInstance(PADDING);
-        SecretKey secret = new SecretKeySpec(key, ALGORITHM);
-        cipher.init(Cipher.ENCRYPT_MODE, secret, new IvParameterSpec(iv));
-        final byte[] bytes = cipher.doFinal(plainStr.getBytes(UTF_8));
-
-        return base64Encoder.encode(bytes);
+            //"MyBzxx8aq4u9AxqKEmE69nWq+0g2TAfroRQGuLd6QWY="
+            final BASE64Decoder base64Decoder = new BASE64Decoder();
+            final BASE64Encoder base64Encoder = new BASE64Encoder();
+            Cipher cipher = Cipher.getInstance(PADDING);
+            SecretKey secret = new SecretKeySpec(key, ALGORITHM);
+            cipher.init(Cipher.ENCRYPT_MODE, secret, new IvParameterSpec(iv));
+            final byte[] bytes = cipher.doFinal(plainStr.getBytes(UTF_8));
+            encryptedString = base64Encoder.encode(bytes);
+        } catch (Exception e) {
+            encryptedString = plainStr;
+            e.printStackTrace();
+        }
+        return encryptedString;
     }
 
     private String processKey(String strKey) {
