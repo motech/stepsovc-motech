@@ -8,7 +8,7 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class CSVImporter<T> extends DataImporter<T> {
+public abstract class CSV<T> extends DataImporter<T> {
 
 
     private ColumnPositionMappingStrategy columnPositionMappingStrategy = new ColumnPositionMappingStrategy<T>();

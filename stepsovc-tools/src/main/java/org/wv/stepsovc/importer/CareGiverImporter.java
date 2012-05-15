@@ -5,7 +5,7 @@ import org.wv.stepsovc.vo.CareGiverInformation;
 
 import java.util.List;
 
-public class CareGiverImporter extends CSVImporter<CareGiverInformation> {
+public class CareGiverImporter extends CSV<CareGiverInformation> {
 
     private DMISDataProcessor dmisDataProcessor = new DMISDataProcessor();
 
