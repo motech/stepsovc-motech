@@ -1,5 +1,6 @@
 package org.wv.stepsovc.web.controllers;
 
+import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
@@ -10,21 +11,22 @@ import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.wv.stepsovc.utils.DateUtils;
-import org.wv.stepsovc.web.domain.Beneficiary;
-import org.wv.stepsovc.web.domain.Referral;
-import org.wv.stepsovc.web.repository.AllAppointments;
-import org.wv.stepsovc.web.repository.AllBeneficiaries;
-import org.wv.stepsovc.web.repository.AllReferrals;
-import org.wv.stepsovc.web.request.StepsovcCase;
+import org.wv.stepsovc.core.domain.Beneficiary;
+import org.wv.stepsovc.core.domain.Referral;
+import org.wv.stepsovc.core.repository.AllAppointments;
+import org.wv.stepsovc.core.repository.AllBeneficiaries;
+import org.wv.stepsovc.core.repository.AllReferrals;
+import org.wv.stepsovc.core.request.StepsovcCase;
+import org.wv.stepsovc.core.utils.DateUtils;
 
 import java.util.List;
+import java.util.Map;
 
 import static junit.framework.Assert.assertNotNull;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static org.wv.stepsovc.web.mapper.ReferralMapperTest.*;
-import static org.wv.stepsovc.web.request.BeneficiaryCaseUpdateType.*;
+import static org.wv.stepsovc.core.request.BeneficiaryCaseUpdateType.*;
+import static org.wv.stepsovc.web.controllers.ReferralMapperTest.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath*:testApplicationContext.xml")
@@ -64,7 +66,7 @@ public class BeneficiaryCaseIT {
 
         String firstOvcId = activeReferral.getOvcId();
         List<VisitResponse> visitResponses = allAppointments.find(new VisitsQuery().havingExternalId(firstOvcId));
-        org.wv.stepsovc.web.repository.AllAppointmentsIT.assertReferralAppointments(activeReferral.getOvcId(),DateUtils.getDateTime(activeReferral.getServiceDate()),activeReferral.appointmentDataMap(),visitResponses);
+        assertReferralAppointments(activeReferral.getOvcId(), DateUtils.getDateTime(activeReferral.getServiceDate()), activeReferral.appointmentDataMap(), visitResponses);
 
         stepsovcCase.setService_date("2012-5-12");
         stepsovcCaseController.createCase(stepsovcCase);
@@ -86,6 +88,13 @@ public class BeneficiaryCaseIT {
         Assert.assertNotNull(allBeneficiaries.findBeneficiary(beneficiaryCode));
         assertReferralReasons(stepsovcCase, allReferrals.findActiveReferral(beneficiaryCode));
 
+    }
+
+    public static void assertReferralAppointments(String externalId, DateTime dueDate, Map<String, Object> params, List<VisitResponse> visitResponses) {
+        assertThat(visitResponses.size(), is(1));
+        assertThat(visitResponses.get(0).getExternalId(), is(externalId));
+        assertThat(visitResponses.get(0).getAppointmentDueDate(), is(dueDate));
+        assertThat(visitResponses.get(0).getVisitData(), is(params));
     }
 
     @After

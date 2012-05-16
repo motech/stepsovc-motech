@@ -9,7 +9,7 @@
     <context:annotation-config/>
     <context:component-scan base-package="org.motechproject.http.client"/>
     <context:component-scan base-package="org.wv.stepsovc.commcare"/>
-    <context:component-scan base-package="org.wv.stepsovc.utils"/>
+    <context:component-scan base-package="org.wv.stepsovc.core.core.core.utils"/>
     <context:component-scan base-package="org.wv.stepsovc.vo"/>
 
     <bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">

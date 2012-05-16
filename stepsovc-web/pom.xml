@@ -29,21 +29,6 @@
             <version>${spring.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <version>1.8.5</version>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-core</artifactId>
-            <version>1.4.9</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>1.8.5</version>
-        </dependency>
-        <dependency>
             <groupId>org.motechproject</groupId>
             <artifactId>case-service</artifactId>
             <version>0.1-SNAPSHOT</version>
@@ -55,45 +40,10 @@
         </dependency>
         <dependency>
             <groupId>org.wv.stepsovc</groupId>
-            <artifactId>stepsovc-commcare-api</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <artifactId>stepsovc-core</artifactId>
+            <version>${parent.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.motechproject</groupId>
-            <artifactId>motech-platform-scheduler</artifactId>
-            <version>${motech-platform.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.motechproject</groupId>
-            <artifactId>motech-appointments-api</artifactId>
-            <version>${motech-platform.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>9.1-901.jdbc4</version>
-        </dependency>
-        <dependency>
-            <groupId>org.motechproject</groupId>
-            <artifactId>motech-sms-api</artifactId>
-            <version>${motech-platform.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.motechproject</groupId>
-            <artifactId>motech-sms-smpp</artifactId>
-            <version>${motech-platform.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-log4j12</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.motechproject</groupId>
-            <artifactId>motech-cmslite-api</artifactId>
-            <version>${motech-platform.version}</version>
-        </dependency>
+
     </dependencies>
     <properties>
         <jetty.port>9979</jetty.port>

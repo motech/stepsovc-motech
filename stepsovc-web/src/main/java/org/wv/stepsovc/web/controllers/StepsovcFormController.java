@@ -4,7 +4,7 @@ import org.apache.log4j.Logger;
 import org.motechproject.casexml.service.CaseService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.wv.stepsovc.web.request.CustomForm;
+import org.wv.stepsovc.core.request.CustomForm;
 
 @Controller
 @RequestMapping("/form/**")

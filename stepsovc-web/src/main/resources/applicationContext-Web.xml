@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <import resource="classpath:applicationContext-Common.xml"/>
+    <import resource="classpath:applicationContext-Core.xml"/>
     <import resource="classpath:applicationSmsSmpp.xml"/>
+
+    <context:annotation-config/>
+    <context:spring-configured/>
+    <context:component-scan base-package="org.wv.stepsovc.web" />
+
 </beans>

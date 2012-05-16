@@ -8,11 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.wv.stepsovc.commcare.domain.CaseType;
-import org.wv.stepsovc.web.mapper.ReferralMapperTest;
-import org.wv.stepsovc.web.repository.AllFacilities;
-import org.wv.stepsovc.web.repository.AllReferrals;
-import org.wv.stepsovc.web.request.BeneficiaryCaseUpdateType;
-import org.wv.stepsovc.web.request.StepsovcCase;
+import org.wv.stepsovc.core.repository.AllFacilities;
+import org.wv.stepsovc.core.repository.AllReferrals;
+import org.wv.stepsovc.core.request.BeneficiaryCaseUpdateType;
+import org.wv.stepsovc.core.request.StepsovcCase;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
@@ -63,7 +62,7 @@ public class FacilityCaseIT {
         stepsovcCaseController.createCase(facilityCase);
         assertThat(allFacilities.findFacilityByCode(facilityId).getServiceUnavailabilities().size(), is(2));
 
-        StepsovcCase caseForReferral4 = ReferralMapperTest.createCaseForReferral(benCode3, "2012-02-01", facilityId);
+        StepsovcCase caseForReferral4 = org.wv.stepsovc.web.controllers.ReferralMapperTest.createCaseForReferral(benCode3, "2012-02-01", facilityId);
         caseForReferral4.setForm_type(BeneficiaryCaseUpdateType.NEW_REFERRAL.getType());
 
         stepsovcCaseController.createCase(caseForReferral4);

@@ -9,11 +9,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.wv.stepsovc.commcare.domain.CaseType;
-import org.wv.stepsovc.web.request.BeneficiaryCaseUpdateType;
-import org.wv.stepsovc.web.request.StepsovcCase;
-import org.wv.stepsovc.web.services.BeneficiaryService;
-import org.wv.stepsovc.web.services.FacilityService;
-import org.wv.stepsovc.web.services.ReferralService;
+import org.wv.stepsovc.core.services.BeneficiaryService;
+import org.wv.stepsovc.core.services.FacilityService;
+import org.wv.stepsovc.core.services.ReferralService;
+import org.wv.stepsovc.core.request.BeneficiaryCaseUpdateType;
+import org.wv.stepsovc.core.request.StepsovcCase;
 
 import java.io.IOException;
 
