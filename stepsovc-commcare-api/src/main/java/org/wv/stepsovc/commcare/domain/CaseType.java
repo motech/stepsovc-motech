@@ -1,4 +1,4 @@
-package org.wv.stepsovc.web.request;
+package org.wv.stepsovc.commcare.domain;
 
 public enum CaseType {
     BENEFICIARY_CASE("beneficiary"),

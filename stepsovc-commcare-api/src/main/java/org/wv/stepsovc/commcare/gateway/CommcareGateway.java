@@ -10,8 +10,8 @@ import org.wv.stepsovc.commcare.domain.Group;
 import org.wv.stepsovc.commcare.factories.GroupFactory;
 import org.wv.stepsovc.commcare.repository.AllGroups;
 import org.wv.stepsovc.commcare.repository.AllUsers;
-import org.wv.stepsovc.utils.ConstantUtils;
-import org.wv.stepsovc.vo.BeneficiaryFormRequest;
+import org.wv.stepsovc.vo.BeneficiaryInformation;
+import org.wv.stepsovc.vo.CareGiverInformation;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,9 +20,17 @@ import java.util.Map;
 @Component
 public class CommcareGateway {
 
-    private static final String BENEFICIARY_FORM_TEMPLATE_PATH = "/templates/beneficiary-form.xml";
+    public static final String BENEFICIARY_CASE_FORM_TEMPLATE_PATH = "/templates/beneficiary-case-form.xml";
 
-    private static final String OWNER_UPDATE_FORM_TEMPLATE_PATH = "/templates/update-owner-form.xml";
+    public static final String OWNER_UPDATE_FORM_TEMPLATE_PATH = "/templates/update-owner-form.xml";
+
+    public static final String USER_REGISTRATION_FORM_TEMPLATE_PATH = "/templates/user-registration-form.xml";
+
+    public static final String BENEFICIARY_FORM_KEY = "beneficiary";
+
+    public static final String CARE_GIVER_FORM_KEY = "caregiver";
+
+    public static final String COMMCARE_URL = "http://localhost:7000/a/stepsovc/receiver";
 
     private HttpClientService httpClientService;
 
@@ -33,7 +41,6 @@ public class CommcareGateway {
     private Map model;
 
     private AllGroups allGroups;
-
     private AllUsers allUsers;
 
 
@@ -66,19 +73,24 @@ public class CommcareGateway {
     }
 
 
-    public void createNewBeneficiary(String url, BeneficiaryFormRequest beneficiaryFormRequest) {
+    public void createNewBeneficiary(BeneficiaryInformation beneficiaryInformation) {
         model = new HashMap<String, Object>();
-        model.put(ConstantUtils.BENEFICIARY, beneficiaryFormRequest);
-        httpClientService.post(url, getXmlFromObject(BENEFICIARY_FORM_TEMPLATE_PATH, model));
+        model.put(BENEFICIARY_FORM_KEY, beneficiaryInformation);
+        httpClientService.post(COMMCARE_URL, getXmlFromObject(BENEFICIARY_CASE_FORM_TEMPLATE_PATH, model));
     }
 
-    public void updateReferralOwner(String url, BeneficiaryFormRequest beneficiaryFormRequest) {
+    public void updateReferralOwner(BeneficiaryInformation beneficiaryInformation) {
         model = new HashMap<String, Object>();
-        model.put(ConstantUtils.BENEFICIARY, beneficiaryFormRequest);
-        String xmlFromObject = getXmlFromObject(OWNER_UPDATE_FORM_TEMPLATE_PATH, model);
-        httpClientService.post(url, xmlFromObject);
+        model.put(BENEFICIARY_FORM_KEY, beneficiaryInformation);
+        httpClientService.post(COMMCARE_URL, getXmlFromObject(OWNER_UPDATE_FORM_TEMPLATE_PATH, model));
     }
 
+
+    public void registerUser(CareGiverInformation careGiverInformation) {
+        model = new HashMap<String, Object>();
+        model.put(CARE_GIVER_FORM_KEY, careGiverInformation);
+        httpClientService.post(COMMCARE_URL, getXmlFromObject(USER_REGISTRATION_FORM_TEMPLATE_PATH, model));
+    }
 
     String getXmlFromObject(String templatePath, Map model) {
         return VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, templatePath, "UTF-8", model);

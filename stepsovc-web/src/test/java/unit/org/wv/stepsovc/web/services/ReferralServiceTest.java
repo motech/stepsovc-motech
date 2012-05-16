@@ -8,7 +8,7 @@ import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.wv.stepsovc.commcare.gateway.CommcareGateway;
-import org.wv.stepsovc.vo.BeneficiaryFormRequest;
+import org.wv.stepsovc.vo.BeneficiaryInformation;
 import org.wv.stepsovc.web.domain.Referral;
 import org.wv.stepsovc.web.mapper.ReferralMapper;
 import org.wv.stepsovc.web.mapper.ReferralMapperTest;
@@ -77,7 +77,7 @@ public class ReferralServiceTest {
         verify(referralService).updateReferralOwner(updatedBeneficiary.capture());
 
         doNothing().when(commcareGateway).updateReferralOwner(
-                anyString(), Matchers.<BeneficiaryFormRequest>any());
+                Matchers.<BeneficiaryInformation>any());
 
         assertThat(updatedBeneficiary.getValue().getOwner_id(), is(stepsovcCase.getUser_id() + "," + groupId));
 
@@ -105,7 +105,7 @@ public class ReferralServiceTest {
         doNothing().when(mockAllReferrals).add(referralArgumentCaptor.getValue());
 
         doNothing().when(commcareGateway).updateReferralOwner(
-                anyString(), Matchers.<BeneficiaryFormRequest>any());
+                Matchers.<BeneficiaryInformation>any());
 
         assertThat(referralArgumentCaptor.getValue().getServiceDate(), is("2012-06-01"));
 
@@ -138,7 +138,7 @@ public class ReferralServiceTest {
         verify(referralService).removeFromCurrentFacility(updatedBeneficiary.capture());
 
         doNothing().when(commcareGateway).updateReferralOwner(
-                anyString(), Matchers.<BeneficiaryFormRequest>any());
+                Matchers.<BeneficiaryInformation>any());
 
         assertThat(updatedBeneficiary.getValue().getOwner_id(), is(stepsovcCase.getUser_id()));
     }
@@ -163,7 +163,7 @@ public class ReferralServiceTest {
 
         doReturn(groupId2).when(commcareGateway).getGroupId(groupName);
         doReturn(referral).when(mockAllReferrals).findActiveReferral(code);
-        doReturn(new FacilityAvailability(true,null)).when(facilityService).getFacilityAvailability(referral.getFacilityCode(),referral.getServiceDate());
+        doReturn(new FacilityAvailability(true, null)).when(facilityService).getFacilityAvailability(referral.getFacilityCode(), referral.getServiceDate());
 
         referralService.updateAvailedServices(stepsovcCase);
 
@@ -174,7 +174,7 @@ public class ReferralServiceTest {
         verify(referralService).assignToFacility(updatedBeneficiary.capture());
 
         doNothing().when(commcareGateway).updateReferralOwner(
-                anyString(), Matchers.<BeneficiaryFormRequest>any());
+                Matchers.<BeneficiaryInformation>any());
 
         assertThat(updatedBeneficiary.getValue().getOwner_id(), is(stepsovcCase.getUser_id() + "," + groupId2));
     }

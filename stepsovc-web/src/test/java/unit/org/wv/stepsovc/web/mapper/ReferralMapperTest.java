@@ -2,8 +2,8 @@ package org.wv.stepsovc.web.mapper;
 
 import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
+import org.wv.stepsovc.commcare.domain.CaseType;
 import org.wv.stepsovc.web.domain.Referral;
-import org.wv.stepsovc.web.request.CaseType;
 import org.wv.stepsovc.web.request.ServiceUnavailedType;
 import org.wv.stepsovc.web.request.StepsovcCase;
 
