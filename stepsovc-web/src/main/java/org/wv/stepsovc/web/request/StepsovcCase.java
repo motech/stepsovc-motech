@@ -24,6 +24,9 @@ public class StepsovcCase {
     private String receiving_organization;
     private String form_type;
     private String service_date;
+
+    private String service_details;
+
     private String followup_required;
     private String followup_date;
     private String visit_date;
@@ -51,6 +54,13 @@ public class StepsovcCase {
     private String date_modified;
     private String user_id;
     /* Beneficiary Case ends */
+    public String getService_details() {
+        return service_details;
+    }
+
+    public void setService_details(String service_details) {
+        this.service_details = service_details;
+    }
 
     public String getFacility_name() {
         return facility_name;

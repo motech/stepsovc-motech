@@ -45,6 +45,18 @@ public class Referral extends MotechBaseDataObject {
     private Service pmtct;
     @JsonProperty
     private Service sexuallyTransmittedInfection;
+
+    public String getServiceDetails() {
+        return serviceDetails;
+    }
+
+    public void setServiceDetails(String serviceDetails) {
+        this.serviceDetails = serviceDetails;
+    }
+
+    @JsonProperty
+    private String serviceDetails;
+
     public static final String META_FACILITY_ID = "facilityId";
 
     public static final String VISIT_NAME = "Referral";
