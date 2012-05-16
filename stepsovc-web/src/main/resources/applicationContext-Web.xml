@@ -1,51 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:util="http://www.springframework.org/schema/util"
-       xmlns:aop="http://www.springframework.org/schema/aop"
-       xmlns:beans="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
-                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
-                           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
-    <util:properties id="stepovcProperties" location="classpath:/stepsovc.properties"/>
-    <util:properties id="couchdbProperties" location="classpath:/couchdb.properties"/>
-
-    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="locations">
-            <list>
-                <value>classpath*:stepsovc.properties</value>
-            </list>
-        </property>
-        <property name="ignoreUnresolvablePlaceholders" value="true"/>
-    </bean>
-
-    <import resource="classpath:applicationPlatformScheduler.xml"/>
-    <import resource="classpath:applicationAppointmentsAPI.xml"/>
-    <import resource="classpath:applicationContext-stepsovc-commcare-api.xml"/>
-
-    <context:component-scan base-package="org.wv.stepsovc"></context:component-scan>
-    <context:spring-configured/>
-    <context:annotation-config/>
-
-    <bean id="beneficiaryService" class="org.wv.stepsovc.web.services.BeneficiaryService"/>
-
-    <bean id="referralService" class="org.wv.stepsovc.web.services.ReferralService">
-        <constructor-arg index="0" value="${commcarehq.submission.url}" />
-    </bean>
-
-    <bean id="facilityService" class="org.wv.stepsovc.web.services.FacilityService"/>
-
-    <bean id="stepsovcDbInstance" class="org.ektorp.impl.StdCouchDbInstance">
-        <constructor-arg>
-            <bean id="httpClient" class="org.ektorp.spring.HttpClientFactoryBean"/>
-        </constructor-arg>
-    </bean>
-
-    <bean id="stepsovcDbConnector" class="org.ektorp.impl.StdCouchDbConnector">
-        <constructor-arg value="stepsovc"/>
-        <constructor-arg ref="stepsovcDbInstance"/>
-    </bean>
+    <import resource="classpath:applicationContext-Common.xml"/>
+    <import resource="classpath:applicationSmsSmpp.xml"/>
 </beans>

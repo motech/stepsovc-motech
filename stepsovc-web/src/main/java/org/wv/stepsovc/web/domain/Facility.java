@@ -14,15 +14,18 @@ public class Facility extends MotechBaseDataObject {
     private String facilityName;
     @JsonProperty
     private List<ServiceUnavailability> serviceUnavailabilities;
+    @JsonProperty
+    private List<String> phoneNumbers;
 
     public Facility() {
 
     }
 
-    public Facility(String facilityCode, String facilityName, List<ServiceUnavailability> serviceUnavailabilities) {
+    public Facility(String facilityCode, String facilityName, List<ServiceUnavailability> serviceUnavailabilities, List<String> phoneNumbers) {
         this.facilityCode = facilityCode;
         this.facilityName = facilityName;
         this.serviceUnavailabilities = serviceUnavailabilities;
+        this.phoneNumbers = phoneNumbers;
     }
 
     public String getFacilityCode() {
@@ -47,5 +50,9 @@ public class Facility extends MotechBaseDataObject {
 
     public void setServiceUnavailabilities(List<ServiceUnavailability> serviceUnavailabilities) {
         this.serviceUnavailabilities = serviceUnavailabilities;
+    }
+
+    public List<String> getPhoneNumbers() {
+        return phoneNumbers;
     }
 }

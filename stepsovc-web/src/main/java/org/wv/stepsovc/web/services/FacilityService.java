@@ -32,7 +32,7 @@ public class FacilityService {
         ServiceUnavailability serviceUnavailability = new ServiceUnavailability(facilityCase.getService_unavailable_reason(), facilityCase.getService_unavailable_from(), serviceUnavailableTo);
         if (facility == null) {
             List<ServiceUnavailability> serviceUnavailabilities = Arrays.asList(serviceUnavailability);
-            facility = new Facility(facilityCase.getFacility_code(), facilityCase.getFacility_name(), serviceUnavailabilities);
+            facility = new Facility(facilityCase.getFacility_code(), facilityCase.getFacility_name(), serviceUnavailabilities, null); // Todo: remove this if block
             allFacilities.add(facility);
         } else {
             facility.getServiceUnavailabilities().add(serviceUnavailability);

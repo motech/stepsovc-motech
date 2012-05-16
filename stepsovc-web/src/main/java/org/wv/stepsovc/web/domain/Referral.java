@@ -71,8 +71,9 @@ public class Referral extends MotechBaseDataObject {
         return this;
     }
 
-    public void setActive(boolean active) {
+    public Referral setActive(boolean active) {
         this.active = active;
+        return this;
     }
 
     public String getFollowupRequired() {
@@ -123,8 +124,9 @@ public class Referral extends MotechBaseDataObject {
         return familyPlanning;
     }
 
-    public void setFamilyPlanning(Service familyPlanning) {
+    public Referral setFamilyPlanning(Service familyPlanning) {
         this.familyPlanning = familyPlanning;
+        return this;
     }
 
     public Service getHivCounseling() {

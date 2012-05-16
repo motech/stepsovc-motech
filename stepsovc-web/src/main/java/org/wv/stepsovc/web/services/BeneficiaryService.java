@@ -2,10 +2,12 @@ package org.wv.stepsovc.web.services;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.wv.stepsovc.web.mapper.BeneficiaryMapper;
 import org.wv.stepsovc.web.repository.AllBeneficiaries;
 import org.wv.stepsovc.web.request.StepsovcCase;
 
+@Service
 public class BeneficiaryService {
 
     @Autowired

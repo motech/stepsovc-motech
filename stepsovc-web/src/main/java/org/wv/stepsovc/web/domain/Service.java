@@ -23,8 +23,9 @@ public class Service {
         return reason;
     }
 
-    public void setReason(String reason) {
+    public Service setReason(String reason) {
         this.reason = reason;
+        return this;
     }
 
     @JsonProperty
