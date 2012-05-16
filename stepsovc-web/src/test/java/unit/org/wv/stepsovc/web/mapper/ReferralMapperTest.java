@@ -1,8 +1,10 @@
 package org.wv.stepsovc.web.mapper;
 
+import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
 import org.wv.stepsovc.commcare.domain.CaseType;
 import org.wv.stepsovc.web.domain.Referral;
+import org.wv.stepsovc.web.request.ServiceUnavailedType;
 import org.wv.stepsovc.web.request.StepsovcCase;
 
 import java.text.ParseException;
@@ -56,6 +58,7 @@ public class ReferralMapperTest {
         stepsovcCase.setOther_health_services("Referred");
         stepsovcCase.setVisit_date("1988-12-23");
         stepsovcCase.setService_date(serviceDate);
+        stepsovcCase.setService_details("new service details");
         stepsovcCase.setFacility_code(facilityId);
         stepsovcCase.setUser_id("Userid001");
 
@@ -98,6 +101,7 @@ public class ReferralMapperTest {
         assertThat(newReferral.getPmtct().isProvided(), is(ReferralMapper.SERVICE_RECEIVED.equals(stepsovcCase.getPmtct())));
         assertThat(newReferral.getSexuallyTransmittedInfection().isProvided(), is(ReferralMapper.SERVICE_RECEIVED.equals(stepsovcCase.getSexually_transmitted_infection())));
 
+        assertThat(newReferral.getServiceDetails(),is(stepsovcCase.getService_details()));
         assertThat(newReferral.getFacilityCode(), is(stepsovcCase.getFacility_code()));
         assertThat(newReferral.getServiceDate(), is(stepsovcCase.getService_date()));
     }
@@ -114,53 +118,57 @@ public class ReferralMapperTest {
     }
 
     public static void assertReferralReasons(StepsovcCase stepsovcCase, Referral newReferral) {
-        assertThat(newReferral.getArtAdherenceCounseling().getReason(), is(stepsovcCase.getArt_adherence_na_reason()));
-        assertThat(newReferral.getCondoms().getReason(), is(stepsovcCase.getCondoms_na_reason()));
-        assertThat(newReferral.getFamilyPlanning().getReason(), is(stepsovcCase.getFamily_planning_na_reason()));
-        assertThat(newReferral.getHivCounseling().getReason(), is(stepsovcCase.getHiv_counseling_na_reason()));
-        assertThat(newReferral.getNewDiagnosis().getReason(), is(stepsovcCase.getNew_diagnosis_na_reason()));
-        assertThat(newReferral.getOtherHealthServices().getReason(), is(stepsovcCase.getOther_health_service_na_reason()));
-        assertThat(newReferral.getPainManagement().getReason(), is(stepsovcCase.getPain_management_na_reason()));
-        assertThat(newReferral.getEndOfLifeHospice().getReason(), is(stepsovcCase.getEnd_of_life_hospice_na_reason()));
-        assertThat(newReferral.getSexuallyTransmittedInfection().getReason(), is(stepsovcCase.getSexually_transmitted_na_reason()));
-        assertThat(newReferral.getPmtct().getReason(), is(stepsovcCase.getPmtct_na_reason()));
+        assertThat(newReferral.getArtAdherenceCounseling().getReason(), is(serviceUnavailedReason(stepsovcCase.getArt_adherence_na_reason())));
+        assertThat(newReferral.getCondoms().getReason(), is(serviceUnavailedReason(stepsovcCase.getCondoms_na_reason())));
+        assertThat(newReferral.getFamilyPlanning().getReason(), is(serviceUnavailedReason(stepsovcCase.getFamily_planning_na_reason())));
+        assertThat(newReferral.getHivCounseling().getReason(), is(serviceUnavailedReason(stepsovcCase.getHiv_counseling_na_reason())));
+        assertThat(newReferral.getNewDiagnosis().getReason(), is(serviceUnavailedReason(stepsovcCase.getNew_diagnosis_na_reason())));
+        assertThat(newReferral.getOtherHealthServices().getReason(), is(serviceUnavailedReason(stepsovcCase.getOther_health_service_na_reason())));
+        assertThat(newReferral.getPainManagement().getReason(), is(serviceUnavailedReason(stepsovcCase.getPain_management_na_reason())));
+        assertThat(newReferral.getEndOfLifeHospice().getReason(), is(serviceUnavailedReason(stepsovcCase.getEnd_of_life_hospice_na_reason())));
+        assertThat(newReferral.getSexuallyTransmittedInfection().getReason(), is(serviceUnavailedReason(stepsovcCase.getSexually_transmitted_na_reason())));
+        assertThat(newReferral.getPmtct().getReason(), is(serviceUnavailedReason(stepsovcCase.getPmtct_na_reason())));
     }
 
     public static StepsovcCase createCaseForUpdateReferral(String beneficiaryCode) {
         StepsovcCase stepsovcCase = createNewCase(beneficiaryCode);
-        stepsovcCase.setArt_adherence_na_reason("Art_adherence_na_reason");
-        stepsovcCase.setCondoms_na_reason("Condoms_na_reason");
-        stepsovcCase.setEnd_of_life_hospice_na_reason("End_of_life_hospice_na_reason");
-        stepsovcCase.setFamily_planning_na_reason("Family_planning_na_reason");
-        stepsovcCase.setHiv_counseling_na_reason("setHiv_counseling_na_reason");
-        stepsovcCase.setNew_diagnosis_na_reason("setNew_diagnosis_na_reason");
-        stepsovcCase.setSexually_transmitted_na_reason("setSexually_transmitted_na_reason");
-        stepsovcCase.setPain_management_na_reason("setPain_management_na_reason");
-        stepsovcCase.setPmtct_na_reason("setPmtct_na_reason");
-        stepsovcCase.setOther_health_service_na_reason("setOther_health_service_na_reason");
+        stepsovcCase.setArt_adherence_na_reason("SERVICE_UNAVAILABLE");
+        stepsovcCase.setCondoms_na_reason("FACILITY_CLOSED");
+        stepsovcCase.setEnd_of_life_hospice_na_reason("BEN_UNABLE_TO_TRAVEL");
+        stepsovcCase.setFamily_planning_na_reason("BEN_FORGOT");
+        stepsovcCase.setHiv_counseling_na_reason("BEN_UNWILLING");
+        stepsovcCase.setNew_diagnosis_na_reason("AVAILED_NOT_RECORED");
+        stepsovcCase.setSexually_transmitted_na_reason("OTHER");
+        stepsovcCase.setPain_management_na_reason("");
+        stepsovcCase.setPmtct_na_reason("");
+        stepsovcCase.setOther_health_service_na_reason("BEN_UNABLE_TO_TRAVEL");
         return stepsovcCase;
 
     }
 
-    public static StepsovcCase createCaseForUpdateService(String code, String visitDate) {
+    public static StepsovcCase createCaseForUpdateService(String code, String serviceDate) {
         StepsovcCase stepsovcCase = createCaseForReferral(code, null, "FAC001");
-        stepsovcCase.setCondoms("Received");
+        stepsovcCase.setCondoms("Not Availed");
         stepsovcCase.setEnd_of_life_hospice("Not Availed");
-        stepsovcCase.setFamily_planning("Received");
+        stepsovcCase.setFamily_planning("Not Availed");
         stepsovcCase.setFollowup_date("2012-12-12");
         stepsovcCase.setFollowup_required("Yes");
-        stepsovcCase.setHiv_counseling("Received");
-        stepsovcCase.setPmtct("Received");
-        stepsovcCase.setNew_diagnosis("Received");
+        stepsovcCase.setHiv_counseling("Not Availed");
+        stepsovcCase.setPmtct("Not Availed");
+        stepsovcCase.setNew_diagnosis("Not Availed");
         stepsovcCase.setSexually_transmitted_infection("Not Availed");
-        stepsovcCase.setPain_management("Received");
-        stepsovcCase.setOther_health_services("Received");
-        stepsovcCase.setArt_adherence_counseling("Received");
+        stepsovcCase.setPain_management("Not Availed");
+        stepsovcCase.setOther_health_services("Not Availed");
+        stepsovcCase.setArt_adherence_counseling("Not Availed");
         stepsovcCase.setFacility_code("ABC");
         stepsovcCase.setService_date(null);
-        stepsovcCase.setVisit_date(visitDate);
+        stepsovcCase.setService_date(serviceDate);
 
         return stepsovcCase;
+    }
+
+    private static String serviceUnavailedReason(String key) {
+        return StringUtils.isNotEmpty(key) ? ServiceUnavailedType.valueOf(key).getValue() : "" ;
     }
 
 

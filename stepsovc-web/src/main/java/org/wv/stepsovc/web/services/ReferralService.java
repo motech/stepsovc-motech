@@ -16,6 +16,8 @@ import org.wv.stepsovc.web.vo.FacilityAvailability;
 
 import java.util.List;
 
+import static org.wv.stepsovc.utils.DateUtils.getDateTime;
+
 public class ReferralService {
 
     private static Logger logger = Logger.getLogger(BeneficiaryService.class);
@@ -46,7 +48,7 @@ public class ReferralService {
         checkForAvailableDate(newReferral);
         assignToFacility(stepsovcCase);
 
-        allAppointments.scheduleNewReferral(newReferral.getOvcId(), newReferral.appointmentDataMap(), DateUtils.getDateTime(newReferral.getServiceDate()));
+        allAppointments.scheduleNewReferral(newReferral.getOvcId(), newReferral.appointmentDataMap(), getDateTime(newReferral.getServiceDate()));
         allReferrals.add(newReferral);
     }
 
@@ -62,6 +64,7 @@ public class ReferralService {
         if (oldActiveReferral != null) {
             oldActiveReferral.setActive(false);
             allReferrals.update(oldActiveReferral);
+            allAppointments.unschedule(oldActiveReferral.getOvcId());
         }
     }
 
@@ -76,16 +79,16 @@ public class ReferralService {
         logger.info("Handling update service");
         Referral existingReferral = allReferrals.findActiveReferral(stepsovcCase.getBeneficiary_code());
 
-        allReferrals.update(new ReferralMapper().updateServices(existingReferral, stepsovcCase));
-        checkForNewReferral(stepsovcCase);
-    }
+        Referral referral = new ReferralMapper().updateServices(existingReferral, stepsovcCase);
 
-    private void checkForNewReferral(StepsovcCase stepsovcCase) {
         if (stepsovcCase.getFacility_code() != null && !"".equals(stepsovcCase.getFacility_code().trim())) {
+            checkForAvailableDate(referral);
+            allAppointments.scheduleNewReferral(referral.getOvcId(), referral.appointmentDataMap(), getDateTime(referral.getServiceDate()));
             assignToFacility(stepsovcCase);
         } else {
             removeFromCurrentFacility(stepsovcCase);
         }
+        allReferrals.update(referral);
     }
 
     public void updateReferralsServiceDate(String facilityId, String fromDateStr, String toDateStr, String nextAvailableDate) {
@@ -103,6 +106,7 @@ public class ReferralService {
         for (Referral referral : referrals) {
             referral.setServiceDate(nextAvailableDate);
             allReferrals.update(referral);
+            allAppointments.scheduleNewReferral(referral.getOvcId(),referral.appointmentDataMap(), getDateTime(referral.getServiceDate()));
         }
     }
 

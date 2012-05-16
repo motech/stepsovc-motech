@@ -39,4 +39,8 @@ public class AllAppointments {
     public List<VisitResponse> find(VisitsQuery visitsQuery) {
         return appointmentService.search(visitsQuery);
     }
+
+    public void unschedule(String ovcId) {
+        appointmentService.removeCalendar(ovcId);
+    }
 }

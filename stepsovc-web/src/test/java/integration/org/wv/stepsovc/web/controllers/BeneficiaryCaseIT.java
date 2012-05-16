@@ -21,6 +21,8 @@ import org.wv.stepsovc.web.request.StepsovcCase;
 import java.util.List;
 
 import static junit.framework.Assert.assertNotNull;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 import static org.wv.stepsovc.web.mapper.ReferralMapperTest.*;
 import static org.wv.stepsovc.web.request.BeneficiaryCaseUpdateType.*;
 
@@ -60,7 +62,8 @@ public class BeneficiaryCaseIT {
         assertNotNull(activeReferral);
         assertReferrals(stepsovcCase, activeReferral);
 
-        List<VisitResponse> visitResponses = allAppointments.find(new VisitsQuery().havingExternalId(activeReferral.getOvcId()));
+        String firstOvcId = activeReferral.getOvcId();
+        List<VisitResponse> visitResponses = allAppointments.find(new VisitsQuery().havingExternalId(firstOvcId));
         org.wv.stepsovc.web.repository.AllAppointmentsIT.assertReferralAppointments(activeReferral.getOvcId(),DateUtils.getDateTime(activeReferral.getServiceDate()),activeReferral.appointmentDataMap(),visitResponses);
 
         stepsovcCase.setService_date("2012-5-12");
@@ -68,8 +71,10 @@ public class BeneficiaryCaseIT {
         activeReferral = allReferrals.findActiveReferral(beneficiaryCode);
         assertNotNull(activeReferral);
         assertReferrals(stepsovcCase, allReferrals.findActiveReferral(beneficiaryCode));
+        visitResponses = allAppointments.find(new VisitsQuery().havingExternalId(firstOvcId));
+        assertThat(visitResponses.size(), is(0));
 
-        stepsovcCase = createCaseForUpdateService(beneficiaryCode, "12-12-1987");
+        stepsovcCase = createCaseForUpdateService(beneficiaryCode, "1987-12-12");
         stepsovcCase.setForm_type(UPDATE_SERVICE.getType());
         stepsovcCaseController.createCase(stepsovcCase);
         Assert.assertNotNull(allReferrals.findActiveReferral(beneficiaryCode));
