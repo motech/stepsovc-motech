@@ -4,6 +4,8 @@ import org.bouncycastle.crypto.digests.SHA1Digest;
 import org.bouncycastle.crypto.generators.PKCS5S1ParametersGenerator;
 import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.wv.stepsovc.crypto.PasswordDeriveBytes;
 import sun.misc.BASE64Decoder;
@@ -24,6 +26,7 @@ public class DMISDataProcessor {
     public static final String UTF_8 = "UTF-8";
     private String SALT_STR = "Kosher";
     private String INITIAL_VECTOR_STR = "#FZ/Pv%mXYB[mQq<";
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public String decrypt(String cipherStr) {
         String decryptedString;
@@ -49,7 +52,7 @@ public class DMISDataProcessor {
             decryptedString = new String(bytes, UTF_8);
         } catch (Exception e) {
             decryptedString = cipherStr;
-            e.printStackTrace();
+            logger.error("Error during decryption" + e.getMessage());
         }
         return decryptedString;
     }
@@ -78,7 +81,7 @@ public class DMISDataProcessor {
             encryptedString = base64Encoder.encode(bytes);
         } catch (Exception e) {
             encryptedString = plainStr;
-            e.printStackTrace();
+            logger.error("Error during encryption" + e.getMessage());
         }
         return encryptedString;
     }

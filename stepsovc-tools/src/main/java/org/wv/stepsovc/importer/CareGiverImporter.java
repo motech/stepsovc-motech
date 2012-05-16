@@ -7,7 +7,11 @@ import java.util.List;
 
 public class CareGiverImporter extends CSVImporter<CareGiverInformation> {
 
-    private DMISDataProcessor dmisDataProcessor = new DMISDataProcessor();
+    private DMISDataProcessor dmisDataProcessor;
+
+    public CareGiverImporter() {
+        this.dmisDataProcessor = new DMISDataProcessor();
+    }
 
     public static void main(String args[]) {
         String filePath = args[0];

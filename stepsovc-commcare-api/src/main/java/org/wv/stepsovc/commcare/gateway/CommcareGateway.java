@@ -20,9 +20,11 @@ import java.util.Map;
 @Component
 public class CommcareGateway {
 
-    private static final String BENEFICIARY_FORM_TEMPLATE_PATH = "/templates/beneficiary-case-form.xml";
+    public static final String BENEFICIARY_CASE_FORM_TEMPLATE_PATH = "/templates/beneficiary-case-form.xml";
 
-    private static final String OWNER_UPDATE_FORM_TEMPLATE_PATH = "/templates/update-owner-form.xml";
+    public static final String OWNER_UPDATE_FORM_TEMPLATE_PATH = "/templates/update-owner-form.xml";
+
+    public static final String USER_REGISTRATION_FORM_TEMPLATE_PATH = "/templates/user-registration-form.xml";
 
     private HttpClientService httpClientService;
 
@@ -33,7 +35,6 @@ public class CommcareGateway {
     private Map model;
 
     private AllGroups allGroups;
-
     private AllUsers allUsers;
 
 
@@ -69,7 +70,7 @@ public class CommcareGateway {
     public void createNewBeneficiary(String url, BeneficiaryInformation beneficiaryInformation) {
         model = new HashMap<String, Object>();
         model.put(CaseType.BENEFICIARY_CASE.getType(), beneficiaryInformation);
-        httpClientService.post(url, getXmlFromObject(BENEFICIARY_FORM_TEMPLATE_PATH, model));
+        httpClientService.post(url, getXmlFromObject(BENEFICIARY_CASE_FORM_TEMPLATE_PATH, model));
     }
 
     public void updateReferralOwner(String url, BeneficiaryInformation beneficiaryInformation) {

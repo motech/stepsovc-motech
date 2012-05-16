@@ -7,11 +7,13 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.wv.stepsovc.commcare.domain.CaseType;
 import org.wv.stepsovc.vo.BeneficiaryInformation;
+import org.wv.stepsovc.vo.CareGiverInformation;
 
 import java.util.HashMap;
 import java.util.UUID;
 
 import static junit.framework.Assert.assertEquals;
+import static org.wv.stepsovc.commcare.gateway.CommcareGateway.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath*:applicationContext-stepsovc-commcare-api.xml")
@@ -31,14 +33,43 @@ public class CommcareGatewayIntegrationTest {
     @Test
     public void testObjectToXmlConversion() {
         BeneficiaryInformation beneficiaryInformation = getBeneficiaryInformation("f98589102c60fcc2e0f3c422bb361ebd", "cg1", "c7264b49-4e3d-4659-8df3-7316539829cb", "test-case", "XYZ/123", "cg1", "hw1");
+        assertConversion(CaseType.BENEFICIARY_CASE.getType(), beneficiaryInformation, BENEFICIARY_CASE_FORM_TEMPLATE_PATH, getExpectedBeneficiaryCaseXml());
+        assertConversion(CaseType.BENEFICIARY_CASE.getType(), beneficiaryInformation, OWNER_UPDATE_FORM_TEMPLATE_PATH, getExpectedUpdateOwnerXml());
+
+        CareGiverInformation careGiverInformation = getCareGiverInformation("7ac0b33f0dac4a81c6d1fbf1bd9dfee0", "EW/123", "cg1", "9089091");
+        assertConversion("caregiver", careGiverInformation, USER_REGISTRATION_FORM_TEMPLATE_PATH, getExpectedUserFormXml());
+    }
+
+    private void assertConversion(String key, Object entity, String formPath, String expectedXML) {
         HashMap<String, Object> model = new HashMap<String, Object>();
-        model.put(CaseType.BENEFICIARY_CASE.getType(), beneficiaryInformation);
+        model.put(key, entity);
+        String actualXML = commcareGateway.getXmlFromObject(formPath, model);
+        assertEquals(expectedXML, actualXML);
+    }
 
-        String actual = commcareGateway.getXmlFromObject("/templates/beneficiary-case-form.xml", model);
-        assertEquals(getExpectedBeneficiaryCaseXml(), actual);
+    private String getExpectedUserFormXml() {
+        return "<Registration xmlns=\"http://openrosa.org/user/registration\">\n" +
+                "\n" +
+                "    <username>EW/123</username>\n" +
+                "    <password>sha1$6a631$73c1ccdd8dd900d6b208dd5ba5ab081d052d87bf</password>\n" +
+                "    <uuid>7ac0b33f0dac4a81c6d1fbf1bd9dfee0</uuid>\n" +
+                "    <date>$today</date>\n" +
+                "\n" +
+                "    <registering_phone_id>9089091</registering_phone_id>\n" +
+                "\n" +
+                "    <user_data>\n" +
+                "        <data key=\"name\">cg1</data>\n" +
+                "    </user_data>\n" +
+                "</Registration>";
+    }
 
-        actual = commcareGateway.getXmlFromObject("/templates/update-owner-form.xml", model);
-        assertEquals(getExpectedUpdateOwnerXml(), actual);
+    private CareGiverInformation getCareGiverInformation(String cgId, String cgCode, String cgName, String phoneNumber) {
+        CareGiverInformation careGiverInformation = new CareGiverInformation();
+        careGiverInformation.setId(cgId);
+        careGiverInformation.setCode(cgCode);
+        careGiverInformation.setName(cgName);
+        careGiverInformation.setPhoneNumber(phoneNumber);
+        return careGiverInformation;
     }
 
     private BeneficiaryInformation getBeneficiaryInformation(String caregiverId, String caregiverCode, String caseId, String caseName, String beneficiaryCode, String caregiverName, String ownerId) {

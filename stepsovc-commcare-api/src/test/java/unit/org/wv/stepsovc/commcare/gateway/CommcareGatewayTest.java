@@ -22,7 +22,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class CommcareGatewayTest {
 
-    CommcareGateway commcareGateway;
+    CommcareGateway spyCommcareGateway;
 
     @Mock
     HttpClientService mockHttpClientService;
@@ -43,38 +43,36 @@ public class CommcareGatewayTest {
     @Before
     public void setup() {
         initMocks(this);
+        spyCommcareGateway = spy(new CommcareGateway(mockHttpClientService, mockVelocityEngine, mockHttpClientEventListener, allGroups, allUsers));
+
     }
 
 
     @Test
     public void shouldSubmitFormWithoutAnyException() throws Exception {
-        CommcareGateway spyCommcareGateway = spy(new CommcareGateway(mockHttpClientService, mockVelocityEngine, mockHttpClientEventListener, allGroups, allUsers));
         BeneficiaryInformation beneficiaryInformation = getBeneficiaryInformation("f98589102c60fcc2e0f3c422bb361ebd", "cg1", UUID.randomUUID().toString(), "Albie-case", "ABC", "cg1", "null");
         Map<String, Object> model = new HashMap<String, Object>();
         model.put(CaseType.BENEFICIARY_CASE.getType(), beneficiaryInformation);
-        doReturn(getExpectedXml()).when(spyCommcareGateway).getXmlFromObject(anyString(), eq(model));
+        doReturn(getBeneficiaryCaseExpectedXml()).when(spyCommcareGateway).getXmlFromObject(anyString(), eq(model));
         String url = "someurl";
         spyCommcareGateway.createNewBeneficiary(url, beneficiaryInformation);
         verify(spyCommcareGateway).getXmlFromObject(anyString(), eq(model));
-        verify(mockHttpClientService).post(url, getExpectedXml());
+        verify(mockHttpClientService).post(url, getBeneficiaryCaseExpectedXml());
     }
 
     @Test
     public void shouldSubmitUpdateOwnerForm() {
-        CommcareGateway spyCommcareGateway = spy(new CommcareGateway(mockHttpClientService, mockVelocityEngine, mockHttpClientEventListener, allGroups, allUsers));
         BeneficiaryInformation beneficiaryInformation = getBeneficiaryInformation("f98589102c60fcc2e0f3c422bb361ebd", "cg1", UUID.randomUUID().toString(), "Albie-case", "ABC", "cg1", "null");
         Map<String, Object> model = new HashMap<String, Object>();
         model.put(CaseType.BENEFICIARY_CASE.getType(), beneficiaryInformation);
-        doReturn(getExpectedXml()).when(spyCommcareGateway).getXmlFromObject(anyString(), eq(model));
+        doReturn(getBeneficiaryCaseExpectedXml()).when(spyCommcareGateway).getXmlFromObject(anyString(), eq(model));
         String url = "someurl";
         spyCommcareGateway.updateReferralOwner(url, beneficiaryInformation);
         verify(spyCommcareGateway).getXmlFromObject(anyString(), eq(model));
-        verify(mockHttpClientService).post(url, getExpectedXml());
+        verify(mockHttpClientService).post(url, getBeneficiaryCaseExpectedXml());
     }
 
-
     private BeneficiaryInformation getBeneficiaryInformation(String caregiverId, String caregiverCode, String caseId, String caseName, String beneficiaryCode, String caregiverName, String ownerId) {
-
         BeneficiaryInformation beneficiaryInformation = new BeneficiaryInformation();
         beneficiaryInformation.setBeneficiaryId(caseId);
         beneficiaryInformation.setBeneficiaryCode(beneficiaryCode);
@@ -92,7 +90,7 @@ public class CommcareGatewayTest {
         return beneficiaryInformation;
     }
 
-    private String getExpectedXml() {
+    private String getBeneficiaryCaseExpectedXml() {
 
         return "<?xml version=\"1.0\"?>\n" +
                 "<data xmlns=\"http://openrosa.org/formdesigner/A6E4F029-A971-41F1-80C1-9DDD5CC24571\" uiVersion=\"1\" version=\"12\"\n" +
@@ -140,4 +138,5 @@ public class CommcareGatewayTest {
                 "    </meta>\n" +
                 "</data>";
     }
+
 }
