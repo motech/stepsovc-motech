@@ -5,7 +5,7 @@ import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.wv.stepsovc.commcare.gateway.CommcareGateway;
 import org.wv.stepsovc.utils.DateUtils;
-import org.wv.stepsovc.vo.BeneficiaryFormRequest;
+import org.wv.stepsovc.vo.BeneficiaryInformation;
 import org.wv.stepsovc.web.domain.Referral;
 import org.wv.stepsovc.web.mapper.BeneficiaryMapper;
 import org.wv.stepsovc.web.mapper.ReferralMapper;
@@ -119,7 +119,7 @@ public class ReferralService {
     }
 
     void updateReferralOwner(StepsovcCase stepsovcCase) {
-        BeneficiaryFormRequest beneficiaryFormRequest = new BeneficiaryMapper().createFormRequest(stepsovcCase);
-        commcareGateway.updateReferralOwner(COMMCARE_URL, beneficiaryFormRequest);
+        BeneficiaryInformation beneficiaryInformation = new BeneficiaryMapper().createFormRequest(stepsovcCase);
+        commcareGateway.updateReferralOwner(COMMCARE_URL, beneficiaryInformation);
     }
 }

@@ -7,11 +7,11 @@ import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.wv.stepsovc.commcare.domain.CaseType;
 import org.wv.stepsovc.web.mapper.ReferralMapperTest;
 import org.wv.stepsovc.web.repository.AllFacilities;
 import org.wv.stepsovc.web.repository.AllReferrals;
 import org.wv.stepsovc.web.request.BeneficiaryCaseUpdateType;
-import org.wv.stepsovc.web.request.CaseType;
 import org.wv.stepsovc.web.request.StepsovcCase;
 
 import static org.hamcrest.Matchers.is;

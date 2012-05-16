@@ -1,6 +1,6 @@
 package org.wv.stepsovc.web.mapper;
 
-import org.wv.stepsovc.vo.*;
+import org.wv.stepsovc.vo.BeneficiaryInformation;
 import org.wv.stepsovc.web.domain.Beneficiary;
 import org.wv.stepsovc.web.request.StepsovcCase;
 
@@ -18,27 +18,17 @@ public class BeneficiaryMapper {
         return beneficiary;
     }
 
-    public BeneficiaryFormRequest createFormRequest(StepsovcCase stepsovcCase) {
+    public BeneficiaryInformation createFormRequest(StepsovcCase stepsovcCase) {
 
-        BeneficiaryFormRequest beneficiaryFormRequest = new BeneficiaryFormRequest();
-        final BeneficiaryInformation beneficiaryInformation = new BeneficiaryInformation();
-        final CareGiverInformation careGiverInformation = new CareGiverInformation();
-        careGiverInformation.setCode(stepsovcCase.getCaregiver_code());
-        careGiverInformation.setName(stepsovcCase.getCaregiver_name());
+        BeneficiaryInformation beneficiaryInformation = new BeneficiaryInformation();
+        beneficiaryInformation.setCareGiverCode(stepsovcCase.getCaregiver_code());
+        beneficiaryInformation.setCareGiverName(stepsovcCase.getCaregiver_name());
 
-        final CaseInformation caseInformation = new CaseInformation();
-        caseInformation.setId(stepsovcCase.getCase_id());
-        caseInformation.setDateModified(stepsovcCase.getDate_modified());
-        caseInformation.setUserId(stepsovcCase.getUser_id());
-        caseInformation.setOwnerId(stepsovcCase.getOwner_id());
+        beneficiaryInformation.setBeneficiaryId(stepsovcCase.getCase_id());
+        beneficiaryInformation.setDateModified(stepsovcCase.getDate_modified());
+        beneficiaryInformation.setCareGiverId(stepsovcCase.getUser_id());
+        beneficiaryInformation.setOwnerId(stepsovcCase.getOwner_id());
 
-        final MetaInformation metaInformation = new MetaInformation();
-
-        beneficiaryFormRequest.setBeneficiaryInformation(beneficiaryInformation);
-        beneficiaryFormRequest.setCaregiverInformation(careGiverInformation);
-        beneficiaryFormRequest.setCaseInformation(caseInformation);
-        beneficiaryFormRequest.setMetaInformation(metaInformation);
-
-        return beneficiaryFormRequest;
+        return beneficiaryInformation;
     }
 }

@@ -6,12 +6,12 @@ import org.motechproject.http.client.service.HttpClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.velocity.VelocityEngineUtils;
+import org.wv.stepsovc.commcare.domain.CaseType;
 import org.wv.stepsovc.commcare.domain.Group;
 import org.wv.stepsovc.commcare.factories.GroupFactory;
 import org.wv.stepsovc.commcare.repository.AllGroups;
 import org.wv.stepsovc.commcare.repository.AllUsers;
-import org.wv.stepsovc.utils.ConstantUtils;
-import org.wv.stepsovc.vo.BeneficiaryFormRequest;
+import org.wv.stepsovc.vo.BeneficiaryInformation;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +20,7 @@ import java.util.Map;
 @Component
 public class CommcareGateway {
 
-    private static final String BENEFICIARY_FORM_TEMPLATE_PATH = "/templates/beneficiary-form.xml";
+    private static final String BENEFICIARY_FORM_TEMPLATE_PATH = "/templates/beneficiary-case-form.xml";
 
     private static final String OWNER_UPDATE_FORM_TEMPLATE_PATH = "/templates/update-owner-form.xml";
 
@@ -66,15 +66,15 @@ public class CommcareGateway {
     }
 
 
-    public void createNewBeneficiary(String url, BeneficiaryFormRequest beneficiaryFormRequest) {
+    public void createNewBeneficiary(String url, BeneficiaryInformation beneficiaryInformation) {
         model = new HashMap<String, Object>();
-        model.put(ConstantUtils.BENEFICIARY, beneficiaryFormRequest);
+        model.put(CaseType.BENEFICIARY_CASE.getType(), beneficiaryInformation);
         httpClientService.post(url, getXmlFromObject(BENEFICIARY_FORM_TEMPLATE_PATH, model));
     }
 
-    public void updateReferralOwner(String url, BeneficiaryFormRequest beneficiaryFormRequest) {
+    public void updateReferralOwner(String url, BeneficiaryInformation beneficiaryInformation) {
         model = new HashMap<String, Object>();
-        model.put(ConstantUtils.BENEFICIARY, beneficiaryFormRequest);
+        model.put(CaseType.BENEFICIARY_CASE.getType(), beneficiaryInformation);
         String xmlFromObject = getXmlFromObject(OWNER_UPDATE_FORM_TEMPLATE_PATH, model);
         httpClientService.post(url, xmlFromObject);
     }

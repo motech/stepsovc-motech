@@ -6,9 +6,10 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.http.client.listener.HttpClientEventListener;
 import org.motechproject.http.client.service.HttpClientService;
+import org.wv.stepsovc.commcare.domain.CaseType;
 import org.wv.stepsovc.commcare.repository.AllGroups;
 import org.wv.stepsovc.commcare.repository.AllUsers;
-import org.wv.stepsovc.vo.*;
+import org.wv.stepsovc.vo.BeneficiaryInformation;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,7 +19,6 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.wv.stepsovc.utils.ConstantUtils.BENEFICIARY;
 
 public class CommcareGatewayTest {
 
@@ -49,12 +49,12 @@ public class CommcareGatewayTest {
     @Test
     public void shouldSubmitFormWithoutAnyException() throws Exception {
         CommcareGateway spyCommcareGateway = spy(new CommcareGateway(mockHttpClientService, mockVelocityEngine, mockHttpClientEventListener, allGroups, allUsers));
-        BeneficiaryFormRequest beneficiaryFormRequest = getBeneficiaryFormRequest("f98589102c60fcc2e0f3c422bb361ebd", "cg1", UUID.randomUUID().toString(), "Albie-case", null);
+        BeneficiaryInformation beneficiaryInformation = getBeneficiaryInformation("f98589102c60fcc2e0f3c422bb361ebd", "cg1", UUID.randomUUID().toString(), "Albie-case", "ABC", "cg1", "null");
         Map<String, Object> model = new HashMap<String, Object>();
-        model.put(BENEFICIARY, beneficiaryFormRequest);
+        model.put(CaseType.BENEFICIARY_CASE.getType(), beneficiaryInformation);
         doReturn(getExpectedXml()).when(spyCommcareGateway).getXmlFromObject(anyString(), eq(model));
         String url = "someurl";
-        spyCommcareGateway.createNewBeneficiary(url, beneficiaryFormRequest);
+        spyCommcareGateway.createNewBeneficiary(url, beneficiaryInformation);
         verify(spyCommcareGateway).getXmlFromObject(anyString(), eq(model));
         verify(mockHttpClientService).post(url, getExpectedXml());
     }
@@ -62,53 +62,34 @@ public class CommcareGatewayTest {
     @Test
     public void shouldSubmitUpdateOwnerForm() {
         CommcareGateway spyCommcareGateway = spy(new CommcareGateway(mockHttpClientService, mockVelocityEngine, mockHttpClientEventListener, allGroups, allUsers));
-        BeneficiaryFormRequest beneficiaryFormRequest = getBeneficiaryFormRequest("f98589102c60fcc2e0f3c422bb361ebd", "cg1", UUID.randomUUID().toString(), "Albie-case", null);
+        BeneficiaryInformation beneficiaryInformation = getBeneficiaryInformation("f98589102c60fcc2e0f3c422bb361ebd", "cg1", UUID.randomUUID().toString(), "Albie-case", "ABC", "cg1", "null");
         Map<String, Object> model = new HashMap<String, Object>();
-        model.put(BENEFICIARY, beneficiaryFormRequest);
+        model.put(CaseType.BENEFICIARY_CASE.getType(), beneficiaryInformation);
         doReturn(getExpectedXml()).when(spyCommcareGateway).getXmlFromObject(anyString(), eq(model));
         String url = "someurl";
-        spyCommcareGateway.updateReferralOwner(url, beneficiaryFormRequest);
+        spyCommcareGateway.updateReferralOwner(url, beneficiaryInformation);
         verify(spyCommcareGateway).getXmlFromObject(anyString(), eq(model));
         verify(mockHttpClientService).post(url, getExpectedXml());
     }
 
 
-    private BeneficiaryFormRequest getBeneficiaryFormRequest(String userId, String caregiveName, String caseId, String caseName, String code) {
-
-        BeneficiaryFormRequest beneficiaryFormRequest = new BeneficiaryFormRequest();
+    private BeneficiaryInformation getBeneficiaryInformation(String caregiverId, String caregiverCode, String caseId, String caseName, String beneficiaryCode, String caregiverName, String ownerId) {
 
         BeneficiaryInformation beneficiaryInformation = new BeneficiaryInformation();
-        beneficiaryInformation.setCode("XYZ");
-        beneficiaryInformation.setName("Albie");
-        beneficiaryInformation.setDob("12-12-1988");
-        beneficiaryInformation.setSex("male");
-        beneficiaryInformation.setTitle("MR");
+        beneficiaryInformation.setBeneficiaryId(caseId);
+        beneficiaryInformation.setBeneficiaryCode(beneficiaryCode);
+        beneficiaryInformation.setBeneficiaryName(caseName);
+        beneficiaryInformation.setBeneficiaryDob("12-12-1988");
+        beneficiaryInformation.setBeneficiarySex("male");
+        beneficiaryInformation.setBeneficiaryTitle("MR");
         beneficiaryInformation.setReceivingOrganization("XAQ");
-
-
-        CareGiverInformation careGiverInformation = new CareGiverInformation();
-        careGiverInformation.setCode(code);
-        careGiverInformation.setName(caregiveName);
-        careGiverInformation.setId(userId);
-
-        CaseInformation caseInformation = new CaseInformation();
-        caseInformation.setCaseTypeId("beneficiary");
-        caseInformation.setId(caseId);
-        caseInformation.setDateModified("2012-05-02T22:18:45.071+05:30");
-        caseInformation.setUserId(userId);
-
-
-        MetaInformation metaInformation = new MetaInformation();
-        metaInformation.setDeviceId("sadsa");
-        metaInformation.setTimeStart("2012-05-02T22:18:45.071+05:30");
-        metaInformation.setTimeEnd("2012-05-02T22:18:45.071+05:30");
-
-        beneficiaryFormRequest.setBeneficiaryInformation(beneficiaryInformation);
-        beneficiaryFormRequest.setCaregiverInformation(careGiverInformation);
-        beneficiaryFormRequest.setCaseInformation(caseInformation);
-        beneficiaryFormRequest.setMetaInformation(metaInformation);
-
-        return beneficiaryFormRequest;
+        beneficiaryInformation.setCareGiverCode(caregiverCode);
+        beneficiaryInformation.setCareGiverId(caregiverId);
+        beneficiaryInformation.setCareGiverName(caregiverName);
+        beneficiaryInformation.setCaseType(CaseType.BENEFICIARY_CASE.getType());
+        beneficiaryInformation.setDateModified("2012-05-02T22:18:45.071+05:30");
+        beneficiaryInformation.setOwnerId(ownerId);
+        return beneficiaryInformation;
     }
 
     private String getExpectedXml() {

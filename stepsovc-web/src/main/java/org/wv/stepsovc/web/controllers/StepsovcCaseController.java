@@ -8,8 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.wv.stepsovc.commcare.domain.CaseType;
 import org.wv.stepsovc.web.request.BeneficiaryCaseUpdateType;
-import org.wv.stepsovc.web.request.CaseType;
 import org.wv.stepsovc.web.request.StepsovcCase;
 import org.wv.stepsovc.web.services.BeneficiaryService;
 import org.wv.stepsovc.web.services.FacilityService;
@@ -63,16 +63,16 @@ public class StepsovcCaseController extends CaseService<StepsovcCase> {
     public void createCase(StepsovcCase stepsovcCase) {
         logger.info("Inside create case \"" + stepsovcCase.getForm_type() + "\"");
 
-        if(CaseType.BENEFICIARY_CASE.getType().equals(stepsovcCase.getCase_type())) {
-            if(BeneficiaryCaseUpdateType.BENEFICIARY_REGISTRATION.getType().equals(stepsovcCase.getForm_type()))
+        if (CaseType.BENEFICIARY_CASE.getType().equals(stepsovcCase.getCase_type())) {
+            if (BeneficiaryCaseUpdateType.BENEFICIARY_REGISTRATION.getType().equals(stepsovcCase.getForm_type()))
                 beneficiaryService.createBeneficiary(stepsovcCase);
-            else if(BeneficiaryCaseUpdateType.NEW_REFERRAL.getType().equals(stepsovcCase.getForm_type()))
+            else if (BeneficiaryCaseUpdateType.NEW_REFERRAL.getType().equals(stepsovcCase.getForm_type()))
                 referralService.addNewReferral(stepsovcCase);
-            else if(BeneficiaryCaseUpdateType.UPDATE_REFERRAL.getType().equals(stepsovcCase.getForm_type()))
+            else if (BeneficiaryCaseUpdateType.UPDATE_REFERRAL.getType().equals(stepsovcCase.getForm_type()))
                 referralService.updateNotAvailedReasons(stepsovcCase);
-            else if(BeneficiaryCaseUpdateType.UPDATE_SERVICE.getType().equals(stepsovcCase.getForm_type()))
+            else if (BeneficiaryCaseUpdateType.UPDATE_SERVICE.getType().equals(stepsovcCase.getForm_type()))
                 referralService.updateAvailedServices(stepsovcCase);
-        } else if (CaseType.FACILITY_CASE.getType().equals(stepsovcCase.getCase_type())){
+        } else if (CaseType.FACILITY_CASE.getType().equals(stepsovcCase.getCase_type())) {
             facilityService.makeFacilityUnavailable(stepsovcCase);
         }
     }
