@@ -10,15 +10,16 @@ import org.wv.stepsovc.commcare.domain.CaseType;
 import org.wv.stepsovc.commcare.repository.AllGroups;
 import org.wv.stepsovc.commcare.repository.AllUsers;
 import org.wv.stepsovc.vo.BeneficiaryInformation;
+import org.wv.stepsovc.vo.CareGiverInformation;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static org.wv.stepsovc.commcare.gateway.CommcareGateway.*;
 
 public class CommcareGatewayTest {
 
@@ -38,38 +39,77 @@ public class CommcareGatewayTest {
 
     @Mock
     private AllUsers allUsers;
+    private Map<String, Object> model;
 
 
     @Before
     public void setup() {
         initMocks(this);
         spyCommcareGateway = spy(new CommcareGateway(mockHttpClientService, mockVelocityEngine, mockHttpClientEventListener, allGroups, allUsers));
+        model = new HashMap<String, Object>();
 
     }
 
 
     @Test
-    public void shouldSubmitFormWithoutAnyException() throws Exception {
+    public void shouldSubmitBeneficiaryCaseForm() throws Exception {
         BeneficiaryInformation beneficiaryInformation = getBeneficiaryInformation("f98589102c60fcc2e0f3c422bb361ebd", "cg1", UUID.randomUUID().toString(), "Albie-case", "ABC", "cg1", "null");
-        Map<String, Object> model = new HashMap<String, Object>();
-        model.put(CaseType.BENEFICIARY_CASE.getType(), beneficiaryInformation);
-        doReturn(getBeneficiaryCaseExpectedXml()).when(spyCommcareGateway).getXmlFromObject(anyString(), eq(model));
-        String url = "someurl";
-        spyCommcareGateway.createNewBeneficiary(url, beneficiaryInformation);
-        verify(spyCommcareGateway).getXmlFromObject(anyString(), eq(model));
-        verify(mockHttpClientService).post(url, getBeneficiaryCaseExpectedXml());
+        model.put(CommcareGateway.BENEFICIARY_FORM_KEY, beneficiaryInformation);
+        doReturn(getBeneficiaryCaseExpectedXml()).when(spyCommcareGateway).getXmlFromObject(eq(BENEFICIARY_CASE_FORM_TEMPLATE_PATH), eq(model));
+
+        spyCommcareGateway.createNewBeneficiary(beneficiaryInformation);
+
+        verify(mockHttpClientService).post(CommcareGateway.COMMCARE_URL, getBeneficiaryCaseExpectedXml());
     }
 
     @Test
     public void shouldSubmitUpdateOwnerForm() {
         BeneficiaryInformation beneficiaryInformation = getBeneficiaryInformation("f98589102c60fcc2e0f3c422bb361ebd", "cg1", UUID.randomUUID().toString(), "Albie-case", "ABC", "cg1", "null");
-        Map<String, Object> model = new HashMap<String, Object>();
-        model.put(CaseType.BENEFICIARY_CASE.getType(), beneficiaryInformation);
-        doReturn(getBeneficiaryCaseExpectedXml()).when(spyCommcareGateway).getXmlFromObject(anyString(), eq(model));
-        String url = "someurl";
-        spyCommcareGateway.updateReferralOwner(url, beneficiaryInformation);
-        verify(spyCommcareGateway).getXmlFromObject(anyString(), eq(model));
-        verify(mockHttpClientService).post(url, getBeneficiaryCaseExpectedXml());
+        model.put(CommcareGateway.BENEFICIARY_FORM_KEY, beneficiaryInformation);
+        doReturn(getBeneficiaryCaseExpectedXml()).when(spyCommcareGateway).getXmlFromObject(eq(OWNER_UPDATE_FORM_TEMPLATE_PATH), eq(model));
+
+        spyCommcareGateway.updateReferralOwner(beneficiaryInformation);
+
+        verify(mockHttpClientService).post(CommcareGateway.COMMCARE_URL, getBeneficiaryCaseExpectedXml());
+    }
+
+
+    @Test
+    public void shouldCreateCareGiverInCommcare() {
+        CareGiverInformation careGiverInformation = getCareGiverInformation("7ac0b33f0dac4a81c6d1fbf1bd9dfee0", "EW/123", "cg1", "9089091");
+        model.put(CommcareGateway.CARE_GIVER_FORM_KEY, careGiverInformation);
+        doReturn(getExpectedUserFormXml()).when(spyCommcareGateway).getXmlFromObject(eq(USER_REGISTRATION_FORM_TEMPLATE_PATH), eq(model));
+
+        spyCommcareGateway.registerUser(careGiverInformation);
+
+        verify(mockHttpClientService).post(CommcareGateway.COMMCARE_URL, getExpectedUserFormXml());
+
+    }
+
+    private String getExpectedUserFormXml() {
+        return "<Registration xmlns=\"http://openrosa.org/user/registration\">\n" +
+                "\n" +
+                "    <username>EW/123</username>\n" +
+                "    <password>sha1$6a631$73c1ccdd8dd900d6b208dd5ba5ab081d052d87bf</password>\n" +
+                "    <uuid>7ac0b33f0dac4a81c6d1fbf1bd9dfee0</uuid>\n" +
+                "    <date>$today</date>\n" +
+                "\n" +
+                "    <registering_phone_id>9089091</registering_phone_id>\n" +
+                "\n" +
+                "    <user_data>\n" +
+                "        <data key=\"name\">cg1</data>\n" +
+                "    </user_data>\n" +
+                "</Registration>";
+    }
+
+
+    private CareGiverInformation getCareGiverInformation(String cgId, String cgCode, String cgName, String phoneNumber) {
+        CareGiverInformation careGiverInformation = new CareGiverInformation();
+        careGiverInformation.setId(cgId);
+        careGiverInformation.setCode(cgCode);
+        careGiverInformation.setName(cgName);
+        careGiverInformation.setPhoneNumber(phoneNumber);
+        return careGiverInformation;
     }
 
     private BeneficiaryInformation getBeneficiaryInformation(String caregiverId, String caregiverCode, String caseId, String caseName, String beneficiaryCode, String caregiverName, String ownerId) {

@@ -6,12 +6,12 @@ import org.motechproject.http.client.service.HttpClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.velocity.VelocityEngineUtils;
-import org.wv.stepsovc.commcare.domain.CaseType;
 import org.wv.stepsovc.commcare.domain.Group;
 import org.wv.stepsovc.commcare.factories.GroupFactory;
 import org.wv.stepsovc.commcare.repository.AllGroups;
 import org.wv.stepsovc.commcare.repository.AllUsers;
 import org.wv.stepsovc.vo.BeneficiaryInformation;
+import org.wv.stepsovc.vo.CareGiverInformation;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,6 +25,12 @@ public class CommcareGateway {
     public static final String OWNER_UPDATE_FORM_TEMPLATE_PATH = "/templates/update-owner-form.xml";
 
     public static final String USER_REGISTRATION_FORM_TEMPLATE_PATH = "/templates/user-registration-form.xml";
+
+    public static final String BENEFICIARY_FORM_KEY = "beneficiary";
+
+    public static final String CARE_GIVER_FORM_KEY = "caregiver";
+
+    public static final String COMMCARE_URL = "http://localhost:7000/a/stepsovc/receiver";
 
     private HttpClientService httpClientService;
 
@@ -67,19 +73,24 @@ public class CommcareGateway {
     }
 
 
-    public void createNewBeneficiary(String url, BeneficiaryInformation beneficiaryInformation) {
+    public void createNewBeneficiary(BeneficiaryInformation beneficiaryInformation) {
         model = new HashMap<String, Object>();
-        model.put(CaseType.BENEFICIARY_CASE.getType(), beneficiaryInformation);
-        httpClientService.post(url, getXmlFromObject(BENEFICIARY_CASE_FORM_TEMPLATE_PATH, model));
+        model.put(BENEFICIARY_FORM_KEY, beneficiaryInformation);
+        httpClientService.post(COMMCARE_URL, getXmlFromObject(BENEFICIARY_CASE_FORM_TEMPLATE_PATH, model));
     }
 
-    public void updateReferralOwner(String url, BeneficiaryInformation beneficiaryInformation) {
+    public void updateReferralOwner(BeneficiaryInformation beneficiaryInformation) {
         model = new HashMap<String, Object>();
-        model.put(CaseType.BENEFICIARY_CASE.getType(), beneficiaryInformation);
-        String xmlFromObject = getXmlFromObject(OWNER_UPDATE_FORM_TEMPLATE_PATH, model);
-        httpClientService.post(url, xmlFromObject);
+        model.put(BENEFICIARY_FORM_KEY, beneficiaryInformation);
+        httpClientService.post(COMMCARE_URL, getXmlFromObject(OWNER_UPDATE_FORM_TEMPLATE_PATH, model));
     }
 
+
+    public void registerUser(CareGiverInformation careGiverInformation) {
+        model = new HashMap<String, Object>();
+        model.put(CARE_GIVER_FORM_KEY, careGiverInformation);
+        httpClientService.post(COMMCARE_URL, getXmlFromObject(USER_REGISTRATION_FORM_TEMPLATE_PATH, model));
+    }
 
     String getXmlFromObject(String templatePath, Map model) {
         return VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, templatePath, "UTF-8", model);

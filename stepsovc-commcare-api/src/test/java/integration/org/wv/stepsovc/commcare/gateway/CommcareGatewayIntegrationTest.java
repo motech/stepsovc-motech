@@ -1,5 +1,6 @@
 package org.wv.stepsovc.commcare.gateway;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,21 +24,21 @@ public class CommcareGatewayIntegrationTest {
     CommcareGateway commcareGateway;
 
 
-    @Test
+    @Ignore
     public void shouldCreateNewBeneficiary() throws Exception {
         BeneficiaryInformation beneficiaryInformation = getBeneficiaryInformation("7ac0b33f0dac4a81c6d1fbf1bd9dfee0", "cg1", UUID.randomUUID().toString(), "new-test-case-5", "new-test-case-5", "cg1", null);
         String url = "http://127.0.0.1:7000/a/stepsovc/receiver";
-        commcareGateway.createNewBeneficiary(url, beneficiaryInformation);
+        commcareGateway.createNewBeneficiary(beneficiaryInformation);
     }
 
     @Test
     public void testObjectToXmlConversion() {
         BeneficiaryInformation beneficiaryInformation = getBeneficiaryInformation("f98589102c60fcc2e0f3c422bb361ebd", "cg1", "c7264b49-4e3d-4659-8df3-7316539829cb", "test-case", "XYZ/123", "cg1", "hw1");
-        assertConversion(CaseType.BENEFICIARY_CASE.getType(), beneficiaryInformation, BENEFICIARY_CASE_FORM_TEMPLATE_PATH, getExpectedBeneficiaryCaseXml());
-        assertConversion(CaseType.BENEFICIARY_CASE.getType(), beneficiaryInformation, OWNER_UPDATE_FORM_TEMPLATE_PATH, getExpectedUpdateOwnerXml());
+        assertConversion(CommcareGateway.BENEFICIARY_FORM_KEY, beneficiaryInformation, BENEFICIARY_CASE_FORM_TEMPLATE_PATH, getExpectedBeneficiaryCaseXml());
+        assertConversion(CommcareGateway.BENEFICIARY_FORM_KEY, beneficiaryInformation, OWNER_UPDATE_FORM_TEMPLATE_PATH, getExpectedUpdateOwnerXml());
 
         CareGiverInformation careGiverInformation = getCareGiverInformation("7ac0b33f0dac4a81c6d1fbf1bd9dfee0", "EW/123", "cg1", "9089091");
-        assertConversion("caregiver", careGiverInformation, USER_REGISTRATION_FORM_TEMPLATE_PATH, getExpectedUserFormXml());
+        assertConversion(CommcareGateway.CARE_GIVER_FORM_KEY, careGiverInformation, USER_REGISTRATION_FORM_TEMPLATE_PATH, getExpectedUserFormXml());
     }
 
     private void assertConversion(String key, Object entity, String formPath, String expectedXML) {

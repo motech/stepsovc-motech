@@ -106,7 +106,7 @@ public class ReferralService {
         for (Referral referral : referrals) {
             referral.setServiceDate(nextAvailableDate);
             allReferrals.update(referral);
-            allAppointments.scheduleNewReferral(referral.getOvcId(),referral.appointmentDataMap(), getDateTime(referral.getServiceDate()));
+            allAppointments.scheduleNewReferral(referral.getOvcId(), referral.appointmentDataMap(), getDateTime(referral.getServiceDate()));
         }
     }
 
@@ -124,6 +124,6 @@ public class ReferralService {
 
     void updateReferralOwner(StepsovcCase stepsovcCase) {
         BeneficiaryInformation beneficiaryInformation = new BeneficiaryMapper().createFormRequest(stepsovcCase);
-        commcareGateway.updateReferralOwner(COMMCARE_URL, beneficiaryInformation);
+        commcareGateway.updateReferralOwner(beneficiaryInformation);
     }
 }
