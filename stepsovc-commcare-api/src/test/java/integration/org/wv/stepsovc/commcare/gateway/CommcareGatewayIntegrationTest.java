@@ -59,7 +59,7 @@ public class CommcareGatewayIntegrationTest {
         CareGiverInformation careGiverInformation = new CareGiverInformation();
         careGiverInformation.setName(caregiveName);
         careGiverInformation.setCode("WS/123");
-        careGiverInformation.setCommcareUserId(userId);
+        careGiverInformation.setId(userId);
 
         CaseInformation caseInformation = new CaseInformation();
         caseInformation.setCaseTypeId("Beneficiary");

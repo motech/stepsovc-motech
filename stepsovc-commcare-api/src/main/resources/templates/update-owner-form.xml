@@ -16,6 +16,6 @@
         <timeStart>$beneficiary.metaInformation.timeStart</timeStart>
         <timeEnd>$beneficiary.metaInformation.timeEnd</timeEnd>
         <username>$beneficiary.caregiverInformation.code</username>
-        <userID>$beneficiary.caregiverInformation.commcareUserId</userID>
+        <userID>$beneficiary.caregiverInformation.id</userID>
     </meta>
 </data>
