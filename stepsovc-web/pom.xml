@@ -244,7 +244,6 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>tomcat-maven-plugin</artifactId>
-                <version>1.2-SNAPSHOT</version>
                 <configuration>
                     <url>http://localhost:8080/manager/text</url>
                     <update>true</update>
