@@ -25,7 +25,7 @@ import static org.hamcrest.Matchers.isIn;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
-public class BaseScheduleTest {
+public abstract class BaseScheduleTest {
 
     @Autowired
     private SchedulerFactoryBean schedulerFactoryBean;

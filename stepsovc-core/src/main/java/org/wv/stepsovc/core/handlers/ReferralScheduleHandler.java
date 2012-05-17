@@ -51,7 +51,7 @@ public class ReferralScheduleHandler {
         try {
             sendSMSToFacilityForAnAppointment(REFERRAL_ALERT, motechEvent);
         } catch (Exception e) {
-            logger.error("<Appointment Alert Exception>: Encountered error while sending alert: ", e);
+            logger.debug("<Appointment Alert Exception>: Encountered error while sending alert: ", e);
             throw new EventHandlerException(motechEvent, e);
         }
     }
