@@ -176,9 +176,6 @@
                 <!-- common configuration shared by all executions -->
                 <configuration>
                     <driver>org.postgresql.Driver</driver>
-                    <url>jdbc:postgresql://${postgres.server}:${postgres.port}:postgres</url>
-                    <username>${postgres.other.user}</username>
-                    <password>${postgres.other.password}</password>
                     <!--all executions are ignored if -Dmaven.test.skip=true-->
                     <skip>${maven.test.skip}</skip>
                 </configuration>
@@ -192,7 +189,7 @@
                         </goals>
                         <configuration>
                             <!-- need another database to drop the targeted one -->
-                            <url>jdbc:postgresql://${postgres.server}:${postgres.port}:postgres</url>
+                            <url>jdbc:postgresql://${postgres.server}:${postgres.port}/${postgres.other.db}</url>
                             <username>${postgres.user}</username>
                             <password>${postgres.password}</password>
                             <autocommit>true</autocommit>
@@ -209,7 +206,7 @@
                         </goals>
                         <configuration>
                             <!-- need another database to drop the targeted one -->
-                            <url>jdbc:postgresql://${postgres.server}:${postgres.port}:postgres</url>
+                            <url>jdbc:postgresql://${postgres.server}:${postgres.port}/${postgres.other.db}</url>
                             <username>${postgres.other.user}</username>
                             <password>${postgres.other.password}</password>
                             <autocommit>true</autocommit>
@@ -225,7 +222,7 @@
                             <goal>execute</goal>
                         </goals>
                         <configuration>
-                            <url>jdbc:postgresql://${postgres.server}:${postgres.port}:${postgres.db}</url>
+                            <url>jdbc:postgresql://${postgres.server}:${postgres.port}/${postgres.db}</url>
                             <username>${postgres.user}</username>
                             <password>${postgres.password}</password>
                             <autocommit>true</autocommit>

@@ -67,6 +67,24 @@
                 </configuration>
             </plugin>
             <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>properties-maven-plugin</artifactId>
+                <version>1.0-alpha-2</version>
+                <executions>
+                    <execution>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>read-project-properties</goal>
+                        </goals>
+                        <configuration>
+                            <files>
+                                <file>../build/maven.properties</file>
+                            </files>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.9</version>
@@ -97,6 +115,80 @@
                     </includes>
                     <redirectTestOutputToFile>true</redirectTestOutputToFile>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>sql-maven-plugin</artifactId>
+                <version>1.5</version>
+
+                <dependencies>
+                    <!-- specify the dependent jdbc driver here -->
+                    <dependency>
+                        <groupId>postgresql</groupId>
+                        <artifactId>postgresql</artifactId>
+                        <version>9.1-901.jdbc4</version>
+                    </dependency>
+                </dependencies>
+
+                <!-- common configuration shared by all executions -->
+                <configuration>
+                    <driver>org.postgresql.Driver</driver>
+                    <!--all executions are ignored if -Dmaven.test.skip=true-->
+                    <skip>${maven.test.skip}</skip>
+                </configuration>
+
+                <executions>
+                    <execution>
+                        <id>drop-quartz-db</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <!-- need another database to drop the targeted one -->
+                            <url>jdbc:postgresql://${postgres.server}:${postgres.port}/${postgres.other.db}</url>
+                            <username>${postgres.user}</username>
+                            <password>${postgres.password}</password>
+                            <autocommit>true</autocommit>
+                            <sqlCommand>drop database if exists ${postgres.db}</sqlCommand>
+                            <!-- ignore error when database is not available -->
+                            <onError>continue</onError>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>create-quartz-db</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <!-- need another database to drop the targeted one -->
+                            <url>jdbc:postgresql://${postgres.server}:${postgres.port}/${postgres.other.db}</url>
+                            <username>${postgres.other.user}</username>
+                            <password>${postgres.other.password}</password>
+                            <autocommit>true</autocommit>
+                            <sqlCommand>create database ${postgres.db}</sqlCommand>
+                            <onError>abort</onError>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>create-schema</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <url>jdbc:postgresql://${postgres.server}:${postgres.port}/${postgres.db}</url>
+                            <username>${postgres.user}</username>
+                            <password>${postgres.password}</password>
+                            <autocommit>true</autocommit>
+                            <srcFiles>
+                                <srcFile>../build/sql/tables_postgres.sql</srcFile>
+                            </srcFiles>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
