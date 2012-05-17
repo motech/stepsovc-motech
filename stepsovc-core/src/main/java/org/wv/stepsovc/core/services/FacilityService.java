@@ -6,14 +6,17 @@ import org.wv.stepsovc.core.domain.Facility;
 import org.wv.stepsovc.core.domain.ServiceUnavailability;
 import org.wv.stepsovc.core.repository.AllFacilities;
 import org.wv.stepsovc.core.request.StepsovcCase;
-import org.wv.stepsovc.core.utils.DateUtils;
 import org.wv.stepsovc.core.vo.FacilityAvailability;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+
+import static java.util.Collections.sort;
+import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
+import static org.wv.stepsovc.core.utils.DateUtils.*;
 
 public class FacilityService {
 
@@ -40,7 +43,7 @@ public class FacilityService {
         }
 
         try {
-            nextAvailableDate = getFacilityAvailability(DateUtils.nextDateStr(serviceUnavailableTo), facility).getNextAvailableDate();
+            nextAvailableDate = getFacilityAvailability(nextDateStr(serviceUnavailableTo), facility).getNextAvailableDate();
         } catch (ParseException e) {
         }
         referralService.updateReferralsServiceDate(facilityCase.getFacility_code(), facilityCase.getService_unavailable_from(), facilityCase.getService_unavailable_to(), nextAvailableDate);
@@ -53,27 +56,30 @@ public class FacilityService {
     }
 
     private FacilityAvailability getFacilityAvailability(String serviceDateStr, Facility facility) {
-        boolean isAvailable = true;
 
+        boolean isAvailable = true;
         Date serviceDate = null;
         try {
-            serviceDate = DateUtils.getDate(serviceDateStr);
-            Collections.sort(facility.getServiceUnavailabilities());
+            serviceDate = getDate(serviceDateStr);
+            List<ServiceUnavailability> serviceUnavailabilities = new ArrayList<ServiceUnavailability>(facility.getServiceUnavailabilities());
+            if (isNotEmpty(serviceUnavailabilities)) {
+                sort(serviceUnavailabilities);
+                for (ServiceUnavailability serviceUnavailability : serviceUnavailabilities) {
+                    Date fromDate = getDate(serviceUnavailability.getFromDate());
+                    Date toDate = getDate(serviceUnavailability.getToDate());
 
-            for (ServiceUnavailability serviceUnavailability : facility.getServiceUnavailabilities()) {
-                Date fromDate = DateUtils.getDate(serviceUnavailability.getFromDate());
-                Date toDate = DateUtils.getDate(serviceUnavailability.getToDate());
-
-                if ((serviceDate.equals(fromDate) || serviceDate.equals(toDate)) ||
-                        (serviceDate.after(fromDate) && serviceDate.before(toDate))) {
-                    serviceDate = DateUtils.nextDate(toDate);
-                    isAvailable = false;
-                } else if (!isAvailable) {
-                    break;
+                    if ((serviceDate.equals(fromDate) || serviceDate.equals(toDate)) ||
+                            (serviceDate.after(fromDate) && serviceDate.before(toDate))) {
+                        serviceDate = nextDate(toDate);
+                        isAvailable = false;
+                    } else if (!isAvailable) {
+                        break;
+                    }
                 }
             }
         } catch (ParseException e) {
+            logger.error("Parse exception", e);
         }
-        return new FacilityAvailability(isAvailable, DateUtils.getFormattedDate(serviceDate));
+        return new FacilityAvailability(isAvailable, getFormattedDate(serviceDate));
     }
 }
