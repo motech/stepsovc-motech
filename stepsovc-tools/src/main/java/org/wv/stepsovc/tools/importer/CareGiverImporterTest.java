@@ -1,11 +1,11 @@
-package org.wv.stepsovc.importer;
+package org.wv.stepsovc.tools.importer;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.wv.stepsovc.commcare.gateway.CommcareGateway;
-import org.wv.stepsovc.dmis.DMISDataProcessor;
+import org.wv.stepsovc.tools.dmis.DMISDataProcessor;
 import org.wv.stepsovc.vo.CareGiverInformation;
 
 import java.util.Arrays;

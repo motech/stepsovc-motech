@@ -3,6 +3,24 @@ package org.wv.stepsovc.core.domain;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 public class Service {
+
+    @JsonProperty
+    private boolean referred;
+
+    @JsonProperty
+    private boolean provided;
+
+    @JsonProperty
+    private String reason;
+
+    public Service(boolean referred) {
+        this.referred = referred;
+    }
+
+    public Service() {
+
+    }
+
     public boolean isReferred() {
         return referred;
     }
@@ -26,22 +44,5 @@ public class Service {
     public Service setReason(String reason) {
         this.reason = reason;
         return this;
-    }
-
-    @JsonProperty
-    private boolean referred;
-
-    @JsonProperty
-    private boolean provided;
-
-    @JsonProperty
-    private String reason;
-
-    public Service(boolean referred) {
-        this.referred = referred;
-    }
-
-    public Service() {
-
     }
 }

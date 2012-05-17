@@ -6,7 +6,7 @@
 
     <util:properties id="textMessage" location="classpath:/textMessage.properties"/>
     <import resource="classpath:applicationCmsLiteApi.xml"/>
-
+    <import resource="classpath:applicationContext-stepsovc-commcare-api.xml"/>
     <context:annotation-config/>
     <context:spring-configured/>
     <context:component-scan base-package="org.wv.stepsovc.tools" />

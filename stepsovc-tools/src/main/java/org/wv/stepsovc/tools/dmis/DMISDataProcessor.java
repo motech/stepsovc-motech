@@ -1,4 +1,4 @@
-package org.wv.stepsovc.dmis;
+package org.wv.stepsovc.tools.dmis;
 
 import org.bouncycastle.crypto.digests.SHA1Digest;
 import org.bouncycastle.crypto.generators.PKCS5S1ParametersGenerator;
@@ -7,7 +7,7 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import org.wv.stepsovc.crypto.PasswordDeriveBytes;
+import org.wv.stepsovc.tools.crypto.PasswordDeriveBytes;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 

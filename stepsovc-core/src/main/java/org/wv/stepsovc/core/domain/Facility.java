@@ -55,4 +55,9 @@ public class Facility extends MotechBaseDataObject {
     public List<String> getPhoneNumbers() {
         return phoneNumbers;
     }
+
+    public Facility setPhoneNumber(List<String> phoneNumbers) {
+        this.phoneNumbers=phoneNumbers;
+        return this;
+    }
 }

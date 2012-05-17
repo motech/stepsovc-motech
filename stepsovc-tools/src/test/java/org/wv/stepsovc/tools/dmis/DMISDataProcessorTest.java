@@ -1,4 +1,4 @@
-package org.wv.stepsovc.dmis;
+package org.wv.stepsovc.tools.dmis;
 
 import org.junit.Test;
 

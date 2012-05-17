@@ -1,9 +1,9 @@
-package org.wv.stepsovc.importer;
+package org.wv.stepsovc.tools.importer;
 
 import org.motechproject.importer.CSVImporter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.wv.stepsovc.commcare.gateway.CommcareGateway;
-import org.wv.stepsovc.dmis.DMISDataProcessor;
+import org.wv.stepsovc.tools.dmis.DMISDataProcessor;
 import org.wv.stepsovc.vo.CareGiverInformation;
 
 import java.util.List;

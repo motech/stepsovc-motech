@@ -4,8 +4,12 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.ektorp.support.TypeDiscriminator;
 import org.motechproject.model.MotechBaseDataObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import static org.wv.stepsovc.core.domain.ServiceType.*;
 
 @TypeDiscriminator("doc.type == 'Referral'")
 public class Referral extends MotechBaseDataObject {
@@ -24,6 +28,8 @@ public class Referral extends MotechBaseDataObject {
     @JsonProperty
     private String followupRequired;
     @JsonProperty
+    private String followupDate;
+    @JsonProperty
     private Service artAdherenceCounseling;
     @JsonProperty
     private Service condoms;
@@ -38,34 +44,24 @@ public class Referral extends MotechBaseDataObject {
     @JsonProperty
     private Service otherHealthServices;
     @JsonProperty
-    private String followupDate;
-    @JsonProperty
     private Service painManagement;
+    @JsonProperty
+    private Service sexuallyTransmittedInfection;
     @JsonProperty
     private Service pmtct;
     @JsonProperty
-    private Service sexuallyTransmittedInfection;
-
-    public String getServiceDetails() {
-        return serviceDetails;
-    }
-
-    public void setServiceDetails(String serviceDetails) {
-        this.serviceDetails = serviceDetails;
-    }
-
-    @JsonProperty
     private String serviceDetails;
+
 
     public static final String META_FACILITY_ID = "facilityId";
 
     public static final String VISIT_NAME = "Referral";
+
     @JsonProperty
     private boolean active;
     public String getOvcId() {
         return ovcId;
     }
-
     public Referral setOvcId(String ovcId) {
         this.ovcId = ovcId;
         return this;
@@ -189,8 +185,9 @@ public class Referral extends MotechBaseDataObject {
         return facilityCode;
     }
 
-    public void setFacilityCode(String facilityCode) {
+    public Referral setFacilityCode(String facilityCode) {
         this.facilityCode = facilityCode;
+        return this;
     }
 
     public String getVisitDate() {
@@ -214,5 +211,39 @@ public class Referral extends MotechBaseDataObject {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put(META_FACILITY_ID, facilityCode);
         return params;
+    }
+
+    public String getServiceDetails() {
+        return serviceDetails;
+    }
+
+    public void setServiceDetails(String serviceDetails) {
+        this.serviceDetails = serviceDetails;
+    }
+
+    public List<String> servicesReferred() {
+        List<String> serviceCodes = new ArrayList<String>();
+        if(newDiagnosis.isReferred())
+            serviceCodes.add(NEW_DIAGNOSIS.getCode());
+        if(endOfLifeHospice.isReferred())
+            serviceCodes.add(END_OF_LIFE_HOSPICE.getCode());
+        if(hivCounseling.isReferred())
+            serviceCodes.add(HIVE_COUNSELING.getCode());
+        if(familyPlanning.isReferred())
+            serviceCodes.add(FAMILY_PLANNING.getCode());
+        if(sexuallyTransmittedInfection.isReferred())
+            serviceCodes.add(SEXUALLY_TRANSMITTED_INFEC.getCode());
+        if(artAdherenceCounseling.isReferred())
+            serviceCodes.add(ART_ADHERENCE.getCode());
+        if(painManagement.isReferred())
+            serviceCodes.add(PAIN_MANAGEMENT.getCode());
+        if(pmtct.isReferred())
+            serviceCodes.add(PMTCT.getCode());
+        if(condoms.isReferred())
+            serviceCodes.add(CONDOMS.getCode());
+        if(otherHealthServices.isReferred())
+            serviceCodes.add(OTHER_HEALTH_SERVICES.getCode());
+
+        return serviceCodes;
     }
 }
