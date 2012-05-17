@@ -1,5 +1,6 @@
 package org.wv.stepsovc.core.handlers;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -20,6 +21,7 @@ import org.wv.stepsovc.core.repository.SMSGateway;
 import java.util.*;
 
 import static org.apache.commons.lang.StringUtils.join;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -75,5 +77,16 @@ public class ReferralScheduleHandlerTest {
         MotechEvent motechEvent= new MotechEvent("subject",parameters);
         referralScheduleHandler.handleAlert(motechEvent);
         verify(mockSMSGateway).send(phoneNumbers, "test (bencode) Services (" + join(referral.servicesReferred(), ",") + ")");
+    }
+
+    @Test
+    public void shouldThrowEventHandlerExceptionOnAnyFailure() {
+
+        when(mockAllReferrals.findActiveByOvcId(anyString())).thenThrow(new RuntimeException("some exception"));
+        try {
+            referralScheduleHandler.handleAlert(new MotechEvent(""));
+            Assert.fail("expected exception here");
+        } catch (EventHandlerException ehe) {
+        }
     }
 }
