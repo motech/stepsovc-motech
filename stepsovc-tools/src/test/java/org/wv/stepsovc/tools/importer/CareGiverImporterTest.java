@@ -2,18 +2,22 @@ package org.wv.stepsovc.tools.importer;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.wv.stepsovc.commcare.gateway.CommcareGateway;
+import org.wv.stepsovc.commcare.vo.CareGiverInformation;
+import org.wv.stepsovc.core.domain.Caregiver;
+import org.wv.stepsovc.core.repository.AllCaregivers;
 import org.wv.stepsovc.tools.dmis.DMISDataProcessor;
-import org.wv.stepsovc.vo.CareGiverInformation;
 
 import java.util.Arrays;
 import java.util.List;
 
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.verify;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class CareGiverImporterTest {
@@ -24,6 +28,8 @@ public class CareGiverImporterTest {
     private DMISDataProcessor mockDMISDataProcessor;
     @Mock
     private CommcareGateway mockCommcareGateway;
+    @Mock
+    private AllCaregivers mockAllCaregivers;
 
     @Before
     public void setUp() throws Exception {
@@ -31,6 +37,7 @@ public class CareGiverImporterTest {
         careGiverImporter = new CareGiverImporter();
         ReflectionTestUtils.setField(careGiverImporter, "dmisDataProcessor", mockDMISDataProcessor);
         ReflectionTestUtils.setField(careGiverImporter, "commcareGateway", mockCommcareGateway);
+        ReflectionTestUtils.setField(careGiverImporter, "allCaregivers", mockAllCaregivers);
     }
 
     @Test
@@ -56,11 +63,24 @@ public class CareGiverImporterTest {
     }
 
     @Test
-    public void shouldInvokeCommcareGatewayToPostImportedData() throws Exception {
-        final CareGiverInformation careGiver1 = new CareGiverInformation();
-        final CareGiverInformation careGiver2 = new CareGiverInformation();
-        careGiverImporter.post(Arrays.asList(careGiver1, careGiver2));
-        verify(mockCommcareGateway).registerUser(careGiver1);
-        verify(mockCommcareGateway).registerUser(careGiver2);
+    public void shouldPostImportedCareGivers() throws Exception {
+        final String id1 = "123";
+        final String id2 = "345";
+        CareGiverInformation careGiverInfo1 = new CareGiverInformation();
+        careGiverInfo1.setId(id1);
+        CareGiverInformation careGiverInfo2 = new CareGiverInformation();
+        careGiverInfo2.setId(id2);
+
+        careGiverImporter.post(Arrays.asList(careGiverInfo1, careGiverInfo2));
+
+        verify(mockCommcareGateway).registerUser(careGiverInfo1);
+        verify(mockCommcareGateway).registerUser(careGiverInfo2);
+
+        ArgumentCaptor<Caregiver> captor = ArgumentCaptor.forClass(Caregiver.class);
+
+        verify(mockAllCaregivers, times(2)).add(captor.capture());
+
+        assertThat(captor.getAllValues().get(0).getId(), is(id1));
+        assertThat(captor.getAllValues().get(1).getId(), is(id2));
     }
 }

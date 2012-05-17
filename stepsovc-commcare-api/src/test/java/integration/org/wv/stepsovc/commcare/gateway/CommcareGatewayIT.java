@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.wv.stepsovc.commcare.domain.CaseType;
-import org.wv.stepsovc.vo.BeneficiaryInformation;
-import org.wv.stepsovc.vo.CareGiverInformation;
+import org.wv.stepsovc.commcare.vo.BeneficiaryInformation;
+import org.wv.stepsovc.commcare.vo.CareGiverInformation;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -18,7 +18,7 @@ import static org.wv.stepsovc.commcare.gateway.CommcareGateway.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath*:applicationContext-stepsovc-commcare-api.xml")
-public class CommcareGatewayIntegrationTest {
+public class CommcareGatewayIT {
 
     @Autowired
     CommcareGateway commcareGateway;
@@ -54,7 +54,7 @@ public class CommcareGatewayIntegrationTest {
                 "    <username>EW/123</username>\n" +
                 "    <password>sha1$6a631$73c1ccdd8dd900d6b208dd5ba5ab081d052d87bf</password>\n" +
                 "    <uuid>7ac0b33f0dac4a81c6d1fbf1bd9dfee0</uuid>\n" +
-                "    <date>$today</date>\n" +
+                "    <date></date>\n" +
                 "\n" +
                 "    <registering_phone_id>9089091</registering_phone_id>\n" +
                 "\n" +

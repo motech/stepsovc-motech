@@ -1,6 +1,6 @@
 package org.wv.stepsovc.core.mapper;
 
-import org.wv.stepsovc.vo.*;
+import org.wv.stepsovc.commcare.vo.BeneficiaryInformation;
 import org.wv.stepsovc.core.domain.Beneficiary;
 import org.wv.stepsovc.core.request.StepsovcCase;
 

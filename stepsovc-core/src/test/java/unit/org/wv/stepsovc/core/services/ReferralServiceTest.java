@@ -1,6 +1,5 @@
 package org.wv.stepsovc.core.services;
 
-import org.wv.stepsovc.core.mapper.ReferralMapperTest;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,9 +8,10 @@ import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.wv.stepsovc.commcare.gateway.CommcareGateway;
-import org.wv.stepsovc.vo.BeneficiaryInformation;
+import org.wv.stepsovc.commcare.vo.BeneficiaryInformation;
 import org.wv.stepsovc.core.domain.Referral;
 import org.wv.stepsovc.core.mapper.ReferralMapper;
+import org.wv.stepsovc.core.mapper.ReferralMapperTest;
 import org.wv.stepsovc.core.repository.AllAppointments;
 import org.wv.stepsovc.core.repository.AllReferrals;
 import org.wv.stepsovc.core.request.StepsovcCase;
@@ -43,7 +43,7 @@ public class ReferralServiceTest {
     @Before
     public void setup() {
         initMocks(this);
-        referralService = spy(new ReferralService(""));
+        referralService = spy(new ReferralService());
         ReflectionTestUtils.setField(referralService, "allReferrals", mockAllReferrals);
         ReflectionTestUtils.setField(referralService, "commcareGateway", commcareGateway);
         ReflectionTestUtils.setField(referralService, "facilityService", facilityService);

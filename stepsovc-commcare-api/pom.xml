@@ -24,9 +24,14 @@
             <version>${motech-platform.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.motechproject</groupId>
-            <artifactId>motech-platform-server-api</artifactId>
-            <version>${motech-platform.version}</version>
+            <groupId>org.apache.velocity</groupId>
+            <artifactId>velocity</artifactId>
+            <version>1.7</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.velocity</groupId>
+            <artifactId>velocity</artifactId>
+            <version>1.7</version>
         </dependency>
     </dependencies>
     <build>

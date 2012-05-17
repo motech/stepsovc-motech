@@ -3,8 +3,10 @@ package org.wv.stepsovc.tools.importer;
 import org.motechproject.importer.CSVImporter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.wv.stepsovc.commcare.gateway.CommcareGateway;
+import org.wv.stepsovc.commcare.vo.CareGiverInformation;
+import org.wv.stepsovc.core.repository.AllCaregivers;
 import org.wv.stepsovc.tools.dmis.DMISDataProcessor;
-import org.wv.stepsovc.vo.CareGiverInformation;
+import org.wv.stepsovc.tools.mapper.CaregiverMapper;
 
 import java.util.List;
 
@@ -13,6 +15,8 @@ public class CareGiverImporter extends CSVImporter<CareGiverInformation> {
     private DMISDataProcessor dmisDataProcessor;
     @Autowired
     private CommcareGateway commcareGateway;
+    @Autowired
+    private AllCaregivers allCaregivers;
 
     public CareGiverImporter() {
         this.dmisDataProcessor = new DMISDataProcessor();
@@ -33,8 +37,10 @@ public class CareGiverImporter extends CSVImporter<CareGiverInformation> {
     }
 
     public void post(List<CareGiverInformation> entities) {
+        CaregiverMapper caregiverMapper = new CaregiverMapper();
         for (CareGiverInformation entity : entities) {
             commcareGateway.registerUser(entity);
+            allCaregivers.add(caregiverMapper.map(entity));
         }
     }
 }

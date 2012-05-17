@@ -1,4 +1,4 @@
-package org.wv.stepsovc.core.repository;
+package unit.org.wv.stepsovc.core.repository;
 
 import org.junit.After;
 import org.junit.Test;
@@ -9,6 +9,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.wv.stepsovc.core.domain.Referral;
 import org.wv.stepsovc.core.domain.Service;
+import org.wv.stepsovc.core.repository.AllReferrals;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNull;

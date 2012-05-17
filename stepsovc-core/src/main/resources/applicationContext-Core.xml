@@ -26,11 +26,9 @@
 
     <context:annotation-config/>
     <context:spring-configured/>
-    <context:component-scan base-package="org.wv.stepsovc.core" />
+    <context:component-scan base-package="org.wv.stepsovc.core"/>
 
-    <bean id="referralService" class="org.wv.stepsovc.core.services.ReferralService">
-        <constructor-arg index="0" value="${commcarehq.submission.url}"/>
-    </bean>
+    <bean id="referralService" class="org.wv.stepsovc.core.services.ReferralService"/>
 
     <bean id="facilityService" class="org.wv.stepsovc.core.services.FacilityService"/>
 

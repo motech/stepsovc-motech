@@ -14,7 +14,7 @@
         <dependency>
             <groupId>org.wv.stepsovc</groupId>
             <artifactId>stepsovc-commcare-api</artifactId>
-            <version>${parent.version}</version>
+            <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>org.motechproject</groupId>
@@ -51,11 +51,6 @@
             <groupId>org.motechproject</groupId>
             <artifactId>motech-cmslite-api</artifactId>
             <version>${motech-platform.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.8.2</version>
         </dependency>
     </dependencies>
 

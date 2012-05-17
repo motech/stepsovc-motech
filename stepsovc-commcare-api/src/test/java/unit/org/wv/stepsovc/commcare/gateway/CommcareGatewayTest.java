@@ -6,11 +6,12 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.http.client.listener.HttpClientEventListener;
 import org.motechproject.http.client.service.HttpClientService;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.wv.stepsovc.commcare.domain.CaseType;
 import org.wv.stepsovc.commcare.repository.AllGroups;
 import org.wv.stepsovc.commcare.repository.AllUsers;
-import org.wv.stepsovc.vo.BeneficiaryInformation;
-import org.wv.stepsovc.vo.CareGiverInformation;
+import org.wv.stepsovc.commcare.vo.BeneficiaryInformation;
+import org.wv.stepsovc.commcare.vo.CareGiverInformation;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -45,7 +46,12 @@ public class CommcareGatewayTest {
     @Before
     public void setup() {
         initMocks(this);
-        spyCommcareGateway = spy(new CommcareGateway(mockHttpClientService, mockVelocityEngine, mockHttpClientEventListener, allGroups, allUsers));
+        spyCommcareGateway = spy(new CommcareGateway());
+        ReflectionTestUtils.setField(spyCommcareGateway, "httpClientEventListener", mockHttpClientEventListener);
+        ReflectionTestUtils.setField(spyCommcareGateway, "httpClientService", mockHttpClientService);
+        ReflectionTestUtils.setField(spyCommcareGateway, "velocityEngine", mockVelocityEngine);
+        ReflectionTestUtils.setField(spyCommcareGateway, "allGroups", allGroups);
+        ReflectionTestUtils.setField(spyCommcareGateway, "allUsers", allUsers);
         model = new HashMap<String, Object>();
 
     }
@@ -59,7 +65,7 @@ public class CommcareGatewayTest {
 
         spyCommcareGateway.createNewBeneficiary(beneficiaryInformation);
 
-        verify(mockHttpClientService).post(CommcareGateway.COMMCARE_URL, getBeneficiaryCaseExpectedXml());
+        verify(mockHttpClientService).post(COMMCARE_URL, getBeneficiaryCaseExpectedXml());
     }
 
     @Test
@@ -70,7 +76,7 @@ public class CommcareGatewayTest {
 
         spyCommcareGateway.updateReferralOwner(beneficiaryInformation);
 
-        verify(mockHttpClientService).post(CommcareGateway.COMMCARE_URL, getBeneficiaryCaseExpectedXml());
+        verify(mockHttpClientService).post(COMMCARE_URL, getBeneficiaryCaseExpectedXml());
     }
 
 
@@ -82,7 +88,7 @@ public class CommcareGatewayTest {
 
         spyCommcareGateway.registerUser(careGiverInformation);
 
-        verify(mockHttpClientService).post(CommcareGateway.COMMCARE_URL, getExpectedUserFormXml());
+        verify(mockHttpClientService).post(COMMCARE_URL, getExpectedUserFormXml());
 
     }
 

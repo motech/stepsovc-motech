@@ -10,8 +10,8 @@ import org.wv.stepsovc.commcare.domain.Group;
 import org.wv.stepsovc.commcare.factories.GroupFactory;
 import org.wv.stepsovc.commcare.repository.AllGroups;
 import org.wv.stepsovc.commcare.repository.AllUsers;
-import org.wv.stepsovc.vo.BeneficiaryInformation;
-import org.wv.stepsovc.vo.CareGiverInformation;
+import org.wv.stepsovc.commcare.vo.BeneficiaryInformation;
+import org.wv.stepsovc.commcare.vo.CareGiverInformation;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,29 +29,19 @@ public class CommcareGateway {
     public static final String BENEFICIARY_FORM_KEY = "beneficiary";
 
     public static final String CARE_GIVER_FORM_KEY = "caregiver";
-
-    public static final String COMMCARE_URL = "http://localhost:7000/a/stepsovc/receiver";
-
+    @Autowired
     private HttpClientService httpClientService;
-
+    @Autowired
     private VelocityEngine velocityEngine;
-
+    @Autowired
     private HttpClientEventListener httpClientEventListener;
-
+    @Autowired
+    private AllGroups allGroups;
+    @Autowired
+    private AllUsers allUsers;
     private Map model;
 
-    private AllGroups allGroups;
-    private AllUsers allUsers;
-
-
-    @Autowired
-    public CommcareGateway(HttpClientService httpClientService, VelocityEngine velocityEngine, HttpClientEventListener httpClientEventListener, AllGroups allGroups, AllUsers allUsers) {
-        this.httpClientService = httpClientService;
-        this.velocityEngine = velocityEngine;
-        this.httpClientEventListener = httpClientEventListener;
-        this.allGroups = allGroups;
-        this.allUsers = allUsers;
-    }
+    public static final String COMMCARE_URL = "http://localhost:7000/a/stepsovc/receiver";
 
     public String getUserId(String name) {
         return allUsers.getUserByName(name) == null ? null : allUsers.getUserByName(name).getId();

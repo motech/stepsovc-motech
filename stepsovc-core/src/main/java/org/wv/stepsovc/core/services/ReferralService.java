@@ -4,14 +4,14 @@ import org.apache.log4j.Logger;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.wv.stepsovc.commcare.gateway.CommcareGateway;
-import org.wv.stepsovc.core.utils.DateUtils;
-import org.wv.stepsovc.vo.BeneficiaryInformation;
+import org.wv.stepsovc.commcare.vo.BeneficiaryInformation;
 import org.wv.stepsovc.core.domain.Referral;
 import org.wv.stepsovc.core.mapper.BeneficiaryMapper;
 import org.wv.stepsovc.core.mapper.ReferralMapper;
 import org.wv.stepsovc.core.repository.AllAppointments;
 import org.wv.stepsovc.core.repository.AllReferrals;
 import org.wv.stepsovc.core.request.StepsovcCase;
+import org.wv.stepsovc.core.utils.DateUtils;
 import org.wv.stepsovc.core.vo.FacilityAvailability;
 
 import java.util.List;
@@ -33,12 +33,6 @@ public class ReferralService {
 
     @Autowired
     private AllAppointments allAppointments;
-
-    private String COMMCARE_URL;
-
-    public ReferralService(String COMMCARE_URL) {
-        this.COMMCARE_URL = COMMCARE_URL;
-    }
 
     public void addNewReferral(StepsovcCase stepsovcCase) {
         logger.info("Handling new referral");

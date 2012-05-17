@@ -3,7 +3,7 @@
     <username>$caregiver.code</username>
     <password>sha1$6a631$73c1ccdd8dd900d6b208dd5ba5ab081d052d87bf</password>
     <uuid>$caregiver.id</uuid>
-    <date>$today</date>
+    <date></date>
 
     <registering_phone_id>$caregiver.phoneNumber</registering_phone_id>
 
