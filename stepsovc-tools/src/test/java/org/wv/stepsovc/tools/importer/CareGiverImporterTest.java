@@ -12,16 +12,14 @@ import org.wv.stepsovc.core.repository.AllCaregivers;
 import org.wv.stepsovc.tools.dmis.DMISDataProcessor;
 
 import java.util.Arrays;
-import java.util.List;
 
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class CareGiverImporterTest {
-
 
     CareGiverImporter careGiverImporter;
     @Mock
@@ -41,34 +39,16 @@ public class CareGiverImporterTest {
     }
 
     @Test
-    public void shouldInvokeDecrypterWhileTransform() {
-
-        final String encryptedName1 = "encryptedName1";
-        final String encryptedName2 = "encryptedName2";
-        final String decryptedName1 = "decryptedName1";
-        final String decryptedName2 = "decryptedName2";
-
-        CareGiverInformation careGiverInformation1 = new CareGiverInformation();
-        careGiverInformation1.setName("encryptedName1");
-
-        CareGiverInformation careGiverInformation2 = new CareGiverInformation();
-        careGiverInformation2.setName("encryptedName2");
-
-        doReturn(decryptedName1).when(mockDMISDataProcessor).decrypt(encryptedName1);
-        doReturn(decryptedName2).when(mockDMISDataProcessor).decrypt(encryptedName2);
-
-        final List<CareGiverInformation> transformedCareGiverInfoList = careGiverImporter.transform(Arrays.asList(careGiverInformation1, careGiverInformation2));
-        assertEquals(decryptedName1, transformedCareGiverInfoList.get(0).getName());
-        assertEquals(decryptedName2, transformedCareGiverInfoList.get(1).getName());
-    }
-
-    @Test
     public void shouldPostImportedCareGivers() throws Exception {
-        final String id1 = "123";
-        final String id2 = "345";
+        String id1 = "123";
+        String id2 = "345";
+        String name1 = "name1";
+        String name2 = "name2";
         CareGiverInformation careGiverInfo1 = new CareGiverInformation();
         careGiverInfo1.setId(id1);
+        careGiverInfo1.setName(name1);
         CareGiverInformation careGiverInfo2 = new CareGiverInformation();
+        careGiverInfo2.setName(name2);
         careGiverInfo2.setId(id2);
 
         careGiverImporter.post(Arrays.asList(careGiverInfo1, careGiverInfo2));
@@ -76,11 +56,16 @@ public class CareGiverImporterTest {
         verify(mockCommcareGateway).registerUser(careGiverInfo1);
         verify(mockCommcareGateway).registerUser(careGiverInfo2);
 
-        ArgumentCaptor<Caregiver> captor = ArgumentCaptor.forClass(Caregiver.class);
+        ArgumentCaptor<Caregiver> captor1 = ArgumentCaptor.forClass(Caregiver.class);
 
-        verify(mockAllCaregivers, times(2)).add(captor.capture());
+        verify(mockAllCaregivers, times(2)).add(captor1.capture());
+        ArgumentCaptor<String> captor2 = ArgumentCaptor.forClass(String.class);
 
-        assertThat(captor.getAllValues().get(0).getId(), is(id1));
-        assertThat(captor.getAllValues().get(1).getId(), is(id2));
+        verify(mockDMISDataProcessor, times(2)).decrypt(captor2.capture());
+
+        assertThat(captor1.getAllValues().get(0).getId(), is(id1));
+        assertThat(captor1.getAllValues().get(1).getId(), is(id2));
+        assertThat(captor2.getAllValues().get(0), is(name1));
+        assertThat(captor2.getAllValues().get(1), is(name2));
     }
 }

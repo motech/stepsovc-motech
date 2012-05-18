@@ -1,7 +1,9 @@
 package org.wv.stepsovc.tools.importer;
 
-import org.motechproject.importer.CSVImporter;
+import org.motechproject.importer.annotation.CSVImporter;
+import org.motechproject.importer.annotation.Post;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.wv.stepsovc.commcare.gateway.CommcareGateway;
 import org.wv.stepsovc.commcare.vo.CareGiverInformation;
 import org.wv.stepsovc.core.repository.AllCaregivers;
@@ -10,35 +12,21 @@ import org.wv.stepsovc.tools.mapper.CaregiverMapper;
 
 import java.util.List;
 
-public class CareGiverImporter extends CSVImporter<CareGiverInformation> {
-
+@CSVImporter(entity = "caregiver", bean = CareGiverInformation.class)
+@Component
+public class CareGiverImporter{
+    @Autowired
     private DMISDataProcessor dmisDataProcessor;
     @Autowired
     private CommcareGateway commcareGateway;
     @Autowired
     private AllCaregivers allCaregivers;
 
-    public CareGiverImporter() {
-        this.dmisDataProcessor = new DMISDataProcessor();
-    }
-
-    public static void main(String args[]) {
-        String filePath = args[0];
-        CareGiverImporter careGiverImporter = new CareGiverImporter();
-        careGiverImporter.process(filePath, CareGiverInformation.class);
-    }
-
-    @Override
-    public List<CareGiverInformation> transform(List<CareGiverInformation> careGivers) {
-        for (CareGiverInformation careGiver : careGivers) {
-            careGiver.setName(dmisDataProcessor.decrypt(careGiver.getName()));
-        }
-        return careGivers;
-    }
-
+    @Post
     public void post(List<CareGiverInformation> entities) {
         CaregiverMapper caregiverMapper = new CaregiverMapper();
         for (CareGiverInformation entity : entities) {
+            entity.setName(dmisDataProcessor.decrypt(entity.getName()));
             commcareGateway.registerUser(entity);
             allCaregivers.add(caregiverMapper.map(entity));
         }
