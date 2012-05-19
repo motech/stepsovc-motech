@@ -1,4 +1,4 @@
-package org.wv.stepsovc.core;
+package org.wv.stepsovc.tools;
 
 import org.joda.time.DateTime;
 import org.motechproject.sms.api.service.SmsService;

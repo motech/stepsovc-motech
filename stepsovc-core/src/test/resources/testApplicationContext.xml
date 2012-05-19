@@ -8,5 +8,5 @@
         <constructor-arg value="stepsovc-integration-test"/>
         <constructor-arg ref="couchDbInstance"/>
     </bean>
-    <bean id="smsServiceImpl" class="integration.org.wv.stepsovc.core.MockSmsService"/>
+    <bean id="smsServiceImpl" class="org.wv.stepsovc.core.MockSmsService"/>
 </beans>

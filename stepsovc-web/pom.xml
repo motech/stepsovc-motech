@@ -193,7 +193,7 @@
                             <username>${postgres.user}</username>
                             <password>${postgres.password}</password>
                             <autocommit>true</autocommit>
-                            <sqlCommand>drop database if exists ${postgres.db}</sqlCommand>
+                            <sqlCommand>drop database if exists ${postgres.testdb}</sqlCommand>
                             <!-- ignore error when database is not available -->
                             <onError>continue</onError>
                         </configuration>
@@ -210,7 +210,7 @@
                             <username>${postgres.other.user}</username>
                             <password>${postgres.other.password}</password>
                             <autocommit>true</autocommit>
-                            <sqlCommand>create database ${postgres.db}</sqlCommand>
+                            <sqlCommand>create database ${postgres.testdb}</sqlCommand>
                             <onError>abort</onError>
                         </configuration>
                     </execution>
@@ -222,7 +222,7 @@
                             <goal>execute</goal>
                         </goals>
                         <configuration>
-                            <url>jdbc:postgresql://${postgres.server}:${postgres.port}/${postgres.db}</url>
+                            <url>jdbc:postgresql://${postgres.server}:${postgres.port}/${postgres.testdb}</url>
                             <username>${postgres.user}</username>
                             <password>${postgres.password}</password>
                             <autocommit>true</autocommit>
