@@ -14,12 +14,7 @@
         <constructor-arg value="stepsovc-integration-test"/>
         <constructor-arg ref="couchDbInstance"/>
     </bean>
-
-    <bean factory-method="create" depends-on="" class="org.wv.stepsovc.web.MockFactory">
-        <constructor-arg value="org.wv.stepsovc.web.MockSmsService"/>
-    </bean>
-    <bean factory-method="create" depends-on="" class="org.wv.stepsovc.web.MockFactory">
-        <constructor-arg value="org.motechproject.sms.api.service.SmsAuditService"/>
-    </bean>
+    <bean factory-method="createSmsService" class="org.wv.stepsovc.web.MockFactory"/>
+    <bean factory-method="createAuditService" class="org.wv.stepsovc.web.MockFactory"/>
 
 </beans>
