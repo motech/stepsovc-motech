@@ -1,4 +1,4 @@
-package org.wv.stepsovc.commcare.factories1;
+package org.wv.stepsovc.commcare.factories;
 
 import org.wv.stepsovc.commcare.domain.Group;
 
