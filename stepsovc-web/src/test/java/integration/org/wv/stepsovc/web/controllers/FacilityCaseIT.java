@@ -3,6 +3,7 @@ package org.wv.stepsovc.web.controllers;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.motechproject.appointments.api.repository.AllAppointmentCalendars;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -17,7 +18,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath*:testApplicationContext.xml")
+@ContextConfiguration("classpath*:testWebApplicationContext.xml")
 public class FacilityCaseIT {
 
     @Autowired
@@ -27,6 +28,10 @@ public class FacilityCaseIT {
     AllFacilities allFacilities;
     @Autowired
     AllReferrals allReferrals;
+
+    @Autowired
+    private AllAppointmentCalendars allAppointmentCalendars;
+
     private String facilityId = "testId";
     private String benCode1 = "BEN001";
     private String benCode2 = "BEN002";
@@ -86,5 +91,6 @@ public class FacilityCaseIT {
     public void clearAll() throws SchedulerException {
         allFacilities.removeAll();
         allReferrals.removeAll();
+        allAppointmentCalendars.removeAll();
     }
 }

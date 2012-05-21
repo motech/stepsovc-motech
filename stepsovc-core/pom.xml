@@ -49,6 +49,11 @@
         </dependency>
         <dependency>
             <groupId>org.motechproject</groupId>
+            <artifactId>message-aggregator</artifactId>
+            <version>0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.motechproject</groupId>
             <artifactId>motech-cmslite-api</artifactId>
             <version>${motech-platform.version}</version>
         </dependency>

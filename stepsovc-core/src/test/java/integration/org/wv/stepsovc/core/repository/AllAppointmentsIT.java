@@ -12,7 +12,6 @@ import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.wv.stepsovc.core.repository.AllAppointments;
 import org.wv.stepsovc.core.BaseScheduleTest;
 import org.wv.stepsovc.core.TestJobDetail;
 import org.wv.stepsovc.core.domain.Referral;
@@ -27,7 +26,7 @@ import static org.junit.Assert.assertThat;
 import static org.motechproject.util.DateUtil.newDateTime;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath*:testApplicationContext.xml")
+@ContextConfiguration("classpath*:testCoreApplicationContext.xml")
 public class AllAppointmentsIT extends BaseScheduleTest {
 
     @Autowired

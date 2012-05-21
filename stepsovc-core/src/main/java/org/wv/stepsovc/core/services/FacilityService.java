@@ -59,7 +59,6 @@ public class FacilityService {
 
         boolean isAvailable = true;
         Date serviceDate = null;
-        try {
             serviceDate = getDate(serviceDateStr);
             List<ServiceUnavailability> serviceUnavailabilities = new ArrayList<ServiceUnavailability>(facility.getServiceUnavailabilities());
             if (isNotEmpty(serviceUnavailabilities)) {
@@ -77,9 +76,6 @@ public class FacilityService {
                     }
                 }
             }
-        } catch (ParseException e) {
-            logger.error("Parse exception", e);
-        }
         return new FacilityAvailability(isAvailable, getFormattedDate(serviceDate));
     }
 }

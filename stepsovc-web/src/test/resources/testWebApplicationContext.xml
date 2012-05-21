@@ -14,7 +14,7 @@
         <constructor-arg value="stepsovc-integration-test"/>
         <constructor-arg ref="couchDbInstance"/>
     </bean>
-    <bean factory-method="createSmsService" class="org.wv.stepsovc.web.MockFactory"/>
-    <bean factory-method="createAuditService" class="org.wv.stepsovc.web.MockFactory"/>
+    <bean id="smsServiceImpl"  factory-method="createSmsService" class="org.wv.stepsovc.web.MockFactory"/>
+    <bean id="smsAuditService" factory-method="createAuditService" class="org.wv.stepsovc.web.MockFactory"/>
 
 </beans>

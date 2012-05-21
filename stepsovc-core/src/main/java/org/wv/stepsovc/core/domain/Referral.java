@@ -3,6 +3,8 @@ package org.wv.stepsovc.core.domain;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.ektorp.support.TypeDiscriminator;
 import org.motechproject.model.MotechBaseDataObject;
+import org.motechproject.util.DateUtil;
+import org.wv.stepsovc.core.utils.DateUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -245,5 +247,14 @@ public class Referral extends MotechBaseDataObject {
             serviceCodes.add(OTHER_HEALTH_SERVICES.getCode());
 
         return serviceCodes;
+    }
+
+    public WindowType window() {
+        if(DateUtil.today().toDate().before(DateUtils.getDate(serviceDate)))
+            return WindowType.UPCOMING;
+        else if(DateUtil.today().toDate().after(DateUtils.getDate(serviceDate)))
+            return WindowType.LATE;
+        else
+            return WindowType.DUE;
     }
 }

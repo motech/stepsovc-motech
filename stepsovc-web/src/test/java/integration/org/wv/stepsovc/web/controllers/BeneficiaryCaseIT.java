@@ -5,6 +5,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.motechproject.appointments.api.repository.AllAppointmentCalendars;
 import org.motechproject.appointments.api.service.contract.VisitResponse;
 import org.motechproject.appointments.api.service.contract.VisitsQuery;
 import org.quartz.SchedulerException;
@@ -29,7 +30,7 @@ import static org.wv.stepsovc.core.request.BeneficiaryCaseUpdateType.*;
 import static org.wv.stepsovc.web.controllers.ReferralMapperTest.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath*:testApplicationContext.xml")
+@ContextConfiguration("classpath*:testWebApplicationContext.xml")
 public class BeneficiaryCaseIT {
 
     @Autowired
@@ -45,6 +46,9 @@ public class BeneficiaryCaseIT {
 
     @Autowired
     private AllAppointments allAppointments;
+
+    @Autowired
+    private AllAppointmentCalendars allAppointmentCalendars;
 
     @Test
     public void shouldCreateBeneficiaryReferralAndUpdateReferral() {
@@ -100,6 +104,7 @@ public class BeneficiaryCaseIT {
     @After
     public void clearAll() throws SchedulerException {
         allBeneficiaries.removeAll();
+        allAppointmentCalendars.removeAll();
         allReferrals.removeAllByBeneficiary(beneficiaryCode);
     }
 

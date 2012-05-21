@@ -16,7 +16,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath*:testApplicationContext.xml")
+@ContextConfiguration("classpath*:testCoreApplicationContext.xml")
 public class AllReferralsTest {
 
     @Autowired

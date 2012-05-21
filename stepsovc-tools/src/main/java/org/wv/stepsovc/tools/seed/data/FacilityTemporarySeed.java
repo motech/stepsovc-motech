@@ -7,6 +7,8 @@ import org.wv.stepsovc.core.domain.ServiceUnavailability;
 import org.wv.stepsovc.core.repository.AllFacilities;
 import org.wv.stepsovc.tools.seed.Seed;
 
+import java.util.ArrayList;
+
 import static java.util.Arrays.asList;
 
 @Component
@@ -28,6 +30,6 @@ public class FacilityTemporarySeed extends Seed {
                         new ServiceUnavailability("reason2", "2012-06-26", "2012-06-26")
                 ),
                 asList("9999999999", "88888888")));
-        allFacilities.add(new Facility("FAC002", "FAC002-Name", null, asList("0987654321", "12345890")));
+        allFacilities.add(new Facility("FAC002", "FAC002-Name", new ArrayList<ServiceUnavailability>(), asList("0987654321", "12345890")));
     }
 }

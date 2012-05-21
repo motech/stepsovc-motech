@@ -3,6 +3,8 @@ package org.wv.stepsovc.core.utils;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.motechproject.util.DateUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -10,9 +12,15 @@ import java.util.Date;
 
 public class DateUtils {
     private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private static Logger logger = LoggerFactory.getLogger(DateUtils.class);
 
-    public static Date getDate(String dateStr) throws ParseException {
-        return simpleDateFormat.parse(dateStr);
+    public static Date getDate(String dateStr) {
+        try {
+            return simpleDateFormat.parse(dateStr);
+        } catch (ParseException e) {
+           logger.error("ParseExcption while parsing date:"+e);
+        }
+        return null;
     }
 
     public static String nextDateStr(Date date){
@@ -44,11 +52,7 @@ public class DateUtils {
     }
 
     public static LocalDate getLocalDate(String fromDate) {
-        try {
-            return LocalDate.fromDateFields(DateUtils.getDate(fromDate));
-        } catch (ParseException e) {
-        }
-        return null;
+        return LocalDate.fromDateFields(DateUtils.getDate(fromDate));
     }
 
     public static DateTime getDateTime(String serviceDate) {
