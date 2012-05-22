@@ -75,16 +75,21 @@ public class BeneficiaryCaseIT {
         stepsovcCase.setService_date("2012-5-12");
         stepsovcCaseController.createCase(stepsovcCase);
         activeReferral = allReferrals.findActiveReferral(beneficiaryCode);
+        String secondOvcId = activeReferral.getOvcId();
         assertNotNull(activeReferral);
         assertReferrals(stepsovcCase, allReferrals.findActiveReferral(beneficiaryCode));
         visitResponses = allAppointments.find(new VisitsQuery().havingExternalId(firstOvcId));
         assertThat(visitResponses.size(), is(0));
+        visitResponses = allAppointments.find(new VisitsQuery().havingExternalId(secondOvcId));
+        assertThat(visitResponses.size(), is(1));
 
-        stepsovcCase = createCaseForUpdateService(beneficiaryCode, "1987-12-12");
+        stepsovcCase = createCaseForUpdateService(beneficiaryCode, "1987-12-12", "");
         stepsovcCase.setForm_type(UPDATE_SERVICE.getType());
         stepsovcCaseController.createCase(stepsovcCase);
         Assert.assertNotNull(allReferrals.findActiveReferral(beneficiaryCode));
         assertServices(stepsovcCase, allReferrals.findActiveReferral(beneficiaryCode));
+        visitResponses = allAppointments.find(new VisitsQuery().havingExternalId(secondOvcId));
+        assertThat(visitResponses.size(), is(0));
 
         stepsovcCase = createCaseForUpdateReferral(beneficiaryCode);
         stepsovcCase.setForm_type(UPDATE_REFERRAL.getType());
@@ -104,8 +109,8 @@ public class BeneficiaryCaseIT {
     @After
     public void clearAll() throws SchedulerException {
         allBeneficiaries.removeAll();
-        allAppointmentCalendars.removeAll();
         allReferrals.removeAllByBeneficiary(beneficiaryCode);
+        allAppointmentCalendars.removeAll();
     }
 
 }

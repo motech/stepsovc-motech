@@ -46,11 +46,10 @@ public class AggregateSMSEventHandler {
 
     private void aggregateForFacility(List<SMSMessage> smsMessages) throws Exception {
 
-        final String smsGroup = smsMessages.get(0).group();
-        final StringContent template = cmsLiteService.getStringContent(Locale.ENGLISH.getLanguage(), smsGroup);
+        StringContent template = cmsLiteService.getStringContent(Locale.ENGLISH.getLanguage(), smsMessages.get(0).group());
         // todo : if sms content is small, this is fine, otherwise added a sortable identifier to SMSMessage
         List<SMSMessage> sortedSMSes = Lambda.sort(smsMessages, on(SMSMessage.class).content());
-        final String allSMSes = joinFrom(sortedSMSes, SMSMessage.class, ", ").content();
+        String allSMSes = joinFrom(sortedSMSes, SMSMessage.class, ", ").content();
         logger.info("Aggregated Sms : "+allSMSes);
         smsService.sendSMS(smsMessages.get(0).phoneNumber(), format(template.getValue(), allSMSes));
     }

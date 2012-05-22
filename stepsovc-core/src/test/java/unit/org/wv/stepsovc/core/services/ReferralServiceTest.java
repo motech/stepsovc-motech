@@ -112,7 +112,7 @@ public class ReferralServiceTest {
     }
 
     @Test
-    public void shouldRemoveFacilityFromOwnersWhileUpdatingReferralServices() {
+    public void shouldRemoveFacilityFromOwnersAndUnScheduleAppointmentsWhileUpdatingReferralServices() {
 
         ArgumentCaptor<Referral> referralArgumentCaptor = ArgumentCaptor.forClass(Referral.class);
         ArgumentCaptor<StepsovcCase> updatedBeneficiary = ArgumentCaptor.forClass(StepsovcCase.class);
@@ -127,6 +127,8 @@ public class ReferralServiceTest {
 
         Referral referral = new ReferralMapper().map(stepsovcCase);
 
+        String ovcId = referral.getOvcId();
+
         doReturn(referral).when(mockAllReferrals).findActiveReferral(code);
 
         referralService.updateAvailedServices(stepsovcCase);
@@ -137,6 +139,9 @@ public class ReferralServiceTest {
 
         verify(referralService).removeFromCurrentFacility(updatedBeneficiary.capture());
 
+        verify(mockAllAppointments).unschedule(ovcId);
+
+
         doNothing().when(commcareGateway).updateReferralOwner(
                 Matchers.<BeneficiaryInformation>any());
 
@@ -144,7 +149,7 @@ public class ReferralServiceTest {
     }
 
     @Test
-    public void shouldAssignToNewFacilityWhileUpdatingReferralServicesWithServiceProvider() {
+    public void shouldAssignToNewFacilityAndRescheduleAppointmentWhileUpdatingReferralServicesWithServiceProvider() {
 
         ArgumentCaptor<Referral> referralArgumentCaptor = ArgumentCaptor.forClass(Referral.class);
         ArgumentCaptor<StepsovcCase> updatedBeneficiary = ArgumentCaptor.forClass(StepsovcCase.class);
@@ -168,6 +173,7 @@ public class ReferralServiceTest {
         referralService.updateAvailedServices(stepsovcCase);
 
         verify(mockAllReferrals).update(referralArgumentCaptor.capture());
+        verify(mockAllAppointments).unschedule(referralArgumentCaptor.getValue().getOvcId());
         verify(mockAllAppointments).scheduleNewReferral(referralArgumentCaptor.getValue().getOvcId(), referralArgumentCaptor.getValue().appointmentDataMap(), getDateTime(referralArgumentCaptor.getValue().getServiceDate()));
         doNothing().when(mockAllReferrals).update(referralArgumentCaptor.getValue());
 
@@ -196,7 +202,6 @@ public class ReferralServiceTest {
 
         verify(mockAllReferrals).update(referralArgumentCaptor.capture());
         verify(mockAllAppointments).unschedule(referralArgumentCaptor.getValue().getOvcId());
-        verify(mockAllAppointments).unschedule(oldOvcId);
 
         assertFalse(referralArgumentCaptor.getValue().isActive());
     }
@@ -222,6 +227,22 @@ public class ReferralServiceTest {
         for (Referral actualReferral : actualReferrals) {
             assertThat(actualReferral.getServiceDate(), is(nextAvailDate));
         }
+    }
+
+    @Test
+    public void shouldUpdateUnAvailedReasons(){
+        String benCode = "ABC";
+        StepsovcCase stepsovcCase = ReferralMapperTest.createNewCase(benCode);
+        Referral toBeReturned = new ReferralMapper().map(stepsovcCase);
+        stepsovcCase = ReferralMapperTest.createCaseForUpdateReferral(benCode);
+        stepsovcCase.setBeneficiary_code(benCode);
+        String ovcId = "1234";
+        toBeReturned.setOvcId(ovcId);
+        doReturn(toBeReturned).when(mockAllReferrals).findActiveReferral(benCode);
+        referralService.updateNotAvailedReasons(stepsovcCase);
+        verify(mockAllAppointments).unschedule(ovcId);
+        verify(mockAllReferrals).update(toBeReturned);
+
     }
 
 }

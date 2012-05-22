@@ -36,7 +36,7 @@ public class ReferralService {
 
     public void addNewReferral(StepsovcCase stepsovcCase) {
         logger.info("Handling new referral");
-        inactivateOldReferral(stepsovcCase); // Todo : remove existing appointments
+        inactivateOldReferral(stepsovcCase);
 
         Referral newReferral = new ReferralMapper().map(stepsovcCase);
         checkForAvailableDate(newReferral);
@@ -56,16 +56,16 @@ public class ReferralService {
     private void inactivateOldReferral(StepsovcCase stepsovcCase) {
         Referral oldActiveReferral = allReferrals.findActiveReferral(stepsovcCase.getBeneficiary_code());
         if (oldActiveReferral != null) {
+            allAppointments.unschedule(oldActiveReferral.getOvcId());
             oldActiveReferral.setActive(false);
             allReferrals.update(oldActiveReferral);
-            allAppointments.unschedule(oldActiveReferral.getOvcId());
         }
     }
 
     public void updateNotAvailedReasons(StepsovcCase stepsovcCase) {
         logger.info("Handling update referral");
         Referral existingReferral = allReferrals.findActiveReferral(stepsovcCase.getBeneficiary_code());
-
+        allAppointments.unschedule(existingReferral.getOvcId());
         allReferrals.update(new ReferralMapper().updateReferral(existingReferral, stepsovcCase));
     }
 
@@ -74,6 +74,8 @@ public class ReferralService {
         Referral existingReferral = allReferrals.findActiveReferral(stepsovcCase.getBeneficiary_code());
 
         Referral referral = new ReferralMapper().updateServices(existingReferral, stepsovcCase);
+
+        allAppointments.unschedule(referral.getOvcId());
 
         if (stepsovcCase.getFacility_code() != null && !"".equals(stepsovcCase.getFacility_code().trim())) {
             checkForAvailableDate(referral);

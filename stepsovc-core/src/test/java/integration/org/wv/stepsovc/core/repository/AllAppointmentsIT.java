@@ -33,8 +33,6 @@ public class AllAppointmentsIT extends BaseScheduleTest {
     AllAppointments allAppointments;
     @Autowired
     private AllAppointmentCalendars allAppointmentCalendars;
-    @Autowired
-    private AllReminderJobs allReminderJobs;
 
     @Test
     public void shouldCreateAppointmentForReferral() {
