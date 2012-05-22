@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.wv.stepsovc.commcare.domain.CaseType;
+import org.wv.stepsovc.commcare.domain.User;
+import org.wv.stepsovc.commcare.repository.AllUsers;
 import org.wv.stepsovc.commcare.vo.BeneficiaryInformation;
 import org.wv.stepsovc.commcare.vo.CareGiverInformation;
 
@@ -14,6 +16,8 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.wv.stepsovc.commcare.gateway.CommcareGateway.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -22,13 +26,37 @@ public class CommcareGatewayIT {
 
     @Autowired
     CommcareGateway commcareGateway;
+    @Autowired
+    private AllUsers allUsers;
 
 
     @Ignore
     public void shouldCreateNewBeneficiary() throws Exception {
-        BeneficiaryInformation beneficiaryInformation = getBeneficiaryInformation("7ac0b33f0dac4a81c6d1fbf1bd9dfee0", "cg1", UUID.randomUUID().toString(), "new-test-case-5", "new-test-case-5", "cg1", null);
+        BeneficiaryInformation beneficiaryInformation = getBeneficiaryInformation("7ac0b33f0dac4a81c6d1fbf1bd9dfee0", "ggg2", UUID.randomUUID().toString(), "new-test-case-6", "new-test-case-6", "cg1", null);
         String url = "http://127.0.0.1:7000/a/stepsovc/receiver";
         commcareGateway.createNewBeneficiary(beneficiaryInformation);
+    }
+
+    @Test
+    public void shouldRegisterNewCareGiverUser() throws InterruptedException {
+        String testCareGiverName = "testCareGiverName";
+        CareGiverInformation careGiverInformation = new CareGiverInformation();
+        careGiverInformation.setId("testCareGiverId");
+        careGiverInformation.setCode("testCareGiverCode");
+        careGiverInformation.setName(testCareGiverName);
+        careGiverInformation.setPassword("12345");
+        careGiverInformation.setPhoneNumber("1234567890");
+
+        assertNull(allUsers.getUserByName(testCareGiverName));
+        commcareGateway.registerUser(careGiverInformation);
+        Thread.sleep(60000);
+        User newCareGiver = allUsers.get("testCareGiverId");
+        assertNotNull(newCareGiver);
+        deleteAddedUser(newCareGiver);
+    }
+
+    private void deleteAddedUser(User newCareGiver) {
+        allUsers.remove(newCareGiver);
     }
 
     @Test
