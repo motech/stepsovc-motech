@@ -5,6 +5,9 @@ import org.codehaus.jackson.annotate.JsonProperty;
 public class Service {
 
     @JsonProperty
+    private ServiceType serviceType;
+
+    @JsonProperty
     private boolean referred;
 
     @JsonProperty
@@ -13,12 +16,21 @@ public class Service {
     @JsonProperty
     private String reason;
 
-    public Service(boolean referred) {
-        this.referred = referred;
+    public ServiceType getServiceType() {
+        return serviceType;
+    }
+
+    public void setServiceType(ServiceType serviceType) {
+        this.serviceType = serviceType;
     }
 
     public Service() {
 
+    }
+
+    public Service(boolean referred, ServiceType serviceType) {
+        this.referred = referred;
+        this.serviceType = serviceType;
     }
 
     public boolean isReferred() {

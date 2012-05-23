@@ -76,7 +76,7 @@ public class ReferralScheduleHandler {
             for (String phoneNumber : phoneNumbers) {
                 final DateTime now = newDateTime(new LocalDate(), 10, 30, 0);
                 StringContent smsTemplate = cmsLiteService.getStringContent(Locale.ENGLISH.getLanguage(), SmsTemplateKeys.REFERRAL_ALERT);
-                String smsContent = format(smsTemplate.getValue(), beneficiary.getName(), beneficiary.getCode(), join(referral.servicesReferred(), ","));
+                String smsContent = format(smsTemplate.getValue(), beneficiary.getName(), beneficiary.getCode(), join(referral.referredServiceCodes(), ","));
                 logger.info("Sms Content : "+smsContent);
                 eventAggregationGateway.dispatch(new SMSMessage(now, phoneNumber, smsContent, group(Referral.VISIT_NAME, referral.window().name(), FACILITY).key()));
             }

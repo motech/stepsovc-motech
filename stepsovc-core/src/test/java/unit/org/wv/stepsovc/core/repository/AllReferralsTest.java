@@ -31,7 +31,7 @@ public class AllReferralsTest {
 
         allReferrals.add(new Referral().setOvcId(ovcId).setServiceDate(serviceDate).setActive(true));
         Service familyPlanning = new Service().setReason("family gninnalp");
-        allReferrals.add(new Referral().setOvcId(ovcId2).setFamilyPlanning(familyPlanning).setActive(true));
+        allReferrals.add(new Referral().setOvcId(ovcId2).setActive(true));
 
         allReferrals.add(new Referral().setOvcId(inactiveOvcId).setServiceDate(serviceDate).setActive(false));
 
@@ -39,7 +39,6 @@ public class AllReferralsTest {
         assertThat(actualReferral.getServiceDate(), is(serviceDate));
 
         actualReferral = allReferrals.findActiveByOvcId(ovcId2);
-        assertThat(actualReferral.getFamilyPlanning().getReason(), is(familyPlanning.getReason()));
 
         assertNull(allReferrals.findActiveByOvcId(inactiveOvcId));
     }

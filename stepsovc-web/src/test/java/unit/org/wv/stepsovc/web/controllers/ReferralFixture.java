@@ -1,10 +1,11 @@
-package org.wv.stepsovc.core.mapper;
+package org.wv.stepsovc.web.controllers;
 
 import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
 import org.wv.stepsovc.commcare.domain.CaseType;
 import org.wv.stepsovc.core.domain.Referral;
 import org.wv.stepsovc.core.domain.Service;
+import org.wv.stepsovc.core.mapper.ReferralMapper;
 import org.wv.stepsovc.core.request.ServiceUnavailedType;
 import org.wv.stepsovc.core.request.StepsovcCase;
 
@@ -14,23 +15,10 @@ import java.util.Map;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.wv.stepsovc.core.domain.ServiceType.*;
+import static org.wv.stepsovc.core.domain.ServiceType.PMTCT;
+import static org.wv.stepsovc.core.domain.ServiceType.SEXUALLY_TRANSMITTED_INFEC;
 
-public class ReferralMapperTest {
-
-    @Test
-    public void shouldMapBeneficiaryCaseToReferral() throws ParseException {
-        StepsovcCase stepsovcCase = createCaseForReferral("Ben_Code", "2012-4-12", "FAC001");
-        Referral newReferral = null;
-
-        newReferral = new ReferralMapper().map(stepsovcCase);
-        assertReferrals(stepsovcCase, newReferral);
-    }
-
-    @Test
-    public void shouldExtractReferredServices() throws Exception {
-        Referral referral = new ReferralMapper().map(createCaseForReferral("Ben_Code", "2012-4-12", "FAC001"));
-        assertThat(referral.referredServiceCodes().size(),is(8));
-    }
+public class ReferralFixture {
 
     public static void assertReferrals(StepsovcCase stepsovcCase, Referral newReferral) {
         Map<String,Service> referredServices = newReferral.getReferredServices();
@@ -89,7 +77,7 @@ public class ReferralMapperTest {
 
     @Test
     public void shouldUpdateService() throws ParseException {
-        StepsovcCase stepsovcCase = createCaseForUpdateService("Ben_Code", "2012-4-12");
+        StepsovcCase stepsovcCase = createCaseForUpdateService("Ben_Code", "2012-4-12", "ABC");
 
         Referral newReferral = new ReferralMapper().map(stepsovcCase);
 
@@ -158,7 +146,7 @@ public class ReferralMapperTest {
 
     }
 
-    public static StepsovcCase createCaseForUpdateService(String code, String serviceDate) {
+    public static StepsovcCase createCaseForUpdateService(String code, String serviceDate, String facility_code) {
         StepsovcCase stepsovcCase = createCaseForReferral(code, null, "FAC001");
         stepsovcCase.setCondoms("Not Availed");
         stepsovcCase.setEnd_of_life_hospice("Not Availed");
@@ -172,7 +160,7 @@ public class ReferralMapperTest {
         stepsovcCase.setPain_management("Not Availed");
         stepsovcCase.setOther_health_services("Not Availed");
         stepsovcCase.setArt_adherence_counseling("Not Availed");
-        stepsovcCase.setFacility_code("ABC");
+        stepsovcCase.setFacility_code(facility_code);
         stepsovcCase.setService_date(null);
         stepsovcCase.setService_date(serviceDate);
 
@@ -182,6 +170,5 @@ public class ReferralMapperTest {
     private static String serviceUnavailedReason(String key) {
         return StringUtils.isNotEmpty(key) ? ServiceUnavailedType.valueOf(key).getValue() : "" ;
     }
-
 
 }

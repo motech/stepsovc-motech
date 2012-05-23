@@ -11,14 +11,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.wv.stepsovc.core.domain.ServiceType.*;
+import static ch.lambdaj.Lambda.*;
 
 @TypeDiscriminator("doc.type == 'Referral'")
 public class Referral extends MotechBaseDataObject {
-
     @JsonProperty
     private String ovcId;
-
     @JsonProperty
     private String beneficiaryCode;
     @JsonProperty
@@ -32,35 +30,23 @@ public class Referral extends MotechBaseDataObject {
     @JsonProperty
     private String followupDate;
     @JsonProperty
-    private Service artAdherenceCounseling;
-    @JsonProperty
-    private Service condoms;
-    @JsonProperty
-    private Service endOfLifeHospice;
-    @JsonProperty
-    private Service familyPlanning;
-    @JsonProperty
-    private Service hivCounseling;
-    @JsonProperty
-    private Service newDiagnosis;
-    @JsonProperty
-    private Service otherHealthServices;
-    @JsonProperty
-    private Service painManagement;
-    @JsonProperty
-    private Service sexuallyTransmittedInfection;
-    @JsonProperty
-    private Service pmtct;
+    private Map<String, Service> referredServices;
     @JsonProperty
     private String serviceDetails;
-
+    @JsonProperty
+    private boolean active;
 
     public static final String META_FACILITY_ID = "facilityId";
 
     public static final String VISIT_NAME = "Referral";
 
-    @JsonProperty
-    private boolean active;
+    public Map<String, Service> getReferredServices() {
+        return referredServices;
+    }
+
+    public void setReferredServices(Map<String, Service> referredServices) {
+        this.referredServices = referredServices;
+    }
     public String getOvcId() {
         return ovcId;
     }
@@ -92,87 +78,6 @@ public class Referral extends MotechBaseDataObject {
 
     public void setFollowupDate(String followupDate) {
         this.followupDate = followupDate;
-    }
-
-    public Service getArtAdherenceCounseling() {
-        return artAdherenceCounseling;
-    }
-
-    public void setArtAdherenceCounseling(Service artAdherenceCounseling) {
-        this.artAdherenceCounseling = artAdherenceCounseling;
-    }
-
-    public Service getCondoms() {
-        return condoms;
-    }
-
-    public void setCondoms(Service condoms) {
-        this.condoms = condoms;
-    }
-
-    public Service getEndOfLifeHospice() {
-        return endOfLifeHospice;
-    }
-
-    public void setEndOfLifeHospice(Service endOfLifeHospice) {
-        this.endOfLifeHospice = endOfLifeHospice;
-    }
-
-    public Service getFamilyPlanning() {
-        return familyPlanning;
-    }
-
-    public Referral setFamilyPlanning(Service familyPlanning) {
-        this.familyPlanning = familyPlanning;
-        return this;
-    }
-
-    public Service getHivCounseling() {
-        return hivCounseling;
-    }
-
-    public void setHivCounseling(Service hivCounseling) {
-        this.hivCounseling = hivCounseling;
-    }
-
-    public Service getNewDiagnosis() {
-        return newDiagnosis;
-    }
-
-    public void setNewDiagnosis(Service newDiagnosis) {
-        this.newDiagnosis = newDiagnosis;
-    }
-
-    public Service getOtherHealthServices() {
-        return otherHealthServices;
-    }
-
-    public void setOtherHealthServices(Service otherHealthServices) {
-        this.otherHealthServices = otherHealthServices;
-    }
-
-    public Service getPainManagement() {
-        return painManagement;
-    }
-
-    public void setPainManagement(Service painManagement) {
-        this.painManagement = painManagement;
-    }
-
-    public Service getPmtct() {
-        return pmtct;
-    }
-
-    public void setPmtct(Service pmtct) {
-        this.pmtct = pmtct;
-    }
-
-    public Service getSexuallyTransmittedInfection() {
-        return sexuallyTransmittedInfection;
-    }
-
-    public void setSexuallyTransmittedInfection(Service sexuallyTransmittedInfection) {
-        this.sexuallyTransmittedInfection = sexuallyTransmittedInfection;
     }
 
     public String getBeneficiaryCode() {
@@ -223,30 +128,16 @@ public class Referral extends MotechBaseDataObject {
         this.serviceDetails = serviceDetails;
     }
 
-    public List<String> servicesReferred() {
+    public List<String> referredServiceCodes() {
         List<String> serviceCodes = new ArrayList<String>();
-        if(newDiagnosis.isReferred())
-            serviceCodes.add(NEW_DIAGNOSIS.getCode());
-        if(endOfLifeHospice.isReferred())
-            serviceCodes.add(END_OF_LIFE_HOSPICE.getCode());
-        if(hivCounseling.isReferred())
-            serviceCodes.add(HIVE_COUNSELING.getCode());
-        if(familyPlanning.isReferred())
-            serviceCodes.add(FAMILY_PLANNING.getCode());
-        if(sexuallyTransmittedInfection.isReferred())
-            serviceCodes.add(SEXUALLY_TRANSMITTED_INFEC.getCode());
-        if(artAdherenceCounseling.isReferred())
-            serviceCodes.add(ART_ADHERENCE.getCode());
-        if(painManagement.isReferred())
-            serviceCodes.add(PAIN_MANAGEMENT.getCode());
-        if(pmtct.isReferred())
-            serviceCodes.add(PMTCT.getCode());
-        if(condoms.isReferred())
-            serviceCodes.add(CONDOMS.getCode());
-        if(otherHealthServices.isReferred())
-            serviceCodes.add(OTHER_HEALTH_SERVICES.getCode());
 
-        return serviceCodes;
+        List<ServiceType> serviceTypes = extract(filter(having(on(Service.class).isReferred()), referredServices.values()), on(Service.class).getServiceType());
+        //extract does not work on Enum, so need the below loop
+        for (ServiceType serviceType : serviceTypes) {
+            serviceCodes.add(serviceType.getCode());
+        }
+
+        return sort(serviceCodes,on(String.class));
     }
 
     public WindowType window() {

@@ -27,7 +27,7 @@ import static junit.framework.Assert.assertNotNull;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.wv.stepsovc.core.request.BeneficiaryCaseUpdateType.*;
-import static org.wv.stepsovc.web.controllers.ReferralMapperTest.*;
+import static org.wv.stepsovc.web.controllers.ReferralFixture.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath*:testWebApplicationContext.xml")
