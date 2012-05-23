@@ -46,7 +46,7 @@ public class CommcareGatewayIT {
         commcareGateway.createNewBeneficiary(beneficiaryInformation);
     }
 
-    @Test
+    @Ignore
     public void shouldRegisterNewCareGiverUser() throws InterruptedException {
         String testCareGiverName = "testCareGiverName";
         CareGiverInformation careGiverInformation = new CareGiverInformation();
@@ -58,7 +58,7 @@ public class CommcareGatewayIT {
 
         assertNull(allUsers.getUserByName(testCareGiverName));
         commcareGateway.registerUser(careGiverInformation);
-        Thread.sleep(60000);
+        Thread.sleep(2000);
         User newCareGiver = allUsers.get("testCareGiverId");
         assertNotNull(newCareGiver);
         allUsers.remove(newCareGiver);
