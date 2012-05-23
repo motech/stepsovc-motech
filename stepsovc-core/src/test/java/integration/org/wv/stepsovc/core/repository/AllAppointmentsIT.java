@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.appointments.api.repository.AllAppointmentCalendars;
 import org.motechproject.appointments.api.repository.AllReminderJobs;
+import org.motechproject.appointments.api.service.contract.CreateVisitRequest;
 import org.motechproject.appointments.api.service.contract.VisitResponse;
 import org.motechproject.appointments.api.service.contract.VisitsQuery;
 import org.motechproject.util.DateUtil;
@@ -15,6 +16,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.wv.stepsovc.core.BaseScheduleTest;
 import org.wv.stepsovc.core.TestJobDetail;
 import org.wv.stepsovc.core.domain.Referral;
+import org.wv.stepsovc.core.factories.VisitRequestFactory;
 
 import java.util.HashMap;
 import java.util.List;
@@ -42,7 +44,7 @@ public class AllAppointmentsIT extends BaseScheduleTest {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put(Referral.META_FACILITY_ID, facilityId);
 
-        allAppointments.scheduleNewReferral(externalId, params, dueDate);
+        allAppointments.add(externalId, VisitRequestFactory.createVisitRequestForReferral(params, dueDate));
 
         List<VisitResponse> visitResponses = allAppointments.find(new VisitsQuery().havingExternalId(externalId));
         assertReferralAppointments(externalId, dueDate, params, visitResponses);

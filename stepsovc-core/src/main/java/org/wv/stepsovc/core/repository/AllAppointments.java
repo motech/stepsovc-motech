@@ -1,17 +1,13 @@
 package org.wv.stepsovc.core.repository;
 
-import org.joda.time.DateTime;
 import org.motechproject.appointments.api.service.AppointmentService;
 import org.motechproject.appointments.api.service.contract.CreateVisitRequest;
-import org.motechproject.appointments.api.service.contract.ReminderConfiguration;
 import org.motechproject.appointments.api.service.contract.VisitResponse;
 import org.motechproject.appointments.api.service.contract.VisitsQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.wv.stepsovc.core.domain.Referral;
 
 import java.util.List;
-import java.util.Map;
 
 @Repository
 public class AllAppointments {
@@ -22,13 +18,7 @@ public class AllAppointments {
     static final int ONE_DAY_BEFORE = -1;
     static final int ONE_DAY_LATER = 1;
 
-    public void scheduleNewReferral(String externalId, Map<String, Object> params, DateTime appointmentDate) {
-
-        CreateVisitRequest createVisitRequest = new CreateVisitRequest().setAppointmentDueDate(appointmentDate).setVisitName(Referral.VISIT_NAME);
-        createVisitRequest.setData(params);
-        createVisitRequest.addAppointmentReminderConfiguration(new ReminderConfiguration().setRemindFrom(switchSign(ONE_DAY_BEFORE)));
-        createVisitRequest.addAppointmentReminderConfiguration(new ReminderConfiguration());
-        createVisitRequest.addAppointmentReminderConfiguration(new ReminderConfiguration().setRemindFrom(switchSign(ONE_DAY_LATER)));
+    public void add(String externalId, CreateVisitRequest createVisitRequest) {
         appointmentService.addVisit(externalId, createVisitRequest);
     }
 
@@ -40,7 +30,7 @@ public class AllAppointments {
         return appointmentService.search(visitsQuery);
     }
 
-    public void unschedule(String ovcId) {
+    public void remove(String ovcId) {
         appointmentService.removeCalendar(ovcId);
     }
 }
