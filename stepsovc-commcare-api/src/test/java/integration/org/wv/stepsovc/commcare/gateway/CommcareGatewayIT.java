@@ -58,7 +58,7 @@ public class CommcareGatewayIT {
 
         assertNull(allUsers.getUserByName(testCareGiverName));
         commcareGateway.registerUser(careGiverInformation);
-        Thread.sleep(2000);
+        Thread.sleep(10000);
         User newCareGiver = allUsers.get("testCareGiverId");
         assertNotNull(newCareGiver);
         allUsers.remove(newCareGiver);
