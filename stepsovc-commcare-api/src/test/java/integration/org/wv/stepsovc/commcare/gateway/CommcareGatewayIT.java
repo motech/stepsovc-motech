@@ -46,7 +46,7 @@ public class CommcareGatewayIT {
         commcareGateway.createNewBeneficiary(beneficiaryInformation);
     }
 
-    @Test
+    @Ignore
     public void shouldRegisterNewCareGiverUser() throws InterruptedException {
         String testCareGiverName = "testCareGiverName";
         CareGiverInformation careGiverInformation = new CareGiverInformation();
