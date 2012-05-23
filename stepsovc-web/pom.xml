@@ -89,10 +89,10 @@
                 <version>2.9</version>
                 <configuration>
                     <includes>
-                        <include>**/unit/*Test.java</include>
+                        <include>**/*Test.java</include>
                     </includes>
                     <excludes>
-                        <exclude>**/integration/**/*Test.java</exclude>
+                        <exclude>**/integration/**/*IT.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>

@@ -21,7 +21,6 @@ import org.wv.stepsovc.core.domain.SmsTemplateKeys;
 import org.wv.stepsovc.core.repository.AllBeneficiaries;
 import org.wv.stepsovc.core.repository.AllFacilities;
 import org.wv.stepsovc.core.repository.AllReferrals;
-import org.wv.stepsovc.core.repository.SMSGateway;
 
 import java.util.List;
 import java.util.Locale;
@@ -38,8 +37,6 @@ import static org.wv.stepsovc.core.aggregator.SMSGroupFactory.group;
 public class ReferralScheduleHandler {
 
     private Logger logger = LoggerFactory.getLogger(ReferralScheduleHandler.class);
-    //private SMSGateway smsGateway;
-    @Autowired
     private EventAggregationGateway<SMSMessage> eventAggregationGateway;
     private AllReferrals allReferrals;
     private AllFacilities allFacilities;
@@ -47,8 +44,8 @@ public class ReferralScheduleHandler {
     private AllBeneficiaries allBeneficiaries;
 
     @Autowired
-    public ReferralScheduleHandler(SMSGateway gateway, AllReferrals referrals, AllFacilities allFacilities, CMSLiteService cmsLiteService, AllBeneficiaries allBeneficiaries) {
-        //this.smsGateway = gateway;
+    public ReferralScheduleHandler(EventAggregationGateway<SMSMessage> eventAggregationGateway, CMSLiteService cmsLiteService, AllReferrals referrals, AllFacilities allFacilities, AllBeneficiaries allBeneficiaries) {
+        this.eventAggregationGateway = eventAggregationGateway;
         this.allReferrals = referrals;
         this.allFacilities = allFacilities;
         this.cmsLiteService = cmsLiteService;
@@ -81,7 +78,6 @@ public class ReferralScheduleHandler {
                 StringContent smsTemplate = cmsLiteService.getStringContent(Locale.ENGLISH.getLanguage(), SmsTemplateKeys.REFERRAL_ALERT);
                 String smsContent = format(smsTemplate.getValue(), beneficiary.getName(), beneficiary.getCode(), join(referral.servicesReferred(), ","));
                 logger.info("Sms Content : "+smsContent);
-                //smsGateway.send(phoneNumbers, smsContent);
                 eventAggregationGateway.dispatch(new SMSMessage(now, phoneNumber, smsContent, group(Referral.VISIT_NAME, referral.window().name(), FACILITY).key()));
             }
         }

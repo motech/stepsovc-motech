@@ -41,7 +41,7 @@ public class CommcareGateway {
     private AllUsers allUsers;
     private Map model;
 
-    public static final String COMMCARE_URL = "http://localhost:7000/a/stepsovc/receiver";
+    public static final String COMMCARE_URL = "http://localhost:8000/a/stepsovc/receiver";
 
     public String getUserId(String name) {
         return allUsers.getUserByName(name) == null ? null : allUsers.getUserByName(name).getId();

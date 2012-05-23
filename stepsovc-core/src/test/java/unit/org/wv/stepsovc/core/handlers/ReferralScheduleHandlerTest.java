@@ -3,12 +3,15 @@ package org.wv.stepsovc.core.handlers;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
+import org.motechproject.aggregator.inbound.EventAggregationGateway;
 import org.motechproject.appointments.api.EventKeys;
 import org.motechproject.cmslite.api.model.ContentNotFoundException;
 import org.motechproject.cmslite.api.model.StringContent;
 import org.motechproject.cmslite.api.service.CMSLiteService;
 import org.motechproject.model.MotechEvent;
+import org.wv.stepsovc.core.aggregator.SMSMessage;
 import org.wv.stepsovc.core.domain.Beneficiary;
 import org.wv.stepsovc.core.domain.Facility;
 import org.wv.stepsovc.core.domain.Referral;
@@ -18,10 +21,16 @@ import org.wv.stepsovc.core.repository.AllFacilities;
 import org.wv.stepsovc.core.repository.AllReferrals;
 import org.wv.stepsovc.core.repository.SMSGateway;
 
+import javax.lang.model.util.Types;
 import java.util.*;
 
 import static org.apache.commons.lang.StringUtils.join;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.isIn;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -29,8 +38,6 @@ import static org.wv.stepsovc.core.domain.SmsTemplateKeys.REFERRAL_ALERT;
 import static org.wv.stepsovc.core.mapper.ReferralMapperTest.createCaseForReferral;
 
 public class ReferralScheduleHandlerTest {
-    @Mock
-    private SMSGateway mockSMSGateway;
     @Mock
     private AllReferrals mockAllReferrals;
 
@@ -40,6 +47,8 @@ public class ReferralScheduleHandlerTest {
     private CMSLiteService mockCmsLiteService;
     @Mock
     private AllBeneficiaries mockAllBeneficiaries;
+    @Mock
+    private EventAggregationGateway<SMSMessage> mockEventAggregationGateway;
 
     private Referral referral;
     private Facility facility;
@@ -49,7 +58,7 @@ public class ReferralScheduleHandlerTest {
     @Before
     public void setUp() {
         initMocks(this);
-        referralScheduleHandler = new ReferralScheduleHandler(mockSMSGateway, mockAllReferrals, mockAllFacilities, mockCmsLiteService, mockAllBeneficiaries);
+        referralScheduleHandler = new ReferralScheduleHandler(mockEventAggregationGateway, mockCmsLiteService, mockAllReferrals, mockAllFacilities, mockAllBeneficiaries);
         referral = new Referral();
         facility= new Facility();
         beneficiary=new Beneficiary();
@@ -76,7 +85,13 @@ public class ReferralScheduleHandlerTest {
         parameters.put(EventKeys.EXTERNAL_ID_KEY,"someID");
         MotechEvent motechEvent= new MotechEvent("subject",parameters);
         referralScheduleHandler.handleAlert(motechEvent);
-        verify(mockSMSGateway).send(phoneNumbers, "test (bencode) Services (" + join(referral.servicesReferred(), ",") + ")");
+        ArgumentCaptor<SMSMessage> smsCaptor = ArgumentCaptor.forClass(SMSMessage.class);
+        verify(mockEventAggregationGateway,times(2)).dispatch(smsCaptor.capture());
+        assertThat(smsCaptor.getAllValues().size(), is(2));
+        assertThat(smsCaptor.getAllValues().get(0).phoneNumber(), isIn(phoneNumbers));
+        assertThat(smsCaptor.getAllValues().get(1).phoneNumber(), isIn(phoneNumbers));
+        assertThat(smsCaptor.getAllValues().get(0).content(), is("test (bencode) Services (001,003,004,006,007,008,009,010)"));
+        assertThat(smsCaptor.getAllValues().get(1).content(), is("test (bencode) Services (001,003,004,006,007,008,009,010)"));
     }
 
     @Test

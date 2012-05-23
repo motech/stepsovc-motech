@@ -95,12 +95,32 @@
                 <version>2.9</version>
                 <configuration>
                     <includes>
-                        <include>**/unit/*Test.java</include>
+                        <include>**/*Test.java</include>
                     </includes>
                     <excludes>
-                        <exclude>**/integration/**/*Test.java</exclude>
+                        <exclude>**/integration/**/*IT.java</exclude>
                     </excludes>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>cobertura-maven-plugin</artifactId>
+                <version>2.5.1</version>
+                <configuration>
+                    <formats>
+                        <format>html</format>
+                    </formats>
+                    <outputDirectory>build/cobertura</outputDirectory>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>cobertura-check</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>cobertura</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
