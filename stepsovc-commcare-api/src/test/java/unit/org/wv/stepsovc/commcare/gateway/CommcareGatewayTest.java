@@ -82,7 +82,7 @@ public class CommcareGatewayTest {
 
     @Test
     public void shouldCreateCareGiverInCommcare() {
-        CareGiverInformation careGiverInformation = getCareGiverInformation("7ac0b33f0dac4a81c6d1fbf1bd9dfee0", "EW/123", "cg1", "9089091");
+        CareGiverInformation careGiverInformation = getCareGiverInformation("7ac0b33f0dac4a81c6d1fbf1bd9dfee0", "EW/123", "9089091");
         model.put(CommcareGateway.CARE_GIVER_FORM_KEY, careGiverInformation);
         doReturn(getExpectedUserFormXml()).when(spyCommcareGateway).getXmlFromObject(eq(USER_REGISTRATION_FORM_TEMPLATE_PATH), eq(model));
 
@@ -109,13 +109,16 @@ public class CommcareGatewayTest {
     }
 
 
-    private CareGiverInformation getCareGiverInformation(String cgId, String cgCode, String cgName, String phoneNumber) {
-        CareGiverInformation careGiverInformation = new CareGiverInformation();
-        careGiverInformation.setId(cgId);
-        careGiverInformation.setCode(cgCode);
-        careGiverInformation.setName(cgName);
-        careGiverInformation.setPhoneNumber(phoneNumber);
-        return careGiverInformation;
+    private CareGiverInformation getCareGiverInformation(String cgId, String cgCode, String phoneNumber) {
+        CareGiverInformation caregiverInfo = new CareGiverInformation();
+        caregiverInfo.setCaregiverId(cgId);
+        caregiverInfo.setCaregiverCode(cgCode);
+        caregiverInfo.setFirstName("fName");
+        caregiverInfo.setMiddleName("mName");
+        caregiverInfo.setLastName("lName");
+        caregiverInfo.setGender("male");
+        caregiverInfo.setPhoneNumber(phoneNumber);
+        return caregiverInfo;
     }
 
     private BeneficiaryInformation getBeneficiaryInformation(String caregiverId, String caregiverCode, String caseId, String caseName, String beneficiaryCode, String caregiverName, String ownerId) {

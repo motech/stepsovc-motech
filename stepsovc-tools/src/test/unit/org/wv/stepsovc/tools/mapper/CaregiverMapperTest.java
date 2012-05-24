@@ -12,21 +12,30 @@ public class CaregiverMapperTest {
 
     @Test
     public void shouldMapCareGiver() throws Exception {
-        String phoneNumber = "456";
         String id = "123";
         String code = "code";
-        String name = "name";
+        String fName = "fname";
+        String mName = "mName";
+        String lName = "lName";
+        String gender = "male";
+        String phoneNumber = "456";
 
         CareGiverInformation caregiverInfo = new CareGiverInformation();
+        caregiverInfo.setCaregiverId(id);
+        caregiverInfo.setCaregiverCode(code);
+        caregiverInfo.setFirstName(fName);
+        caregiverInfo.setMiddleName(mName);
+        caregiverInfo.setLastName(lName);
+        caregiverInfo.setGender(gender);
         caregiverInfo.setPhoneNumber(phoneNumber);
-        caregiverInfo.setId(id);
-        caregiverInfo.setCode(code);
-        caregiverInfo.setName(name);
 
         Caregiver caregiver = new CaregiverMapper().map(caregiverInfo);
         assertThat(caregiver.getId(), is(id));
-        assertThat(caregiver.getName(), is(name));
         assertThat(caregiver.getCode(), is(code));
+        assertThat(caregiver.getFirstName(), is(fName));
+        assertThat(caregiver.getMiddleName(), is(mName));
+        assertThat(caregiver.getLastName(), is(lName));
+        assertThat(caregiver.getGender(), is(gender));
         assertThat(caregiver.getPhoneNumber(), is(phoneNumber));
     }
 }

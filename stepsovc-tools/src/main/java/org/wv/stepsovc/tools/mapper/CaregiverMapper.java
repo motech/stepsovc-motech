@@ -7,11 +7,13 @@ public class CaregiverMapper {
 
     public Caregiver map(CareGiverInformation careGiverInformation) {
         Caregiver caregiver = new Caregiver();
-        caregiver.setCode(careGiverInformation.getCode());
-        caregiver.setId(careGiverInformation.getId());
-        caregiver.setName(careGiverInformation.getName());
+        caregiver.setId(careGiverInformation.getCaregiverId());
+        caregiver.setCode(careGiverInformation.getCaregiverCode());
+        caregiver.setFirstName(careGiverInformation.getFirstName());
+        caregiver.setMiddleName(careGiverInformation.getMiddleName());
+        caregiver.setLastName(careGiverInformation.getLastName());
+        caregiver.setGender(careGiverInformation.getGender());
         caregiver.setPhoneNumber(careGiverInformation.getPhoneNumber());
-
         return caregiver;
     }
 }

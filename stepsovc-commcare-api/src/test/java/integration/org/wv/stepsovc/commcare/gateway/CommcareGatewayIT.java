@@ -1,5 +1,6 @@
 package org.wv.stepsovc.commcare.gateway;
 
+import fixture.TestFixture;
 import junit.framework.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -48,18 +49,16 @@ public class CommcareGatewayIT {
 
     @Ignore
     public void shouldRegisterNewCareGiverUser() throws InterruptedException {
+        String testCareGiverId = "testCareGiverId";
         String testCareGiverName = "testCareGiverName";
-        CareGiverInformation careGiverInformation = new CareGiverInformation();
-        careGiverInformation.setId("testCareGiverId");
-        careGiverInformation.setCode("testCareGiverCode");
-        careGiverInformation.setName(testCareGiverName);
-        careGiverInformation.setPassword("12345");
-        careGiverInformation.setPhoneNumber("1234567890");
+        CareGiverInformation careGiverInformation = TestFixture.createCareGiverInformation(testCareGiverId, testCareGiverName);
 
         assertNull(allUsers.getUserByName(testCareGiverName));
+
         commcareGateway.registerUser(careGiverInformation);
-        Thread.sleep(2000);
-        User newCareGiver = allUsers.get("testCareGiverId");
+
+        Thread.sleep(60000);
+        User newCareGiver = allUsers.get(testCareGiverId);
         assertNotNull(newCareGiver);
         allUsers.remove(newCareGiver);
     }
@@ -70,7 +69,7 @@ public class CommcareGatewayIT {
         assertConversion(CommcareGateway.BENEFICIARY_FORM_KEY, beneficiaryInformation, BENEFICIARY_CASE_FORM_TEMPLATE_PATH, getExpectedBeneficiaryCaseXml());
         assertConversion(CommcareGateway.BENEFICIARY_FORM_KEY, beneficiaryInformation, OWNER_UPDATE_FORM_TEMPLATE_PATH, getExpectedUpdateOwnerXml());
 
-        CareGiverInformation careGiverInformation = getCareGiverInformation("7ac0b33f0dac4a81c6d1fbf1bd9dfee0", "EW/123", "cg1", "9089091");
+        CareGiverInformation careGiverInformation = TestFixture.createCareGiverInformation();
         assertConversion(CommcareGateway.CARE_GIVER_FORM_KEY, careGiverInformation, USER_REGISTRATION_FORM_TEMPLATE_PATH, getExpectedUserFormXml());
     }
 
@@ -114,26 +113,17 @@ public class CommcareGatewayIT {
     private String getExpectedUserFormXml() {
         return "<Registration xmlns=\"http://openrosa.org/user/registration\">\n" +
                 "\n" +
-                "    <username>EW/123</username>\n" +
+                "    <username>code</username>\n" +
                 "    <password>sha1$90a7b$47a168cca627c6a34f4e349ea4b1fb3d01702c68</password>\n" +
-                "    <uuid>7ac0b33f0dac4a81c6d1fbf1bd9dfee0</uuid>\n" +
+                "    <uuid>id</uuid>\n" +
                 "    <date>01-01-2012</date>\n" +
                 "\n" +
-                "    <registering_phone_id>9089091</registering_phone_id>\n" +
+                "    <registering_phone_id>phoneNumber</registering_phone_id>\n" +
                 "\n" +
                 "    <user_data type=\"hash\">\n" +
-                "        <name>cg1</name>\n" +
+                "        <name>fName</name>\n" +
                 "    </user_data>\n" +
                 "</Registration>";
-    }
-
-    private CareGiverInformation getCareGiverInformation(String cgId, String cgCode, String cgName, String phoneNumber) {
-        CareGiverInformation careGiverInformation = new CareGiverInformation();
-        careGiverInformation.setId(cgId);
-        careGiverInformation.setCode(cgCode);
-        careGiverInformation.setName(cgName);
-        careGiverInformation.setPhoneNumber(phoneNumber);
-        return careGiverInformation;
     }
 
     private BeneficiaryInformation getBeneficiaryInformation(String caregiverId, String caregiverCode, String caseId, String caseName, String beneficiaryCode, String caregiverName, String ownerId) {
