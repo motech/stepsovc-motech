@@ -20,8 +20,6 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import static junit.framework.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.wv.stepsovc.commcare.gateway.CommcareGateway.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -45,22 +43,6 @@ public class CommcareGatewayIT {
     public void shouldCreateNewBeneficiary() throws Exception {
         BeneficiaryInformation beneficiaryInformation = getBeneficiaryInformation("7ac0b33f0dac4a81c6d1fbf1bd9dfee0", "ggg2", UUID.randomUUID().toString(), "new-test-case-6", "new-test-case-6", "cg1", null);
         commcareGateway.createCase(beneficiaryInformation);
-    }
-
-    @Ignore
-    public void shouldRegisterNewCareGiverUser() throws InterruptedException {
-        String testCareGiverId = "testCareGiverId";
-        String testCareGiverName = "testCareGiverName";
-        CareGiverInformation careGiverInformation = TestFixture.createCareGiverInformation(testCareGiverId, testCareGiverName);
-
-        assertNull(allUsers.getUserByName(testCareGiverName));
-
-        commcareGateway.registerUser(careGiverInformation);
-
-        Thread.sleep(60000);
-        User newCareGiver = allUsers.get(testCareGiverId);
-        assertNotNull(newCareGiver);
-        allUsers.remove(newCareGiver);
     }
 
     @Test

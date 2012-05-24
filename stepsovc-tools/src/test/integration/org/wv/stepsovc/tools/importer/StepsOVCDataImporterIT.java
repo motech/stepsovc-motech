@@ -1,6 +1,5 @@
 package org.wv.stepsovc.tools.importer;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,30 +20,45 @@ public class StepsOVCDataImporterIT {
     @Autowired
     private AllCaregivers allCaregivers;
 
-    @Ignore(value = "Geetha : failing test - fix it and unignore")
+    // Ids are from csv file used for testing
+    private String caregiver1UUID = "111111";
+    private String caregiver2UUID = "222222";
+
     @Test
     public void shouldImportCareGivers() throws InterruptedException {
         String filePath = "/Users/gee/Projects/stepsovc-motech/stepsovc-tools/src/main/resources/caregiver.csv";
         String[] args = {"caregiver", filePath};
 
-        String caregiver1UUID = "111111";
-        String caregiver2UUID = "222222";
-
-        assertFalse(allUsers.contains(caregiver1UUID));
-        assertFalse(allUsers.contains(caregiver2UUID));
+        assertCareGiversNotPresent();
 
         StepsOVCDataImporter.main(args);
 
-        Thread.sleep(60000);
+        Thread.sleep(2000);
 
-//        User newCareGiver1 = allUsers.get(caregiver1UUID);
-//        User newCareGiver2 = allUsers.get(caregiver2UUID);
+        assertCareGiversCreated();
+        deleteCareGiverCreated();
+
+    }
+
+    private void deleteCareGiverCreated() {
+        allUsers.remove(allUsers.get(caregiver1UUID));
+        allUsers.remove(allUsers.get(caregiver2UUID));
+        allCaregivers.remove(allCaregivers.get(caregiver1UUID));
+        allCaregivers.remove(allCaregivers.get(caregiver2UUID));
+    }
+
+    private void assertCareGiversCreated() {
         assertTrue(allUsers.contains(caregiver1UUID));
         assertTrue(allUsers.contains(caregiver2UUID));
+        assertTrue(allCaregivers.contains(caregiver1UUID));
         assertTrue(allCaregivers.contains(caregiver2UUID));
-//        allUsers.remove(newCareGiver1);
-//        allUsers.remove(newCareGiver2);
+    }
 
+    private void assertCareGiversNotPresent() {
+        assertFalse(allUsers.contains(caregiver1UUID));
+        assertFalse(allUsers.contains(caregiver2UUID));
+        assertFalse(allCaregivers.contains(caregiver1UUID));
+        assertFalse(allCaregivers.contains(caregiver2UUID));
     }
 
 
