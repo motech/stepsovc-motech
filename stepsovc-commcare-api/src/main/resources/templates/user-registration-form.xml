@@ -1,18 +1,13 @@
 <Registration xmlns="http://openrosa.org/user/registration">
-
     <username>$caregiver.caregiverCode</username>
     <password>sha1$90a7b$47a168cca627c6a34f4e349ea4b1fb3d01702c68</password>
     <uuid>$caregiver.caregiverId</uuid>
     <date>01-01-2012</date>
-
     <registering_phone_id>$caregiver.phoneNumber</registering_phone_id>
-
-
     <user_data>
         <data key="firstName">$caregiver.firstName</data>
         <data key="middleName">$caregiver.middleName</data>
         <data key="lastName">$caregiver.lastName</data>
         <data key="gender">$caregiver.gender</data>
     </user_data>
-
 </Registration>
