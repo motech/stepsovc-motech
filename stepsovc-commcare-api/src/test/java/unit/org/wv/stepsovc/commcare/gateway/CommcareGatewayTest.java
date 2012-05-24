@@ -8,6 +8,7 @@ import org.motechproject.http.client.listener.HttpClientEventListener;
 import org.motechproject.http.client.service.HttpClientService;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.wv.stepsovc.commcare.domain.CaseType;
+import org.wv.stepsovc.commcare.domain.Group;
 import org.wv.stepsovc.commcare.repository.AllGroups;
 import org.wv.stepsovc.commcare.repository.AllUsers;
 import org.wv.stepsovc.commcare.vo.BeneficiaryInformation;
@@ -63,7 +64,7 @@ public class CommcareGatewayTest {
         model.put(CommcareGateway.BENEFICIARY_FORM_KEY, beneficiaryInformation);
         doReturn(getBeneficiaryCaseExpectedXml()).when(spyCommcareGateway).getXmlFromObject(eq(BENEFICIARY_CASE_FORM_TEMPLATE_PATH), eq(model));
 
-        spyCommcareGateway.createNewBeneficiary(beneficiaryInformation);
+        spyCommcareGateway.createCase(beneficiaryInformation);
 
         verify(mockHttpClientService).post(COMMCARE_URL, getBeneficiaryCaseExpectedXml());
     }
@@ -73,8 +74,10 @@ public class CommcareGatewayTest {
         BeneficiaryInformation beneficiaryInformation = getBeneficiaryInformation("f98589102c60fcc2e0f3c422bb361ebd", "cg1", UUID.randomUUID().toString(), "Albie-case", "ABC", "cg1", "null");
         model.put(CommcareGateway.BENEFICIARY_FORM_KEY, beneficiaryInformation);
         doReturn(getBeneficiaryCaseExpectedXml()).when(spyCommcareGateway).getXmlFromObject(eq(OWNER_UPDATE_FORM_TEMPLATE_PATH), eq(model));
+        String someGroup = "someGroup";
+        doReturn(new Group()).when(allGroups).get(someGroup);
 
-        spyCommcareGateway.updateReferralOwner(beneficiaryInformation);
+        spyCommcareGateway.updateCaseOwner(beneficiaryInformation, "someUser", someGroup);
 
         verify(mockHttpClientService).post(COMMCARE_URL, getBeneficiaryCaseExpectedXml());
     }

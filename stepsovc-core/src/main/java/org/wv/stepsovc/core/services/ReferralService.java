@@ -4,7 +4,6 @@ import org.apache.log4j.Logger;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.wv.stepsovc.commcare.gateway.CommcareGateway;
-import org.wv.stepsovc.commcare.vo.BeneficiaryInformation;
 import org.wv.stepsovc.core.domain.Referral;
 import org.wv.stepsovc.core.mapper.BeneficiaryMapper;
 import org.wv.stepsovc.core.mapper.ReferralMapper;
@@ -16,6 +15,7 @@ import org.wv.stepsovc.core.vo.FacilityAvailability;
 
 import java.util.List;
 
+import static org.wv.stepsovc.core.factories.VisitRequestFactory.createVisitRequestForReferral;
 import static org.wv.stepsovc.core.utils.DateUtils.getDateTime;
 
 public class ReferralService {
@@ -40,9 +40,9 @@ public class ReferralService {
 
         Referral newReferral = new ReferralMapper().map(stepsovcCase);
         checkForAvailableDate(newReferral);
-        assignToFacility(stepsovcCase);
+        updateReferralOwner(stepsovcCase, stepsovcCase.getFacility_code());
 
-        allAppointments.scheduleNewReferral(newReferral.getOvcId(), newReferral.appointmentDataMap(), getDateTime(newReferral.getServiceDate()));
+        allAppointments.add(newReferral.getOvcId(), createVisitRequestForReferral(newReferral.appointmentDataMap(), getDateTime(newReferral.getServiceDate())));
         allReferrals.add(newReferral);
     }
 
@@ -56,7 +56,7 @@ public class ReferralService {
     private void inactivateOldReferral(StepsovcCase stepsovcCase) {
         Referral oldActiveReferral = allReferrals.findActiveReferral(stepsovcCase.getBeneficiary_code());
         if (oldActiveReferral != null) {
-            allAppointments.unschedule(oldActiveReferral.getOvcId());
+            allAppointments.remove(oldActiveReferral.getOvcId());
             oldActiveReferral.setActive(false);
             allReferrals.update(oldActiveReferral);
         }
@@ -65,7 +65,7 @@ public class ReferralService {
     public void updateNotAvailedReasons(StepsovcCase stepsovcCase) {
         logger.info("Handling update referral");
         Referral existingReferral = allReferrals.findActiveReferral(stepsovcCase.getBeneficiary_code());
-        allAppointments.unschedule(existingReferral.getOvcId());
+        allAppointments.remove(existingReferral.getOvcId());
         allReferrals.update(new ReferralMapper().updateReferral(existingReferral, stepsovcCase));
     }
 
@@ -75,14 +75,14 @@ public class ReferralService {
 
         Referral referral = new ReferralMapper().updateServices(existingReferral, stepsovcCase);
 
-        allAppointments.unschedule(referral.getOvcId());
+        allAppointments.remove(referral.getOvcId());
 
         if (stepsovcCase.getFacility_code() != null && !"".equals(stepsovcCase.getFacility_code().trim())) {
             checkForAvailableDate(referral);
-            allAppointments.scheduleNewReferral(referral.getOvcId(), referral.appointmentDataMap(), getDateTime(referral.getServiceDate()));
-            assignToFacility(stepsovcCase);
+            allAppointments.add(referral.getOvcId(), createVisitRequestForReferral(referral.appointmentDataMap(), getDateTime(referral.getServiceDate())));
+            updateReferralOwner(stepsovcCase, stepsovcCase.getFacility_code());
         } else {
-            removeFromCurrentFacility(stepsovcCase);
+            updateReferralOwner(stepsovcCase, null);
         }
         allReferrals.update(referral);
     }
@@ -102,24 +102,11 @@ public class ReferralService {
         for (Referral referral : referrals) {
             referral.setServiceDate(nextAvailableDate);
             allReferrals.update(referral);
-            allAppointments.scheduleNewReferral(referral.getOvcId(), referral.appointmentDataMap(), getDateTime(referral.getServiceDate()));
+            allAppointments.add(referral.getOvcId(), createVisitRequestForReferral(referral.appointmentDataMap(), getDateTime(referral.getServiceDate())));
         }
     }
 
-    void removeFromCurrentFacility(StepsovcCase stepsovcCase) {
-        stepsovcCase.setOwner_id(stepsovcCase.getUser_id());
-        updateReferralOwner(stepsovcCase);
-    }
-
-    void assignToFacility(StepsovcCase stepsovcCase) {
-        String groupId = commcareGateway.getGroupId(stepsovcCase.getFacility_code());
-        String ownerId = stepsovcCase.getUser_id() + "," + groupId;
-        stepsovcCase.setOwner_id(ownerId);
-        updateReferralOwner(stepsovcCase);
-    }
-
-    void updateReferralOwner(StepsovcCase stepsovcCase) {
-        BeneficiaryInformation beneficiaryInformation = new BeneficiaryMapper().createFormRequest(stepsovcCase);
-        commcareGateway.updateReferralOwner(beneficiaryInformation);
+    public void updateReferralOwner(StepsovcCase stepsovcCase, String facilityCode) {
+        commcareGateway.updateCaseOwner(new BeneficiaryMapper().createFormRequest(stepsovcCase), stepsovcCase.getUser_id(), facilityCode);
     }
 }

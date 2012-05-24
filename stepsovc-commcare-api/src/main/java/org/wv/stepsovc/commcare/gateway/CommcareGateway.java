@@ -47,7 +47,7 @@ public class CommcareGateway {
         return allUsers.getUserByName(name) == null ? null : allUsers.getUserByName(name).getId();
     }
 
-    public String getGroupId(String name) {
+    private String getGroupId(String name) {
         return allGroups.getGroupByName(name) == null ? null : allGroups.getGroupByName(name).getId();
     }
 
@@ -63,13 +63,14 @@ public class CommcareGateway {
     }
 
 
-    public void createNewBeneficiary(BeneficiaryInformation beneficiaryInformation) {
+    public void createCase(BeneficiaryInformation beneficiaryInformation) {
         model = new HashMap<String, Object>();
         model.put(BENEFICIARY_FORM_KEY, beneficiaryInformation);
         httpClientService.post(COMMCARE_URL, getXmlFromObject(BENEFICIARY_CASE_FORM_TEMPLATE_PATH, model));
     }
 
-    public void updateReferralOwner(BeneficiaryInformation beneficiaryInformation) {
+    public void updateCaseOwner(BeneficiaryInformation beneficiaryInformation, String userId, String groupName) {
+        beneficiaryInformation.setOwnerId(groupName == null ? userId : userId+","+getGroupId(groupName) );
         model = new HashMap<String, Object>();
         model.put(BENEFICIARY_FORM_KEY, beneficiaryInformation);
         httpClientService.post(COMMCARE_URL, getXmlFromObject(OWNER_UPDATE_FORM_TEMPLATE_PATH, model));
@@ -82,7 +83,7 @@ public class CommcareGateway {
         httpClientService.post(COMMCARE_URL, getXmlFromObject(USER_REGISTRATION_FORM_TEMPLATE_PATH, model));
     }
 
-    String getXmlFromObject(String templatePath, Map model) {
+    public String getXmlFromObject(String templatePath, Map model) {
         return VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, templatePath, "UTF-8", model);
     }
 }

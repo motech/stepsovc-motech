@@ -44,7 +44,7 @@ public class CommcareGatewayIT {
     @Ignore
     public void shouldCreateNewBeneficiary() throws Exception {
         BeneficiaryInformation beneficiaryInformation = getBeneficiaryInformation("7ac0b33f0dac4a81c6d1fbf1bd9dfee0", "ggg2", UUID.randomUUID().toString(), "new-test-case-6", "new-test-case-6", "cg1", null);
-        commcareGateway.createNewBeneficiary(beneficiaryInformation);
+        commcareGateway.createCase(beneficiaryInformation);
     }
 
     @Ignore
