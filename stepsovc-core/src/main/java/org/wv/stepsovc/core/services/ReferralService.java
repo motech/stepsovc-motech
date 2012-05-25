@@ -73,9 +73,9 @@ public class ReferralService {
         logger.info("Handling update service");
         Referral existingReferral = allReferrals.findActiveReferral(stepsovcCase.getBeneficiary_code());
 
-        Referral referral = new ReferralMapper().updateServices(existingReferral, stepsovcCase);
+        allAppointments.remove(existingReferral.getOvcId());
 
-        allAppointments.remove(referral.getOvcId());
+        Referral referral = new ReferralMapper().updateServices(existingReferral, stepsovcCase);
 
         if (stepsovcCase.getFacility_code() != null && !"".equals(stepsovcCase.getFacility_code().trim())) {
             checkForAvailableDate(referral);
