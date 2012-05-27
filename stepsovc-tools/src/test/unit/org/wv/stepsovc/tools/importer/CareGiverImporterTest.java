@@ -42,14 +42,22 @@ public class CareGiverImporterTest {
     public void shouldPostImportedCareGivers() throws Exception {
         String id1 = "123";
         String id2 = "345";
-        String name1 = "name1";
-        String name2 = "name2";
+        String fname1 = "fname1";
+        String mname1 = "mname1";
+        String lname1 = "lname1";
+        String fname2 = "fname2";
+        String mname2 = "mname2";
+        String lname2 = "lname2";
         CareGiverInformation careGiverInfo1 = new CareGiverInformation();
-        careGiverInfo1.setId(id1);
-        careGiverInfo1.setName(name1);
+        careGiverInfo1.setCaregiverId(id1);
+        careGiverInfo1.setFirstName(fname1);
+        careGiverInfo1.setMiddleName(mname1);
+        careGiverInfo1.setLastName(lname1);
         CareGiverInformation careGiverInfo2 = new CareGiverInformation();
-        careGiverInfo2.setName(name2);
-        careGiverInfo2.setId(id2);
+        careGiverInfo2.setCaregiverId(id2);
+        careGiverInfo2.setFirstName(fname2);
+        careGiverInfo2.setLastName(lname2);
+        careGiverInfo2.setMiddleName(mname2);
 
         careGiverImporter.post(Arrays.asList(careGiverInfo1, careGiverInfo2));
 
@@ -61,11 +69,15 @@ public class CareGiverImporterTest {
         verify(mockAllCaregivers, times(2)).add(captor1.capture());
         ArgumentCaptor<String> captor2 = ArgumentCaptor.forClass(String.class);
 
-        verify(mockDMISDataProcessor, times(2)).decrypt(captor2.capture());
+        verify(mockDMISDataProcessor, times(6)).decrypt(captor2.capture());
 
         assertThat(captor1.getAllValues().get(0).getId(), is(id1));
         assertThat(captor1.getAllValues().get(1).getId(), is(id2));
-        assertThat(captor2.getAllValues().get(0), is(name1));
-        assertThat(captor2.getAllValues().get(1), is(name2));
+        assertThat(captor2.getAllValues().get(0), is(fname1));
+        assertThat(captor2.getAllValues().get(1), is(mname1));
+        assertThat(captor2.getAllValues().get(2), is(lname1));
+        assertThat(captor2.getAllValues().get(3), is(fname2));
+        assertThat(captor2.getAllValues().get(4), is(mname2));
+        assertThat(captor2.getAllValues().get(5), is(lname2));
     }
 }

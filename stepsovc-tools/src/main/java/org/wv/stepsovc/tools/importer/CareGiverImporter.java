@@ -14,7 +14,7 @@ import java.util.List;
 
 @CSVImporter(entity = "caregiver", bean = CareGiverInformation.class)
 @Component
-public class CareGiverImporter{
+public class CareGiverImporter {
     @Autowired
     private DMISDataProcessor dmisDataProcessor;
     @Autowired
@@ -26,7 +26,9 @@ public class CareGiverImporter{
     public void post(List<CareGiverInformation> entities) {
         CaregiverMapper caregiverMapper = new CaregiverMapper();
         for (CareGiverInformation entity : entities) {
-            entity.setName(dmisDataProcessor.decrypt(entity.getName()));
+            entity.setFirstName(dmisDataProcessor.decrypt(entity.getFirstName()));
+            entity.setMiddleName(dmisDataProcessor.decrypt(entity.getMiddleName()));
+            entity.setLastName(dmisDataProcessor.decrypt(entity.getLastName()));
             commcareGateway.registerUser(entity);
             allCaregivers.add(caregiverMapper.map(entity));
         }

@@ -10,10 +10,10 @@ public class User extends MotechBaseDataObject {
     private String first_name;
 
     @JsonProperty
-    private  boolean is_superuser;
+    private boolean is_superuser;
 
     @JsonProperty
-    private  String registering_device_id;
+    private String registering_device_id;
     @JsonProperty
     private String status;
     @JsonProperty
@@ -38,7 +38,7 @@ public class User extends MotechBaseDataObject {
     @JsonProperty
     private String email;
     @JsonProperty
-    private  boolean is_active;
+    private boolean is_active;
 
     @JsonProperty
     private String last_name;
@@ -57,6 +57,17 @@ public class User extends MotechBaseDataObject {
 
     @JsonProperty
     private String date_joined;
+
+    @JsonProperty
+    private String date;
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
 
     public String getDate_joined() {
         return date_joined;
@@ -221,7 +232,4 @@ public class User extends MotechBaseDataObject {
         this.phone_numbers = phone_numbers;
     }
 
-    static class UserData {
-
-    }
 }
