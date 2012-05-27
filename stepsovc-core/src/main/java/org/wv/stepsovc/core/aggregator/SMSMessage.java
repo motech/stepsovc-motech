@@ -10,12 +10,14 @@ public class SMSMessage implements Serializable {
     private String phoneNumber;
     private String content;
     private String groupKey;
+    private String patientDueDate;
 
-    public SMSMessage(DateTime deliveryTime, String phoneNumber, String content, String groupKey) {
+    public SMSMessage(DateTime deliveryTime, String phoneNumber, String content, String groupKey, String patientDueDate) {
         this.deliveryTime = deliveryTime;
         this.phoneNumber = phoneNumber;
         this.content = content;
         this.groupKey = groupKey;
+        this.patientDueDate = patientDueDate;
     }
 
     public DateTime deliveryTime() {
@@ -36,5 +38,9 @@ public class SMSMessage implements Serializable {
 
     public String content() {
         return content;
+    }
+
+    public String getPatientDueDate() {
+        return patientDueDate;
     }
 }

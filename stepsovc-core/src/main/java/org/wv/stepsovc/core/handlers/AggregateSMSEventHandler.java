@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.wv.stepsovc.core.aggregator.SMSMessage;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -47,18 +46,11 @@ public class AggregateSMSEventHandler {
     private void aggregateForFacility(List<SMSMessage> smsMessages) throws Exception {
 
         StringContent template = cmsLiteService.getStringContent(Locale.ENGLISH.getLanguage(), smsMessages.get(0).group());
-        // todo : if sms content is small, this is fine, otherwise added a sortable identifier to SMSMessage
         List<SMSMessage> sortedSMSes = Lambda.sort(smsMessages, on(SMSMessage.class).content());
         String allSMSes = joinFrom(sortedSMSes, SMSMessage.class, ", ").content();
-        logger.info("Aggregated Sms : "+allSMSes);
-        smsService.sendSMS(smsMessages.get(0).phoneNumber(), format(template.getValue(), allSMSes));
+        logger.info("Aggregated Sms : "+allSMSes+", Due Date:" +smsMessages.get(0).getPatientDueDate());
+        smsService.sendSMS(smsMessages.get(0).phoneNumber(), format(template.getValue(), allSMSes, smsMessages.get(0).getPatientDueDate()));
     }
 
 
-    Comparator<String> alphabeticalOrder = new Comparator<String>() {
-        @Override
-        public int compare(String s, String s1) {
-            return s.compareTo(s1);
-        }
-    };
 }

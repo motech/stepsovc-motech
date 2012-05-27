@@ -11,12 +11,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class DateUtils {
-    private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private static Logger logger = LoggerFactory.getLogger(DateUtils.class);
+    public static final String YYYY_MM_DD = "yyyy-MM-dd";
 
     public static Date getDate(String dateStr) {
         try {
-            return simpleDateFormat.parse(dateStr);
+            return new SimpleDateFormat(YYYY_MM_DD).parse(dateStr);
         } catch (ParseException e) {
            logger.error("ParseExcption while parsing date:"+e);
         }
@@ -26,13 +26,13 @@ public class DateUtils {
     public static String nextDateStr(Date date){
         LocalDate localDate = LocalDate.fromDateFields(date);
 
-        return simpleDateFormat.format(localDate.plusDays(1).toDate());
+        return new SimpleDateFormat(YYYY_MM_DD).format(localDate.plusDays(1).toDate());
     }
 
     public static String nextDateStr(String dateStr) throws ParseException {
         LocalDate localDate = LocalDate.fromDateFields(getDate(dateStr));
 
-        return simpleDateFormat.format(localDate.plusDays(1).toDate());
+        return new SimpleDateFormat(YYYY_MM_DD).format(localDate.plusDays(1).toDate());
     }
 
     public static Date nextDate(Date date){
@@ -48,7 +48,7 @@ public class DateUtils {
     }
 
     public static String getFormattedDate(Date date) {
-        return simpleDateFormat.format(date);
+        return new SimpleDateFormat(YYYY_MM_DD).format(date);
     }
 
     public static LocalDate getLocalDate(String fromDate) {
@@ -57,7 +57,7 @@ public class DateUtils {
 
     public static DateTime getDateTime(String serviceDate) {
         try {
-            return DateUtil.newDateTime(simpleDateFormat.parse(serviceDate));
+            return DateUtil.newDateTime(new SimpleDateFormat(YYYY_MM_DD).parse(serviceDate));
         } catch (ParseException e) {
             throw new RuntimeException("Date format wrong:" + serviceDate, e);
         }

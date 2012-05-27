@@ -14,14 +14,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.wv.stepsovc.core.aggregator.SMSMessage;
-import org.wv.stepsovc.core.domain.Beneficiary;
-import org.wv.stepsovc.core.domain.Facility;
-import org.wv.stepsovc.core.domain.Referral;
-import org.wv.stepsovc.core.domain.SmsTemplateKeys;
+import org.wv.stepsovc.core.domain.*;
 import org.wv.stepsovc.core.repository.AllBeneficiaries;
 import org.wv.stepsovc.core.repository.AllFacilities;
 import org.wv.stepsovc.core.repository.AllReferrals;
+import org.wv.stepsovc.core.utils.DateUtils;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -55,31 +54,37 @@ public class ReferralScheduleHandler {
     @MotechListener(subjects = {EventKeys.APPOINTMENT_REMINDER_EVENT_SUBJECT})
     public void handleAlert(MotechEvent motechEvent) {
         try {
-            sendSMSToFacilityForAnAppointment(motechEvent);
+            Map<String, Object> parameters = motechEvent.getParameters();
+            Referral referral = allReferrals.findActiveByOvcId((String) parameters.get(EventKeys.EXTERNAL_ID_KEY));
+            Beneficiary beneficiary = allBeneficiaries.findBeneficiary(referral.getBeneficiaryCode());
+            sendAggregatedSMSToFacility(referral, beneficiary);
+            if (referral.window() == WindowType.DUE)
+                sendInstanceSMSToCaregiver(referral, beneficiary);
         } catch (Exception e) {
             logger.debug("<Appointment Alert Exception>: Encountered error while sending alert: ", e);
             throw new EventHandlerException(motechEvent, e);
         }
     }
 
-    private void sendSMSToFacilityForAnAppointment(MotechEvent motechEvent) throws ContentNotFoundException {
 
-        Map<String, Object> parameters = motechEvent.getParameters();
-        Referral referral = allReferrals.findActiveByOvcId((String) parameters.get(EventKeys.EXTERNAL_ID_KEY));
+    private void sendAggregatedSMSToFacility(Referral referral, Beneficiary beneficiary) throws ContentNotFoundException {
         Facility facility = allFacilities.findFacilityByCode(referral.getFacilityCode());
-        Beneficiary beneficiary = allBeneficiaries.findBeneficiary(referral.getBeneficiaryCode());
-
         List<String> phoneNumbers = facility.getPhoneNumbers();
         if (isEmpty(phoneNumbers)) {
-            logger.warn("No Phone Numbers to send SMS.");
+            logger.error("No Phone Numbers to send SMS.");
         } else {
+            final DateTime now = newDateTime(new LocalDate(), 7, 30, 0);
+            StringContent smsTemplate = cmsLiteService.getStringContent(Locale.ENGLISH.getLanguage(), SmsTemplateKeys.REFERRAL_ALERT);
+            String smsContent = format(smsTemplate.getValue(), beneficiary.getName(), beneficiary.getCode(), join(referral.referredServiceCodes(), ","));
+            logger.info("Sms Content : " + smsContent);
+            String patientDueDate = new SimpleDateFormat("dd-MMM-yyyy").format(DateUtils.getDate(referral.getServiceDate()));
             for (String phoneNumber : phoneNumbers) {
-                final DateTime now = newDateTime(new LocalDate(), 10, 30, 0);
-                StringContent smsTemplate = cmsLiteService.getStringContent(Locale.ENGLISH.getLanguage(), SmsTemplateKeys.REFERRAL_ALERT);
-                String smsContent = format(smsTemplate.getValue(), beneficiary.getName(), beneficiary.getCode(), join(referral.referredServiceCodes(), ","));
-                logger.info("Sms Content : "+smsContent);
-                eventAggregationGateway.dispatch(new SMSMessage(now, phoneNumber, smsContent, group(Referral.VISIT_NAME, referral.window().name(), FACILITY).key()));
+                eventAggregationGateway.dispatch(new SMSMessage(now, phoneNumber, smsContent, group(Referral.VISIT_NAME, referral.window().name(), FACILITY).key(), patientDueDate));
             }
         }
+    }
+
+    private void sendInstanceSMSToCaregiver(Referral referral, Beneficiary beneficiary) {
+
     }
 }
