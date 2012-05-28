@@ -42,9 +42,9 @@ public class FacilityCaseIT {
     public void shouldCreateOrUpdateFacilityWithServiceUnavailability() {
         String mayFirst = "2012-05-01";
         String maySecond = "2012-05-02";
-        StepsovcCase caseForReferral1 = ReferralFixture.createCaseForReferral(benCode1, mayFirst, facilityId);
-        StepsovcCase caseForReferral2 = ReferralFixture.createCaseForReferral(benCode2, mayFirst, facilityId);
-        StepsovcCase caseForReferral3 = ReferralFixture.createCaseForReferral(benCode3, "2012-01-03", facilityId);
+        StepsovcCase caseForReferral1 = StepsovcCaseFixture.createCaseForReferral(benCode1, mayFirst, facilityId);
+        StepsovcCase caseForReferral2 = StepsovcCaseFixture.createCaseForReferral(benCode2, mayFirst, facilityId);
+        StepsovcCase caseForReferral3 = StepsovcCaseFixture.createCaseForReferral(benCode3, "2012-01-03", facilityId);
         StepsovcCase facilityCase = createFacilityCase(facilityId, mayFirst, mayFirst);
 
         caseForReferral1.setForm_type(BeneficiaryCaseUpdateType.NEW_REFERRAL.getType());
@@ -68,7 +68,7 @@ public class FacilityCaseIT {
         stepsovcCaseController.createCase(facilityCase);
         assertThat(allFacilities.findFacilityByCode(facilityId).getServiceUnavailabilities().size(), is(2));
 
-        StepsovcCase caseForReferral4 = ReferralFixture.createCaseForReferral(benCode3, "2012-02-01", facilityId);
+        StepsovcCase caseForReferral4 = StepsovcCaseFixture.createCaseForReferral(benCode3, "2012-02-01", facilityId);
         caseForReferral4.setForm_type(BeneficiaryCaseUpdateType.NEW_REFERRAL.getType());
 
         stepsovcCaseController.createCase(caseForReferral4);

@@ -1,4 +1,4 @@
-package org.wv.stepsovc.core.handlers;
+package unit.org.wv.stepsovc.core.handlers;
 
 import org.joda.time.DateTime;
 import org.junit.Before;
@@ -11,6 +11,7 @@ import org.motechproject.model.MotechEvent;
 import org.motechproject.sms.api.service.SmsService;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.wv.stepsovc.core.aggregator.SMSMessage;
+import org.wv.stepsovc.core.handlers.AggregateSMSEventHandler;
 
 import java.util.*;
 
