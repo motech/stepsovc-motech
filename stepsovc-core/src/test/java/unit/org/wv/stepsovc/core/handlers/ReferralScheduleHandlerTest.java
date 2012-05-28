@@ -19,9 +19,7 @@ import org.wv.stepsovc.core.mapper.ReferralMapper;
 import org.wv.stepsovc.core.repository.AllBeneficiaries;
 import org.wv.stepsovc.core.repository.AllFacilities;
 import org.wv.stepsovc.core.repository.AllReferrals;
-import org.wv.stepsovc.core.repository.SMSGateway;
 
-import javax.lang.model.util.Types;
 import java.util.*;
 
 import static org.apache.commons.lang.StringUtils.join;
@@ -29,13 +27,12 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.isIn;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.wv.stepsovc.core.domain.SmsTemplateKeys.REFERRAL_ALERT;
-import static org.wv.stepsovc.core.mapper.ReferralMapperTest.createCaseForReferral;
+import static org.wv.stepsovc.core.domain.SmsTemplateKeys.REFERRAL_ALERT_WITH_SERVICE;
+import static org.wv.stepsovc.core.fixtures.StepsovcCaseFixture.createCaseForReferral;
 
 public class ReferralScheduleHandlerTest {
     @Mock
@@ -79,7 +76,7 @@ public class ReferralScheduleHandlerTest {
         when(mockAllBeneficiaries.findBeneficiary(bencode)).thenReturn(beneficiary);
 
         StringContent templateString= new StringContent(null, null, "%s (%s) Services (%s)");
-        when(mockCmsLiteService.getStringContent(Locale.ENGLISH.getLanguage(),REFERRAL_ALERT)).thenReturn(templateString);
+        when(mockCmsLiteService.getStringContent(Locale.ENGLISH.getLanguage(), REFERRAL_ALERT_WITH_SERVICE)).thenReturn(templateString);
 
         Map<String, Object> parameters= new HashMap<String, Object>();
         parameters.put(EventKeys.EXTERNAL_ID_KEY,"someID");

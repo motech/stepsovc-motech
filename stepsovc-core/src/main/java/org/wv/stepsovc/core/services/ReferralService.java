@@ -7,16 +7,12 @@ import org.wv.stepsovc.commcare.gateway.CommcareGateway;
 import org.wv.stepsovc.core.domain.Referral;
 import org.wv.stepsovc.core.mapper.BeneficiaryMapper;
 import org.wv.stepsovc.core.mapper.ReferralMapper;
-import org.wv.stepsovc.core.repository.AllAppointments;
 import org.wv.stepsovc.core.repository.AllReferrals;
 import org.wv.stepsovc.core.request.StepsovcCase;
 import org.wv.stepsovc.core.utils.DateUtils;
 import org.wv.stepsovc.core.vo.FacilityAvailability;
 
 import java.util.List;
-
-import static org.wv.stepsovc.core.factories.VisitRequestFactory.createVisitRequestForReferral;
-import static org.wv.stepsovc.core.utils.DateUtils.getDateTime;
 
 public class ReferralService {
 
@@ -32,7 +28,7 @@ public class ReferralService {
     private FacilityService facilityService;
 
     @Autowired
-    private AllAppointments allAppointments;
+    private ReferralAlertService referralAlertService;
 
     public void addNewReferral(StepsovcCase stepsovcCase) {
         logger.info("Handling new referral");
@@ -42,7 +38,7 @@ public class ReferralService {
         checkForAvailableDate(newReferral);
         updateReferralOwner(stepsovcCase, stepsovcCase.getFacility_code());
 
-        allAppointments.add(newReferral.getOvcId(), createVisitRequestForReferral(newReferral.appointmentDataMap(), getDateTime(newReferral.getServiceDate())));
+        referralAlertService.newReferralAlert(newReferral);
         allReferrals.add(newReferral);
     }
 
@@ -56,7 +52,7 @@ public class ReferralService {
     private void inactivateOldReferral(StepsovcCase stepsovcCase) {
         Referral oldActiveReferral = allReferrals.findActiveReferral(stepsovcCase.getBeneficiary_code());
         if (oldActiveReferral != null) {
-            allAppointments.remove(oldActiveReferral.getOvcId());
+            referralAlertService.removeAlertSchedules(oldActiveReferral);
             oldActiveReferral.setActive(false);
             allReferrals.update(oldActiveReferral);
         }
@@ -65,7 +61,7 @@ public class ReferralService {
     public void updateNotAvailedReasons(StepsovcCase stepsovcCase) {
         logger.info("Handling update referral");
         Referral existingReferral = allReferrals.findActiveReferral(stepsovcCase.getBeneficiary_code());
-        allAppointments.remove(existingReferral.getOvcId());
+        referralAlertService.removeAlertSchedules(existingReferral);
         allReferrals.update(new ReferralMapper().updateReferral(existingReferral, stepsovcCase));
     }
 
@@ -73,13 +69,13 @@ public class ReferralService {
         logger.info("Handling update service");
         Referral existingReferral = allReferrals.findActiveReferral(stepsovcCase.getBeneficiary_code());
 
-        allAppointments.remove(existingReferral.getOvcId());
+        referralAlertService.removeAlertSchedules(existingReferral);
 
         Referral referral = new ReferralMapper().updateServices(existingReferral, stepsovcCase);
 
         if (stepsovcCase.getFacility_code() != null && !"".equals(stepsovcCase.getFacility_code().trim())) {
             checkForAvailableDate(referral);
-            allAppointments.add(referral.getOvcId(), createVisitRequestForReferral(referral.appointmentDataMap(), getDateTime(referral.getServiceDate())));
+            referralAlertService.newReferralAlert(referral);
             updateReferralOwner(stepsovcCase, stepsovcCase.getFacility_code());
         } else {
             updateReferralOwner(stepsovcCase, null);
@@ -102,7 +98,7 @@ public class ReferralService {
         for (Referral referral : referrals) {
             referral.setServiceDate(nextAvailableDate);
             allReferrals.update(referral);
-            allAppointments.add(referral.getOvcId(), createVisitRequestForReferral(referral.appointmentDataMap(), getDateTime(referral.getServiceDate())));
+            referralAlertService.newReferralAlert(referral);
         }
     }
 

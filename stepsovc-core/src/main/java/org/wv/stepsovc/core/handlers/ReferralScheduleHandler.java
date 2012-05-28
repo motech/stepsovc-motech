@@ -74,7 +74,7 @@ public class ReferralScheduleHandler {
             logger.error("No Phone Numbers to send SMS.");
         } else {
             final DateTime now = newDateTime(new LocalDate(), 7, 30, 0);
-            StringContent smsTemplate = cmsLiteService.getStringContent(Locale.ENGLISH.getLanguage(), SmsTemplateKeys.REFERRAL_ALERT);
+            StringContent smsTemplate = cmsLiteService.getStringContent(Locale.ENGLISH.getLanguage(), SmsTemplateKeys.REFERRAL_ALERT_WITH_SERVICE);
             String smsContent = format(smsTemplate.getValue(), beneficiary.getName(), beneficiary.getCode(), join(referral.referredServiceCodes(), ","));
             logger.info("Sms Content : " + smsContent+ "dateTime :" +now);
             String patientDueDate = new SimpleDateFormat("dd-MMM-yyyy").format(DateUtils.getDate(referral.getServiceDate()));

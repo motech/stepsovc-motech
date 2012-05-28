@@ -18,7 +18,7 @@ import static org.wv.stepsovc.core.domain.ServiceType.*;
 import static org.wv.stepsovc.core.domain.ServiceType.PMTCT;
 import static org.wv.stepsovc.core.domain.ServiceType.SEXUALLY_TRANSMITTED_INFEC;
 
-public class ReferralFixture {
+public class StepsovcCaseFixture {
 
     public static void assertReferrals(StepsovcCase stepsovcCase, Referral newReferral) {
         Map<String,Service> referredServices = newReferral.getReferredServices();

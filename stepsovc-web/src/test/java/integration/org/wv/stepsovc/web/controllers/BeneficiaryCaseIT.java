@@ -13,9 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.wv.stepsovc.core.domain.Beneficiary;
+import org.wv.stepsovc.core.domain.Facility;
 import org.wv.stepsovc.core.domain.Referral;
+import org.wv.stepsovc.core.domain.ServiceUnavailability;
 import org.wv.stepsovc.core.repository.AllAppointments;
 import org.wv.stepsovc.core.repository.AllBeneficiaries;
+import org.wv.stepsovc.core.repository.AllFacilities;
 import org.wv.stepsovc.core.repository.AllReferrals;
 import org.wv.stepsovc.core.request.StepsovcCase;
 import org.wv.stepsovc.core.utils.DateUtils;
@@ -23,11 +26,12 @@ import org.wv.stepsovc.core.utils.DateUtils;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertNotNull;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.wv.stepsovc.core.request.BeneficiaryCaseUpdateType.*;
-import static org.wv.stepsovc.web.controllers.ReferralFixture.*;
+import static org.wv.stepsovc.web.controllers.StepsovcCaseFixture.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath*:testWebApplicationContext.xml")
@@ -49,6 +53,9 @@ public class BeneficiaryCaseIT {
 
     @Autowired
     private AllAppointmentCalendars allAppointmentCalendars;
+    @Autowired
+    private AllFacilities allFacilities;
+    private Facility facility;
 
     @Test
     public void shouldCreateBeneficiaryReferralAndUpdateReferral() {
@@ -59,6 +66,13 @@ public class BeneficiaryCaseIT {
         stepsovcCaseController.createCase(stepsovcCase);
         beneficiary = allBeneficiaries.findBeneficiary(beneficiaryCode);
         assertNotNull(beneficiary);
+
+        facility = new Facility("FAC001", "FAC001-Name",
+                asList(new ServiceUnavailability("reason1", "2012-06-20", "2012-06-20"),
+                        new ServiceUnavailability("reason2", "2012-06-26", "2012-06-26")
+                ),
+                asList("9999999999", "88888888"));
+        allFacilities.add(facility);
 
         stepsovcCase = createCaseForReferral(beneficiaryCode, "2012-4-12", "FAC001");
 
@@ -108,6 +122,7 @@ public class BeneficiaryCaseIT {
 
     @After
     public void clearAll() throws SchedulerException {
+        allFacilities.remove(facility);
         allBeneficiaries.removeAll();
         allReferrals.removeAllByBeneficiary(beneficiaryCode);
         allAppointmentCalendars.removeAll();

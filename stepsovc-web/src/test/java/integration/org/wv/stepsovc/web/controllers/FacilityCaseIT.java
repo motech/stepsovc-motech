@@ -14,6 +14,7 @@ import org.wv.stepsovc.core.repository.AllReferrals;
 import org.wv.stepsovc.core.request.BeneficiaryCaseUpdateType;
 import org.wv.stepsovc.core.request.StepsovcCase;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 
