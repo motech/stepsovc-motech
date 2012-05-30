@@ -39,8 +39,6 @@ public class CommcareGateway {
     @Autowired
     private AllUsers allUsers;
 
-    private Map model;
-
     public String getUserId(String name) {
         return allUsers.getUserByName(name) == null ? null : allUsers.getUserByName(name).getId();
     }
@@ -56,28 +54,6 @@ public class CommcareGateway {
         Group newGroup = GroupFactory.createGroup(groupName, commcareUserIds, domain);
         allGroups.add(newGroup);
         return true;
-    }
-
-    public void createCase(BeneficiaryInformation beneficiaryInformation) {
-        model = new HashMap<String, Object>();
-        model.put(BENEFICIARY_FORM_KEY, beneficiaryInformation);
-        httpClientService.post(COMMCARE_URL, getXmlFromObject(BENEFICIARY_CASE_FORM_TEMPLATE_PATH, model));
-    }
-
-    private void postOwnerUpdate(BeneficiaryInformation beneficiaryInformation) {
-        model = new HashMap<String, Object>();
-        model.put(BENEFICIARY_FORM_KEY, beneficiaryInformation);
-        httpClientService.post(COMMCARE_URL, getXmlFromObject(OWNER_UPDATE_FORM_TEMPLATE_PATH, model));
-    }
-
-    public void registerUser(CareGiverInformation careGiverInformation) {
-        model = new HashMap<String, Object>();
-        model.put(CARE_GIVER_FORM_KEY, careGiverInformation);
-        httpClientService.post(COMMCARE_URL, getXmlFromObject(USER_REGISTRATION_FORM_TEMPLATE_PATH, model));
-    }
-
-    public String getXmlFromObject(String templatePath, Map model) {
-        return VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, templatePath, "UTF-8", model);
     }
 
     public void addGroupOwnership(BeneficiaryInformation beneficiaryInformation, String groupName){
@@ -100,5 +76,27 @@ public class CommcareGateway {
 
     private String removeGroupIdFromOwnerId(String groupId, String ownerId, int indexOfGroupId) {
         return ownerId.substring(0, indexOfGroupId - 1) + ownerId.substring(indexOfGroupId + groupId.length());
+    }
+
+    public void createCase(BeneficiaryInformation beneficiaryInformation) {
+        Map<String, Object> model = new HashMap<String, Object>();
+        model.put(BENEFICIARY_FORM_KEY, beneficiaryInformation);
+        httpClientService.post(COMMCARE_URL, getXmlFromObject(BENEFICIARY_CASE_FORM_TEMPLATE_PATH, model));
+    }
+
+    public void registerUser(CareGiverInformation careGiverInformation) {
+        Map<String, Object> model = new HashMap<String, Object>();
+        model.put(CARE_GIVER_FORM_KEY, careGiverInformation);
+        httpClientService.post(COMMCARE_URL, getXmlFromObject(USER_REGISTRATION_FORM_TEMPLATE_PATH, model));
+    }
+
+    void postOwnerUpdate(BeneficiaryInformation beneficiaryInformation) {
+        Map<String, Object> model = new HashMap<String, Object>();
+        model.put(BENEFICIARY_FORM_KEY, beneficiaryInformation);
+        httpClientService.post(COMMCARE_URL, getXmlFromObject(OWNER_UPDATE_FORM_TEMPLATE_PATH, model));
+    }
+
+    public String getXmlFromObject(String templatePath, Map model) {
+        return VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, templatePath, "UTF-8", model);
     }
 }

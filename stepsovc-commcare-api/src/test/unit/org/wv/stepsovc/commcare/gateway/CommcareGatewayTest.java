@@ -3,6 +3,7 @@ package org.wv.stepsovc.commcare.gateway;
 import org.apache.velocity.app.VelocityEngine;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.http.client.listener.HttpClientEventListener;
 import org.motechproject.http.client.service.HttpClientService;
@@ -18,6 +19,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -42,7 +45,6 @@ public class CommcareGatewayTest {
     @Mock
     private AllUsers allUsers;
     private Map<String, Object> model;
-
 
     @Before
     public void setup() {
@@ -70,28 +72,50 @@ public class CommcareGatewayTest {
     }
 
     @Test
-    public void shouldSubmitUpdateOwnerForm() {
-        BeneficiaryInformation beneficiaryInformation = getBeneficiaryInformation("f98589102c60fcc2e0f3c422bb361ebd", "cg1", UUID.randomUUID().toString(), "Albie-case", "ABC", "cg1", "null");
-        model.put(CommcareGateway.BENEFICIARY_FORM_KEY, beneficiaryInformation);
-        doReturn(getBeneficiaryCaseExpectedXml()).when(spyCommcareGateway).getXmlFromObject(eq(OWNER_UPDATE_FORM_TEMPLATE_PATH), eq(model));
-        String someGroup = "someGroup";
-        doReturn(new Group()).when(allGroups).get(someGroup);
-
-        spyCommcareGateway.addGroupOwnership(beneficiaryInformation, someGroup);
-
-        verify(mockHttpClientService).post(COMMCARE_URL, getBeneficiaryCaseExpectedXml());
-    }
-
-
-    @Test
     public void shouldCreateCareGiverInCommcare() {
         CareGiverInformation careGiverInformation = getCareGiverInformation("7ac0b33f0dac4a81c6d1fbf1bd9dfee0", "EW/123", "9089091");
         model.put(CommcareGateway.CARE_GIVER_FORM_KEY, careGiverInformation);
         doReturn(getExpectedUserFormXml()).when(spyCommcareGateway).getXmlFromObject(eq(USER_REGISTRATION_FORM_TEMPLATE_PATH), eq(model));
-
         spyCommcareGateway.registerUser(careGiverInformation);
-
         verify(mockHttpClientService).post(COMMCARE_URL, getExpectedUserFormXml());
+    }
+
+
+    @Test
+    public void shouldSubmitUpdateOwnerFormForGroupOwnershipRequest() {
+        BeneficiaryInformation beneficiaryInformation = getBeneficiaryInformation("f98589102c60fcc2e0f3c422bb361ebd", "cg1", UUID.randomUUID().toString(), "Albie-case", "ABC", "cg1", "null");
+        String currentOwnerId = beneficiaryInformation.getCurrentOwnerId();
+        model.put(CommcareGateway.BENEFICIARY_FORM_KEY, beneficiaryInformation);
+        doReturn(getBeneficiaryCaseExpectedXml()).when(spyCommcareGateway).getXmlFromObject(eq(OWNER_UPDATE_FORM_TEMPLATE_PATH), eq(model));
+        String someGroup = "someGroup";
+        Group group = new Group();
+        group.setId("somegroupId");
+        doReturn(group).when(allGroups).getGroupByName(someGroup);
+        ArgumentCaptor<BeneficiaryInformation> beneficiaryInfoCaptor = ArgumentCaptor.forClass(BeneficiaryInformation.class);
+
+        spyCommcareGateway.addGroupOwnership(beneficiaryInformation, someGroup);
+
+        verify(spyCommcareGateway).postOwnerUpdate(beneficiaryInfoCaptor.capture());
+        verify(mockHttpClientService).post(COMMCARE_URL, getBeneficiaryCaseExpectedXml());
+
+        assertThat(beneficiaryInfoCaptor.getValue().getOwnerId(),is(currentOwnerId +","+group.getId()));
+    }
+
+    @Test
+    public void shouldSendOwnershipUpdateXmlForAddUserOwnershipRequest() throws Exception {
+        BeneficiaryInformation beneficiaryInformation = getBeneficiaryInformation("f98589102c60fcc2e0f3c422bb361ebd", "cg1", UUID.randomUUID().toString(), "Albie-case", "ABC", "cg1", "null");
+        String currentOwnerId = beneficiaryInformation.getCurrentOwnerId();
+        model.put(CommcareGateway.BENEFICIARY_FORM_KEY, beneficiaryInformation);
+        doReturn(getBeneficiaryCaseExpectedXml()).when(spyCommcareGateway).getXmlFromObject(eq(OWNER_UPDATE_FORM_TEMPLATE_PATH), eq(model));
+        String userId = "userId";
+        ArgumentCaptor<BeneficiaryInformation> beneficiaryInfoCaptor = ArgumentCaptor.forClass(BeneficiaryInformation.class);
+
+        spyCommcareGateway.addUserOwnership(beneficiaryInformation, userId);
+
+        verify(spyCommcareGateway).postOwnerUpdate(beneficiaryInfoCaptor.capture());
+        verify(mockHttpClientService).post(COMMCARE_URL, getBeneficiaryCaseExpectedXml());
+
+        assertThat(beneficiaryInfoCaptor.getValue().getOwnerId(), is(currentOwnerId + "," + userId));
 
     }
 
