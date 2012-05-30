@@ -21,11 +21,11 @@ public class AllBeneficiaries extends MotechBaseRepository<Beneficiary> {
         super(Beneficiary.class, dbCouchDbConnector);
     }
 
-    @View(name = "by_beneficiary_code", map = "function(doc){ if(doc.type === 'Beneficiary') emit([doc.code],doc) }")
+    @View(name = "by_beneficiary_code", map = "function(doc){ if(doc.type == 'Beneficiary') emit([doc.code],doc) }")
     public Beneficiary findBeneficiary(String beneficiaryCode) {
         ViewQuery viewQuery = createQuery("by_beneficiary_code").key(ComplexKey.of(beneficiaryCode)).includeDocs(true);
-        List<Beneficiary> latestReferral = db.queryView(viewQuery, Beneficiary.class);
-        return CollectionUtils.isEmpty(latestReferral) ? null : latestReferral.get(0);
+        List<Beneficiary> beneficiaries = db.queryView(viewQuery, Beneficiary.class);
+        return CollectionUtils.isEmpty(beneficiaries) ? null : beneficiaries.get(0);
     }
 
 

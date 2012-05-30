@@ -2,8 +2,10 @@ package org.wv.stepsovc.core.services;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.wv.stepsovc.commcare.gateway.CommcareGateway;
 import org.wv.stepsovc.core.domain.Facility;
 import org.wv.stepsovc.core.domain.ServiceUnavailability;
+import org.wv.stepsovc.core.mapper.BeneficiaryMapper;
 import org.wv.stepsovc.core.repository.AllFacilities;
 import org.wv.stepsovc.core.request.StepsovcCase;
 import org.wv.stepsovc.core.vo.FacilityAvailability;
@@ -26,6 +28,8 @@ public class FacilityService {
     private AllFacilities allFacilities;
     @Autowired
     private ReferralService referralService;
+    @Autowired
+    private CommcareGateway commcareGateway;
 
     public void makeFacilityUnavailable(StepsovcCase facilityCase) {
         String nextAvailableDate = null;
@@ -77,5 +81,9 @@ public class FacilityService {
                 }
             }
         return new FacilityAvailability(isAvailable, getFormattedDate(serviceDate));
+    }
+
+    public void registerFacility(StepsovcCase stepsovcCase) {
+        commcareGateway.addGroupOwnership(new BeneficiaryMapper().createFormRequest(stepsovcCase),CommcareGateway.ALL_USERS_GROUP);
     }
 }

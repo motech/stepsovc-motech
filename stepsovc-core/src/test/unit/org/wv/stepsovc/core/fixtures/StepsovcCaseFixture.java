@@ -36,6 +36,7 @@ public class StepsovcCaseFixture {
         stepsovcCase.setBeneficiary_name("Ben_Name");
         stepsovcCase.setCaregiver_code("CareGiverID");
         stepsovcCase.setCaregiver_name("CareGiverName");
+        stepsovcCase.setFacility_code("FAC");
         return stepsovcCase;
     }
 

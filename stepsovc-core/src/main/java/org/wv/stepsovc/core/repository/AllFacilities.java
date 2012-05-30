@@ -21,7 +21,7 @@ public class AllFacilities extends MotechBaseRepository<Facility> {
         super(Facility.class, dbCouchDbConnector);
     }
 
-    @View(name = "by_facilityCode", map = "function(doc){ if(doc.type === 'Facility') emit([doc.facilityCode],doc) }")
+    @View(name = "by_facilityCode", map = "function(doc){ if(doc.type == 'Facility') emit([doc.facilityCode],doc) }")
     public Facility findFacilityByCode(String facilityCode) {
         ViewQuery viewQuery = createQuery("by_facilityCode").key(ComplexKey.of(facilityCode)).includeDocs(true);
         List<Facility> facilities = db.queryView(viewQuery, Facility.class);

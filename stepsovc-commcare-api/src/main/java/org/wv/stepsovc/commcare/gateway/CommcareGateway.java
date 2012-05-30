@@ -21,14 +21,13 @@ import java.util.Map;
 public class CommcareGateway {
 
     public static final String BENEFICIARY_CASE_FORM_TEMPLATE_PATH = "/templates/beneficiary-case-form.xml";
-
     public static final String OWNER_UPDATE_FORM_TEMPLATE_PATH = "/templates/update-owner-form.xml";
-
     public static final String USER_REGISTRATION_FORM_TEMPLATE_PATH = "/templates/user-registration-form.xml";
-
     public static final String BENEFICIARY_FORM_KEY = "beneficiary";
-
     public static final String CARE_GIVER_FORM_KEY = "caregiver";
+    public static final String COMMCARE_URL = "http://localhost:8000/a/stepsovc/receiver";
+    public static final String ALL_USERS_GROUP = "ALL_USERS";
+
     @Autowired
     private HttpClientService httpClientService;
     @Autowired
@@ -39,9 +38,8 @@ public class CommcareGateway {
     private AllGroups allGroups;
     @Autowired
     private AllUsers allUsers;
-    private Map model;
 
-    public static final String COMMCARE_URL = "http://localhost:8000/a/stepsovc/receiver";
+    private Map model;
 
     public String getUserId(String name) {
         return allUsers.getUserByName(name) == null ? null : allUsers.getUserByName(name).getId();
@@ -55,13 +53,10 @@ public class CommcareGateway {
 
         if (allGroups.getGroupByName(groupName) != null)
             return false;
-
         Group newGroup = GroupFactory.createGroup(groupName, commcareUserIds, domain);
         allGroups.add(newGroup);
-
         return true;
     }
-
 
     public void createCase(BeneficiaryInformation beneficiaryInformation) {
         model = new HashMap<String, Object>();
@@ -69,13 +64,11 @@ public class CommcareGateway {
         httpClientService.post(COMMCARE_URL, getXmlFromObject(BENEFICIARY_CASE_FORM_TEMPLATE_PATH, model));
     }
 
-    public void updateCaseOwner(BeneficiaryInformation beneficiaryInformation, String userId, String groupName) {
-        beneficiaryInformation.setOwnerId(groupName == null ? userId : userId+","+getGroupId(groupName) );
+    private void postOwnerUpdate(BeneficiaryInformation beneficiaryInformation) {
         model = new HashMap<String, Object>();
         model.put(BENEFICIARY_FORM_KEY, beneficiaryInformation);
         httpClientService.post(COMMCARE_URL, getXmlFromObject(OWNER_UPDATE_FORM_TEMPLATE_PATH, model));
     }
-
 
     public void registerUser(CareGiverInformation careGiverInformation) {
         model = new HashMap<String, Object>();
@@ -85,5 +78,27 @@ public class CommcareGateway {
 
     public String getXmlFromObject(String templatePath, Map model) {
         return VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, templatePath, "UTF-8", model);
+    }
+
+    public void addGroupOwnership(BeneficiaryInformation beneficiaryInformation, String groupName){
+        beneficiaryInformation.setOwnerId(beneficiaryInformation.getCurrentOwnerId() + "," + getGroupId(groupName));
+        postOwnerUpdate(beneficiaryInformation);
+    }
+
+    public void removeGroupOwnership(BeneficiaryInformation beneficiaryInformation, String groupName) {
+        int indexOfGroupId = beneficiaryInformation.getOwnerId().indexOf(getGroupId(groupName));
+        if(indexOfGroupId != -1) {
+            beneficiaryInformation.setOwnerId(removeGroupIdFromOwnerId(getGroupId(groupName), beneficiaryInformation.getOwnerId(), indexOfGroupId));
+        }
+        postOwnerUpdate(beneficiaryInformation);
+    }
+
+    public void addUserOwnership(BeneficiaryInformation beneficiaryInformation, String userId) {
+        beneficiaryInformation.setOwnerId(beneficiaryInformation.getCurrentOwnerId() + "," + userId);
+        postOwnerUpdate(beneficiaryInformation);
+    }
+
+    private String removeGroupIdFromOwnerId(String groupId, String ownerId, int indexOfGroupId) {
+        return ownerId.substring(0, indexOfGroupId - 1) + ownerId.substring(indexOfGroupId + groupId.length());
     }
 }

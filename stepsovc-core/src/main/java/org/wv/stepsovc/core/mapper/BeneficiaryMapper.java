@@ -14,6 +14,7 @@ public class BeneficiaryMapper {
         beneficiary.setName(stepsovcCase.getBeneficiary_name());
         beneficiary.setSex(stepsovcCase.getSex());
         beneficiary.setTitle(stepsovcCase.getTitle());
+        beneficiary.setCaseId(stepsovcCase.getCase_id());
 
         return beneficiary;
     }

@@ -71,8 +71,8 @@ public class CareGiverImporterTest {
 
         verify(mockDMISDataProcessor, times(6)).decrypt(captor2.capture());
 
-        assertThat(captor1.getAllValues().get(0).getId(), is(id1));
-        assertThat(captor1.getAllValues().get(1).getId(), is(id2));
+        assertThat(captor1.getAllValues().get(0).getCgId(), is(id1));
+        assertThat(captor1.getAllValues().get(1).getCgId(), is(id2));
         assertThat(captor2.getAllValues().get(0), is(fname1));
         assertThat(captor2.getAllValues().get(1), is(mname1));
         assertThat(captor2.getAllValues().get(2), is(lname1));

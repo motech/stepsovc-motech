@@ -77,7 +77,7 @@ public class CommcareGatewayTest {
         String someGroup = "someGroup";
         doReturn(new Group()).when(allGroups).get(someGroup);
 
-        spyCommcareGateway.updateCaseOwner(beneficiaryInformation, "someUser", someGroup);
+        spyCommcareGateway.addGroupOwnership(beneficiaryInformation, someGroup);
 
         verify(mockHttpClientService).post(COMMCARE_URL, getBeneficiaryCaseExpectedXml());
     }

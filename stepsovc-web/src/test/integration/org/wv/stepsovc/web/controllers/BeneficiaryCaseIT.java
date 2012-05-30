@@ -30,7 +30,7 @@ import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertNotNull;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static org.wv.stepsovc.core.request.BeneficiaryCaseUpdateType.*;
+import static org.wv.stepsovc.core.request.CaseUpdateType.*;
 import static org.wv.stepsovc.web.controllers.StepsovcCaseFixture.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)

@@ -135,4 +135,8 @@ public class BeneficiaryInformation {
     public void setOwnerId(String ownerId) {
         this.ownerId = ownerId;
     }
+
+    public String getCurrentOwnerId() {
+        return ownerId == null ? careGiverId : ownerId;
+    }
 }

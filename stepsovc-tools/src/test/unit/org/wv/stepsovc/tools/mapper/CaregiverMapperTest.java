@@ -30,7 +30,7 @@ public class CaregiverMapperTest {
         caregiverInfo.setPhoneNumber(phoneNumber);
 
         Caregiver caregiver = new CaregiverMapper().map(caregiverInfo);
-        assertThat(caregiver.getId(), is(id));
+        assertThat(caregiver.getCgId(), is(id));
         assertThat(caregiver.getCode(), is(code));
         assertThat(caregiver.getFirstName(), is(fName));
         assertThat(caregiver.getMiddleName(), is(mName));

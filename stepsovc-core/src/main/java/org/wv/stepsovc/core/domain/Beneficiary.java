@@ -18,6 +18,26 @@ public class Beneficiary extends MotechBaseDataObject {
     private String sex;
     @JsonProperty
     private String caregiverCode;
+    @JsonProperty
+    private String caseId;
+
+    public Beneficiary() {
+    }
+
+    public Beneficiary(String name, String code, String caregiverCode, String caseId) {
+        this.name = name;
+        this.code = code;
+        this.caregiverCode = caregiverCode;
+        this.caseId = caseId;
+    }
+
+    public String getCaseId() {
+        return caseId;
+    }
+
+    public void setCaseId(String caseId) {
+        this.caseId = caseId;
+    }
 
     public String getName() {
         return name;

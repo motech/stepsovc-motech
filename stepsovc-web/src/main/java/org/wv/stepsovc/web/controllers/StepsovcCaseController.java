@@ -9,13 +9,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.wv.stepsovc.commcare.domain.CaseType;
+import org.wv.stepsovc.core.request.StepsovcCase;
 import org.wv.stepsovc.core.services.BeneficiaryService;
 import org.wv.stepsovc.core.services.FacilityService;
 import org.wv.stepsovc.core.services.ReferralService;
-import org.wv.stepsovc.core.request.BeneficiaryCaseUpdateType;
-import org.wv.stepsovc.core.request.StepsovcCase;
 
 import java.io.IOException;
+
+import static org.wv.stepsovc.commcare.domain.CaseType.BENEFICIARY_OWNERSHIP_CASE;
+import static org.wv.stepsovc.commcare.domain.CaseType.FACILITY_CASE;
+import static org.wv.stepsovc.core.request.CaseUpdateType.*;
 
 @Controller
 @RequestMapping("/case/**")
@@ -61,19 +64,30 @@ public class StepsovcCaseController extends CaseService<StepsovcCase> {
 
     @Override
     public void createCase(StepsovcCase stepsovcCase) {
-        logger.info("Inside create case \"" + stepsovcCase.getForm_type() + "\"");
+        logger.info("Inside create case; case type \"" + stepsovcCase.getCase_type() + "\"; form type " + stepsovcCase.getForm_type() + "\"");
 
         if (CaseType.BENEFICIARY_CASE.getType().equals(stepsovcCase.getCase_type())) {
-            if (BeneficiaryCaseUpdateType.BENEFICIARY_REGISTRATION.getType().equals(stepsovcCase.getForm_type()))
+            if (BENEFICIARY_REGISTRATION.getType().equals(stepsovcCase.getForm_type()))
                 beneficiaryService.createBeneficiary(stepsovcCase);
-            else if (BeneficiaryCaseUpdateType.NEW_REFERRAL.getType().equals(stepsovcCase.getForm_type()))
+            else if (NEW_REFERRAL.getType().equals(stepsovcCase.getForm_type()))
                 referralService.addNewReferral(stepsovcCase);
-            else if (BeneficiaryCaseUpdateType.UPDATE_REFERRAL.getType().equals(stepsovcCase.getForm_type()))
+            else if (UPDATE_REFERRAL.getType().equals(stepsovcCase.getForm_type()))
                 referralService.updateNotAvailedReasons(stepsovcCase);
-            else if (BeneficiaryCaseUpdateType.UPDATE_SERVICE.getType().equals(stepsovcCase.getForm_type()))
+            else if (UPDATE_SERVICE.getType().equals(stepsovcCase.getForm_type()))
                 referralService.updateAvailedServices(stepsovcCase);
-        } else if (CaseType.FACILITY_CASE.getType().equals(stepsovcCase.getCase_type())) {
-            facilityService.makeFacilityUnavailable(stepsovcCase);
+        } else if (FACILITY_CASE.getType().equals(stepsovcCase.getCase_type())) {
+            if(FACILITY_UNAVAILABILITY.getType().equals(stepsovcCase.getForm_type()))
+                facilityService.makeFacilityUnavailable(stepsovcCase);
+            else if(FACILITY_REGISTRATION.getType().equals(stepsovcCase.getForm_type()))
+                facilityService.registerFacility(stepsovcCase);
+        } else if(BENEFICIARY_OWNERSHIP_CASE.getType().equals(stepsovcCase.getCase_type())) {
+            if(USER_OWNERSHIP_REQUEST.getType().equals(stepsovcCase.getForm_type())) {
+                beneficiaryService.addUserOwnership(stepsovcCase);
+            } else if(FACILITY_OWNERSHIP_REQUEST.getType().equals(stepsovcCase.getForm_type())) {
+                beneficiaryService.addGroupOwnership(stepsovcCase);
+            } else if(OWNERSHIP_REGISTRATION.getType().equals(stepsovcCase.getForm_type())) {
+                    beneficiaryService.createDummyOwnershipCase(stepsovcCase);
+            }
         }
     }
 }

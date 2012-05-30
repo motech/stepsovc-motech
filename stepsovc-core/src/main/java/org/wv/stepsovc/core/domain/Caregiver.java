@@ -4,10 +4,10 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.ektorp.support.TypeDiscriminator;
 import org.motechproject.model.MotechBaseDataObject;
 
-@TypeDiscriminator("doc.type = 'Caregiver'")
+@TypeDiscriminator("doc.type == 'Caregiver'")
 public class Caregiver extends MotechBaseDataObject {
     @JsonProperty
-    private String id;
+    private String cgId;
     @JsonProperty
     private String code;
     @JsonProperty
@@ -21,13 +21,22 @@ public class Caregiver extends MotechBaseDataObject {
     @JsonProperty
     private String phoneNumber;
 
-
-    public String getId() {
-        return id;
+    public Caregiver() {
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public Caregiver(String cgId, String code, String firstName, String phoneNumber) {
+        this.cgId = cgId;
+        this.code = code;
+        this.firstName = firstName;
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getCgId() {
+        return cgId;
+    }
+
+    public void setCgId(String id) {
+        this.cgId = id;
     }
 
     public String getCode() {

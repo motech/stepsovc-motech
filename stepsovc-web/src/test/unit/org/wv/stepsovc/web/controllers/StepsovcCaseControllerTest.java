@@ -5,7 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.wv.stepsovc.commcare.domain.CaseType;
-import org.wv.stepsovc.core.request.BeneficiaryCaseUpdateType;
+import org.wv.stepsovc.core.request.CaseUpdateType;
 import org.wv.stepsovc.core.request.StepsovcCase;
 import org.wv.stepsovc.core.services.BeneficiaryService;
 import org.wv.stepsovc.core.services.FacilityService;
@@ -41,7 +41,7 @@ public class StepsovcCaseControllerTest {
     @Test
     public void ShouldCallBeneficiaryRegistrationHandler() throws Exception {
         stepsovcCase.setCase_type(CaseType.BENEFICIARY_CASE.getType());
-        stepsovcCase.setForm_type(BeneficiaryCaseUpdateType.BENEFICIARY_REGISTRATION.getType());
+        stepsovcCase.setForm_type(CaseUpdateType.BENEFICIARY_REGISTRATION.getType());
         stepsovcCaseController.createCase(stepsovcCase);
         verify(mockBeneficiaryService).createBeneficiary(stepsovcCase);
     }
@@ -49,7 +49,7 @@ public class StepsovcCaseControllerTest {
     @Test
     public void ShouldCallNewReferralHandler() throws Exception {
         stepsovcCase.setCase_type(CaseType.BENEFICIARY_CASE.getType());
-        stepsovcCase.setForm_type(BeneficiaryCaseUpdateType.NEW_REFERRAL.getType());
+        stepsovcCase.setForm_type(CaseUpdateType.NEW_REFERRAL.getType());
         stepsovcCaseController.createCase(stepsovcCase);
         verify(mockReferralService).addNewReferral(stepsovcCase);
     }
@@ -57,7 +57,7 @@ public class StepsovcCaseControllerTest {
     @Test
     public void ShouldCallUpdateReferralHandler() throws Exception {
         stepsovcCase.setCase_type(CaseType.BENEFICIARY_CASE.getType());
-        stepsovcCase.setForm_type(BeneficiaryCaseUpdateType.UPDATE_REFERRAL.getType());
+        stepsovcCase.setForm_type(CaseUpdateType.UPDATE_REFERRAL.getType());
         stepsovcCaseController.createCase(stepsovcCase);
         verify(mockReferralService).updateNotAvailedReasons(stepsovcCase);
     }
@@ -65,7 +65,7 @@ public class StepsovcCaseControllerTest {
     @Test
     public void ShouldCallUpdateServiceHandler() throws Exception {
         stepsovcCase.setCase_type(CaseType.BENEFICIARY_CASE.getType());
-        stepsovcCase.setForm_type(BeneficiaryCaseUpdateType.UPDATE_SERVICE.getType());
+        stepsovcCase.setForm_type(CaseUpdateType.UPDATE_SERVICE.getType());
         stepsovcCaseController.createCase(stepsovcCase);
         verify(mockReferralService).updateAvailedServices(stepsovcCase);
     }
