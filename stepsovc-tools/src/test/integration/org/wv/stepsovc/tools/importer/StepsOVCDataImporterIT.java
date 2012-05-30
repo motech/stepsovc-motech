@@ -12,7 +12,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath*:applicationContext-Tools.xml")
+@ContextConfiguration("classpath:applicationContext-Tools.xml")
 public class StepsOVCDataImporterIT {
 
     @Autowired
@@ -20,20 +20,15 @@ public class StepsOVCDataImporterIT {
     @Autowired
     private AllCaregivers allCaregivers;
 
-    // Ids are from csv file used for testing
-    private String caregiver1UUID = "111111";
-    private String caregiver2UUID = "222222";
-
     @Test
     public void shouldImportCareGivers() throws InterruptedException {
-        String filePath = "/Users/gee/Projects/stepsovc-motech/stepsovc-tools/src/main/resources/caregiver.csv";
+        String filePath = this.getClass().getResource("/caregiver.csv").getPath();
         String[] args = {"caregiver", filePath};
 
         assertCareGiversNotPresent();
 
         StepsOVCDataImporter.main(args);
 
-        Thread.sleep(2000);
 
         assertCareGiversCreated();
         deleteCareGiverCreated();
@@ -41,24 +36,24 @@ public class StepsOVCDataImporterIT {
     }
 
     private void deleteCareGiverCreated() {
-        allUsers.remove(allUsers.get(caregiver1UUID));
-        allUsers.remove(allUsers.get(caregiver2UUID));
-        allCaregivers.remove(allCaregivers.get(caregiver1UUID));
-        allCaregivers.remove(allCaregivers.get(caregiver2UUID));
+        for (int i = 100; i <= 102; i++) {
+            allUsers.remove(allUsers.get(String.valueOf(i)));
+            allCaregivers.remove(allCaregivers.get(String.valueOf(i)));
+        }
     }
 
     private void assertCareGiversCreated() {
-        assertTrue(allUsers.contains(caregiver1UUID));
-        assertTrue(allUsers.contains(caregiver2UUID));
-        assertTrue(allCaregivers.contains(caregiver1UUID));
-        assertTrue(allCaregivers.contains(caregiver2UUID));
+        for (int i = 100; i <= 102; i++) {
+            assertTrue(allUsers.contains(String.valueOf(i)));
+            assertTrue(allCaregivers.contains(String.valueOf(i)));
+        }
     }
 
     private void assertCareGiversNotPresent() {
-        assertFalse(allUsers.contains(caregiver1UUID));
-        assertFalse(allUsers.contains(caregiver2UUID));
-        assertFalse(allCaregivers.contains(caregiver1UUID));
-        assertFalse(allCaregivers.contains(caregiver2UUID));
+        for (int i = 100; i <= 102; i++) {
+            assertFalse(allUsers.contains(String.valueOf(i)));
+            assertFalse(allCaregivers.contains(String.valueOf(i)));
+        }
     }
 
 

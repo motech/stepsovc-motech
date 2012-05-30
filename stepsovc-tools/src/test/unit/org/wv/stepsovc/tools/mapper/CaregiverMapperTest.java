@@ -4,7 +4,6 @@ import org.junit.Test;
 import org.wv.stepsovc.commcare.vo.CareGiverInformation;
 import org.wv.stepsovc.core.domain.Caregiver;
 
-import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 public class CaregiverMapperTest {
@@ -19,6 +18,7 @@ public class CaregiverMapperTest {
         String lName = "lName";
         String gender = "male";
         String phoneNumber = "456";
+        String userName = "11111";
 
         CareGiverInformation caregiverInfo = new CareGiverInformation();
         caregiverInfo.setCaregiverId(id);
@@ -28,6 +28,7 @@ public class CaregiverMapperTest {
         caregiverInfo.setLastName(lName);
         caregiverInfo.setGender(gender);
         caregiverInfo.setPhoneNumber(phoneNumber);
+        caregiverInfo.setUserName(userName);
 
         Caregiver caregiver = new CaregiverMapper().map(caregiverInfo);
         assertThat(caregiver.getCgId(), is(id));
@@ -37,5 +38,6 @@ public class CaregiverMapperTest {
         assertThat(caregiver.getLastName(), is(lName));
         assertThat(caregiver.getGender(), is(gender));
         assertThat(caregiver.getPhoneNumber(), is(phoneNumber));
+        assertThat(caregiver.getUserName(), is(userName));
     }
 }

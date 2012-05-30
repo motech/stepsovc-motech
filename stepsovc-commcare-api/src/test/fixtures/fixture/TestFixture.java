@@ -21,6 +21,7 @@ public class TestFixture {
         CareGiverInformation careGiverInformation = new CareGiverInformation();
         careGiverInformation.setCaregiverId("id");
         careGiverInformation.setCaregiverCode("code");
+        careGiverInformation.setUserName("uName");
         careGiverInformation.setFirstName("fName");
         careGiverInformation.setMiddleName("mName");
         careGiverInformation.setLastName("lName");

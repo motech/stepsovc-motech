@@ -7,8 +7,7 @@
     <context:spring-configured/>
     <context:annotation-config/>
 
-    <import resource="classpath:applicationPlatformServerAPI.xml"/>
-    <context:component-scan base-package="org.motechproject.http.client"/>
+    <import resource="classpath:applicationContextHttpClient.xml"/>
     <context:component-scan base-package="org.wv.stepsovc.commcare"/>
 
     <bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
@@ -31,4 +30,5 @@
         <constructor-arg value="commcarehq"/>
         <constructor-arg ref="commcareDbInstance"/>
     </bean>
+
 </beans>

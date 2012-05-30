@@ -5,6 +5,7 @@ public class UserData {
     private String firstName;
     private String middleName;
     private String lastName;
+    private String caregiverCode;
     private String gender;
 
     public String getFirstName() {
@@ -29,6 +30,14 @@ public class UserData {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getCaregiverCode() {
+        return caregiverCode;
+    }
+
+    public void setCaregiverCode(String caregiverCode) {
+        this.caregiverCode = caregiverCode;
     }
 
     public String getGender() {

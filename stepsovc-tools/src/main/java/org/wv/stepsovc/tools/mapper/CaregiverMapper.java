@@ -9,6 +9,7 @@ public class CaregiverMapper {
         Caregiver caregiver = new Caregiver();
         caregiver.setCgId(careGiverInformation.getCaregiverId());
         caregiver.setCode(careGiverInformation.getCaregiverCode());
+        caregiver.setUserName(careGiverInformation.getUserName());
         caregiver.setFirstName(careGiverInformation.getFirstName());
         caregiver.setMiddleName(careGiverInformation.getMiddleName());
         caregiver.setLastName(careGiverInformation.getLastName());

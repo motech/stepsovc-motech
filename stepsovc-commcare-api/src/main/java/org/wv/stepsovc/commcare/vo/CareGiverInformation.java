@@ -6,7 +6,7 @@ public class CareGiverInformation {
     /* primary key column cg_id - from DMIS (id)*/
     private String caregiverId;
 
-    /* user name to login - from DMIS*/
+    /* care giver full code - from DMIS*/
     private String caregiverCode;
 
     /* first name of the care giver - from DMIS */
@@ -23,6 +23,9 @@ public class CareGiverInformation {
 
     /* phone number of care giver - from DMIS */
     private String phoneNumber;
+
+    /* user name to login - last five digits of caregiver code from DMIS*/
+    private String userName;
 
     /* password to login - generated */
     private String password;
@@ -89,5 +92,13 @@ public class CareGiverInformation {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }

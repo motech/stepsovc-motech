@@ -5,7 +5,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.motechproject.http.client.listener.HttpClientEventListener;
 import org.motechproject.http.client.service.HttpClientService;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.wv.stepsovc.commcare.domain.CaseType;
@@ -34,9 +33,6 @@ public class CommcareGatewayTest {
     HttpClientService mockHttpClientService;
 
     @Mock
-    HttpClientEventListener mockHttpClientEventListener;
-
-    @Mock
     VelocityEngine mockVelocityEngine;
 
     @Mock
@@ -50,7 +46,6 @@ public class CommcareGatewayTest {
     public void setup() {
         initMocks(this);
         spyCommcareGateway = spy(new CommcareGateway());
-        ReflectionTestUtils.setField(spyCommcareGateway, "httpClientEventListener", mockHttpClientEventListener);
         ReflectionTestUtils.setField(spyCommcareGateway, "httpClientService", mockHttpClientService);
         ReflectionTestUtils.setField(spyCommcareGateway, "velocityEngine", mockVelocityEngine);
         ReflectionTestUtils.setField(spyCommcareGateway, "allGroups", allGroups);
@@ -98,7 +93,7 @@ public class CommcareGatewayTest {
         verify(spyCommcareGateway).postOwnerUpdate(beneficiaryInfoCaptor.capture());
         verify(mockHttpClientService).post(COMMCARE_URL, getBeneficiaryCaseExpectedXml());
 
-        assertThat(beneficiaryInfoCaptor.getValue().getOwnerId(),is(currentOwnerId +","+group.getId()));
+        assertThat(beneficiaryInfoCaptor.getValue().getOwnerId(), is(currentOwnerId + "," + group.getId()));
     }
 
     @Test

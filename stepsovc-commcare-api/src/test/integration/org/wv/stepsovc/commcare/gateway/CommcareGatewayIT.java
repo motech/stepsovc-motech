@@ -94,12 +94,13 @@ public class CommcareGatewayIT {
 
     private String getExpectedUserFormXml() {
         return "<Registration xmlns=\"http://openrosa.org/user/registration\">\n" +
-                "    <username>code</username>\n" +
+                "    <username>uName</username>\n" +
                 "    <password>sha1$90a7b$47a168cca627c6a34f4e349ea4b1fb3d01702c68</password>\n" +
                 "    <uuid>id</uuid>\n" +
                 "    <date>01-01-2012</date>\n" +
-                "    <registering_phone_id>phoneNumber</registering_phone_id>\n" +
+                "    <registering_phone_id>11111</registering_phone_id>\n" +
                 "    <user_data>\n" +
+                "        <data key=\"caregiverCode\">code</data>\n" +
                 "        <data key=\"firstName\">fName</data>\n" +
                 "        <data key=\"middleName\">mName</data>\n" +
                 "        <data key=\"lastName\">lName</data>\n" +
