@@ -4,6 +4,7 @@ import org.junit.Test;
 import org.wv.stepsovc.commcare.vo.CareGiverInformation;
 import org.wv.stepsovc.core.domain.Caregiver;
 
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 public class CaregiverMapperTest {

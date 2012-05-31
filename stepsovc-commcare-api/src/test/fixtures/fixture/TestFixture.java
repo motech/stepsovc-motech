@@ -4,19 +4,6 @@ import org.wv.stepsovc.commcare.vo.CareGiverInformation;
 
 public class TestFixture {
 
-//    public BeneficiaryInformation createBeneficiaryInformation() {
-//        BeneficiaryInformation beneficiaryInformation = new BeneficiaryInformation();
-//
-//        beneficiaryInformation.setCode("XYZ");
-//        beneficiaryInformation.setName("Albie");
-//        beneficiaryInformation.setDob("12-12-1988");
-//        beneficiaryInformation.setSex("male");
-//        beneficiaryInformation.setTitle("MR");
-//        beneficiaryInformation.setReceivingOrganization("XAQ");
-//        return beneficiaryInformation;
-//
-//    }
-
     public static CareGiverInformation createCareGiverInformation() {
         CareGiverInformation careGiverInformation = new CareGiverInformation();
         careGiverInformation.setCaregiverId("id");
@@ -26,7 +13,8 @@ public class TestFixture {
         careGiverInformation.setMiddleName("mName");
         careGiverInformation.setLastName("lName");
         careGiverInformation.setGender("gender");
-        careGiverInformation.setPhoneNumber("phoneNumber");
+        careGiverInformation.setPhoneNumber("11111");
+        careGiverInformation.setCreationDate("01-01-2012");
         return careGiverInformation;
     }
 
@@ -38,7 +26,8 @@ public class TestFixture {
         careGiverInformation.setMiddleName("mName");
         careGiverInformation.setLastName("lName");
         careGiverInformation.setGender("gender");
-        careGiverInformation.setPhoneNumber("phoneNumber");
+        careGiverInformation.setPhoneNumber("11111");
+        careGiverInformation.setCreationDate("01-01-2012");
         return careGiverInformation;
     }
 }

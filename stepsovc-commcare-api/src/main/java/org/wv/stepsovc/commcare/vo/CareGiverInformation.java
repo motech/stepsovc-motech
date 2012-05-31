@@ -30,6 +30,10 @@ public class CareGiverInformation {
     /* password to login - generated */
     private String password;
 
+    private String creationDate;
+
+    private String facilityCode;
+
     public String getCaregiverId() {
         return caregiverId;
     }
@@ -100,5 +104,21 @@ public class CareGiverInformation {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public String getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(String creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public String getFacilityCode() {
+        return facilityCode;
+    }
+
+    public void setFacilityCode(String facilityCode) {
+        this.facilityCode = facilityCode;
     }
 }

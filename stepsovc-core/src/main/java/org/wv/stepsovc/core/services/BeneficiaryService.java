@@ -24,13 +24,13 @@ public class BeneficiaryService {
     private AllCaregivers allCaregivers;
 
     public void createBeneficiary(StepsovcCase stepsovcCase) {
-        logger.info("Handling beneficiary registration for "+ stepsovcCase.getBeneficiary_name());
+        logger.info("Handling beneficiary registration for " + stepsovcCase.getBeneficiary_name());
 
         Beneficiary oldBeneficiary = allBeneficiaries.findBeneficiary(stepsovcCase.getBeneficiary_code());
-        if(oldBeneficiary == null)
+        if (oldBeneficiary == null)
             allBeneficiaries.add(new BeneficiaryMapper().map(stepsovcCase));
         else {
-            logger.error("Updating as Beneficiary already present in database, "+ stepsovcCase.getBeneficiary_code());
+            logger.error("Updating as Beneficiary already present in database, " + stepsovcCase.getBeneficiary_code());
             allBeneficiaries.remove(oldBeneficiary);
             allBeneficiaries.add(new BeneficiaryMapper().map(stepsovcCase));
         }
@@ -38,18 +38,18 @@ public class BeneficiaryService {
 
     public void addUserOwnership(StepsovcCase stepsovcCase) {
         Beneficiary beneficiary = allBeneficiaries.findBeneficiary(stepsovcCase.getBeneficiary_code());
-        Caregiver caregiver = allCaregivers.findCaregiver(stepsovcCase.getCaregiver_code());
+        Caregiver caregiver = allCaregivers.findCaregiverByCode(stepsovcCase.getCaregiver_code());
 
-        if(beneficiary != null && caregiver != null) {
-            commcareGateway.addUserOwnership(populateBeneficiaryCase(stepsovcCase, beneficiary),caregiver.getCgId());
+        if (beneficiary != null && caregiver != null) {
+            commcareGateway.addUserOwnership(populateBeneficiaryCase(stepsovcCase, beneficiary), caregiver.getCgId());
         }
     }
 
     public void addGroupOwnership(StepsovcCase stepsovcCase) {
         Beneficiary beneficiary = allBeneficiaries.findBeneficiary(stepsovcCase.getBeneficiary_code());
 
-        if(beneficiary != null) {
-            commcareGateway.addGroupOwnership(populateBeneficiaryCase(stepsovcCase, beneficiary),stepsovcCase.getFacility_code());
+        if (beneficiary != null) {
+            commcareGateway.addGroupOwnership(populateBeneficiaryCase(stepsovcCase, beneficiary), stepsovcCase.getFacility_code());
         }
     }
 
@@ -57,7 +57,7 @@ public class BeneficiaryService {
         stepsovcCase.setCaregiver_code(beneficiary.getCaregiverCode());
         stepsovcCase.setCase_id(beneficiary.getCaseId());
 
-        Caregiver caregiver = allCaregivers.findCaregiver(beneficiary.getCaregiverCode());
+        Caregiver caregiver = allCaregivers.findCaregiverByCode(beneficiary.getCaregiverCode());
         stepsovcCase.setCaregiver_name(caregiver.getFirstName());
         stepsovcCase.setUser_id(caregiver.getCgId());
         stepsovcCase.setOwner_id(caregiver.getCgId());

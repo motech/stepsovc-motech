@@ -22,6 +22,8 @@ public class Caregiver extends MotechBaseDataObject {
     private String gender;
     @JsonProperty
     private String phoneNumber;
+    @JsonProperty
+    private String facilityCode;
 
     public Caregiver() {
     }
@@ -95,5 +97,13 @@ public class Caregiver extends MotechBaseDataObject {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public String getFacilityCode() {
+        return facilityCode;
+    }
+
+    public void setFacilityCode(String facilityCode) {
+        this.facilityCode = facilityCode;
     }
 }

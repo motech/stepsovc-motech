@@ -2,8 +2,8 @@
     <username>$caregiver.userName</username>
     <password>1234</password>
     <uuid>$caregiver.caregiverId</uuid>
-    <date>01-01-2012</date>
-    <registering_phone_id>11111</registering_phone_id>
+    <date>$caregiver.creationDate</date>
+    <registering_phone_id>$!caregiver.phoneNumber</registering_phone_id>
     <user_data>
         <data key="caregiverCode">$caregiver.caregiverCode</data>
         <data key="firstName">$caregiver.firstName</data>

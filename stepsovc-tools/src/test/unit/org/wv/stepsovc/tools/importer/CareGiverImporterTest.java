@@ -8,7 +8,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.wv.stepsovc.commcare.gateway.CommcareGateway;
 import org.wv.stepsovc.commcare.vo.CareGiverInformation;
 import org.wv.stepsovc.core.domain.Caregiver;
-import org.wv.stepsovc.core.repository.AllCaregivers;
+import org.wv.stepsovc.core.services.CaregiverService;
 import org.wv.stepsovc.tools.dmis.DMISDataProcessor;
 
 import java.util.Arrays;
@@ -27,7 +27,7 @@ public class CareGiverImporterTest {
     @Mock
     private CommcareGateway mockCommcareGateway;
     @Mock
-    private AllCaregivers mockAllCaregivers;
+    private CaregiverService mockCaregiverService;
 
     @Before
     public void setUp() throws Exception {
@@ -35,7 +35,7 @@ public class CareGiverImporterTest {
         careGiverImporter = new CareGiverImporter();
         ReflectionTestUtils.setField(careGiverImporter, "dmisDataProcessor", mockDMISDataProcessor);
         ReflectionTestUtils.setField(careGiverImporter, "commcareGateway", mockCommcareGateway);
-        ReflectionTestUtils.setField(careGiverImporter, "allCaregivers", mockAllCaregivers);
+        ReflectionTestUtils.setField(careGiverImporter, "allCaregivers", mockCaregiverService);
     }
 
     @Test
@@ -66,7 +66,7 @@ public class CareGiverImporterTest {
 
         ArgumentCaptor<Caregiver> captor1 = ArgumentCaptor.forClass(Caregiver.class);
 
-        verify(mockAllCaregivers, times(2)).add(captor1.capture());
+        verify(mockCaregiverService, times(2)).addCareGiver(captor1.capture());
         ArgumentCaptor<String> captor2 = ArgumentCaptor.forClass(String.class);
 
         verify(mockDMISDataProcessor, times(6)).decrypt(captor2.capture());
