@@ -64,7 +64,7 @@ public class BeneficiaryCaseIT {
 
         stepsovcCase.setForm_type(BENEFICIARY_REGISTRATION.getType());
         stepsovcCaseController.createCase(stepsovcCase);
-        beneficiary = allBeneficiaries.findBeneficiary(beneficiaryCode);
+        beneficiary = allBeneficiaries.findBeneficiaryByCode(beneficiaryCode);
         assertNotNull(beneficiary);
 
         facility = new Facility("FAC001", "FAC001-Name",
@@ -108,7 +108,7 @@ public class BeneficiaryCaseIT {
         stepsovcCase = createCaseForUpdateReferral(beneficiaryCode);
         stepsovcCase.setForm_type(UPDATE_REFERRAL.getType());
         stepsovcCaseController.createCase(stepsovcCase);
-        Assert.assertNotNull(allBeneficiaries.findBeneficiary(beneficiaryCode));
+        Assert.assertNotNull(allBeneficiaries.findBeneficiaryByCode(beneficiaryCode));
         assertReferralReasons(stepsovcCase, allReferrals.findActiveReferral(beneficiaryCode));
 
     }

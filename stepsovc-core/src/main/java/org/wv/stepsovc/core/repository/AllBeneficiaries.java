@@ -22,11 +22,10 @@ public class AllBeneficiaries extends MotechBaseRepository<Beneficiary> {
     }
 
     @View(name = "by_beneficiary_code", map = "function(doc){ if(doc.type == 'Beneficiary') emit([doc.code],doc) }")
-    public Beneficiary findBeneficiary(String beneficiaryCode) {
+    public Beneficiary findBeneficiaryByCode(String beneficiaryCode) {
         ViewQuery viewQuery = createQuery("by_beneficiary_code").key(ComplexKey.of(beneficiaryCode)).includeDocs(true);
         List<Beneficiary> beneficiaries = db.queryView(viewQuery, Beneficiary.class);
         return CollectionUtils.isEmpty(beneficiaries) ? null : beneficiaries.get(0);
     }
-
 
 }

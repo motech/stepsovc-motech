@@ -56,7 +56,7 @@ public class ReferralScheduleHandler {
         try {
             Map<String, Object> parameters = motechEvent.getParameters();
             Referral referral = allReferrals.findActiveByOvcId((String) parameters.get(EventKeys.EXTERNAL_ID_KEY));
-            Beneficiary beneficiary = allBeneficiaries.findBeneficiary(referral.getBeneficiaryCode());
+            Beneficiary beneficiary = allBeneficiaries.findBeneficiaryByCode(referral.getBeneficiaryCode());
             sendAggregatedSMSToFacility(referral, beneficiary);
             if (referral.window() == WindowType.DUE)
                 sendInstanceSMSToCaregiver(referral, beneficiary);
@@ -76,7 +76,7 @@ public class ReferralScheduleHandler {
             final DateTime now = newDateTime(new LocalDate(), 7, 30, 0);
             StringContent smsTemplate = cmsLiteService.getStringContent(Locale.ENGLISH.getLanguage(), SmsTemplateKeys.REFERRAL_ALERT_WITH_SERVICE);
             String smsContent = format(smsTemplate.getValue(), beneficiary.getName(), beneficiary.getCode(), join(referral.referredServiceCodes(), ","));
-            logger.info("Sms Content : " + smsContent+ "dateTime :" +now);
+            logger.info("Sms Content : " + smsContent + "dateTime :" + now);
             String patientDueDate = new SimpleDateFormat("dd-MMM-yyyy").format(DateUtils.getDate(referral.getServiceDate()));
             for (String phoneNumber : phoneNumbers) {
                 eventAggregationGateway.dispatch(new SMSMessage(now, phoneNumber, smsContent, group(Referral.VISIT_NAME, referral.window().name(), FACILITY).key(), patientDueDate));

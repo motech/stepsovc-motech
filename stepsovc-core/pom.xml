@@ -50,7 +50,7 @@
         <dependency>
             <groupId>org.motechproject</groupId>
             <artifactId>message-aggregator</artifactId>
-            <version>0.1-SNAPSHOT</version>
+            <version>${motech-contrib.version}</version>
         </dependency>
         <dependency>
             <groupId>org.motechproject</groupId>

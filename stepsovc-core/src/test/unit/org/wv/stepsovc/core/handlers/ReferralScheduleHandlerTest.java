@@ -22,14 +22,11 @@ import org.wv.stepsovc.core.repository.AllReferrals;
 
 import java.util.*;
 
-import static org.apache.commons.lang.StringUtils.join;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.isIn;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.wv.stepsovc.core.domain.SmsTemplateKeys.REFERRAL_ALERT_WITH_SERVICE;
 import static org.wv.stepsovc.core.fixtures.StepsovcCaseFixture.createCaseForReferral;
@@ -57,8 +54,8 @@ public class ReferralScheduleHandlerTest {
         initMocks(this);
         referralScheduleHandler = new ReferralScheduleHandler(mockEventAggregationGateway, mockCmsLiteService, mockAllReferrals, mockAllFacilities, mockAllBeneficiaries);
         referral = new Referral();
-        facility= new Facility();
-        beneficiary=new Beneficiary();
+        facility = new Facility();
+        beneficiary = new Beneficiary();
     }
 
     @Test
@@ -73,17 +70,17 @@ public class ReferralScheduleHandlerTest {
 
         when(mockAllReferrals.findActiveByOvcId("someID")).thenReturn(referral);
         when(mockAllFacilities.findFacilityByCode(facilityCode)).thenReturn(facility);
-        when(mockAllBeneficiaries.findBeneficiary(bencode)).thenReturn(beneficiary);
+        when(mockAllBeneficiaries.findBeneficiaryByCode(bencode)).thenReturn(beneficiary);
 
-        StringContent templateString= new StringContent(null, null, "%s (%s) Services (%s)");
+        StringContent templateString = new StringContent(null, null, "%s (%s) Services (%s)");
         when(mockCmsLiteService.getStringContent(Locale.ENGLISH.getLanguage(), REFERRAL_ALERT_WITH_SERVICE)).thenReturn(templateString);
 
-        Map<String, Object> parameters= new HashMap<String, Object>();
-        parameters.put(EventKeys.EXTERNAL_ID_KEY,"someID");
-        MotechEvent motechEvent= new MotechEvent("subject",parameters);
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put(EventKeys.EXTERNAL_ID_KEY, "someID");
+        MotechEvent motechEvent = new MotechEvent("subject", parameters);
         referralScheduleHandler.handleAlert(motechEvent);
         ArgumentCaptor<SMSMessage> smsCaptor = ArgumentCaptor.forClass(SMSMessage.class);
-        verify(mockEventAggregationGateway,times(2)).dispatch(smsCaptor.capture());
+        verify(mockEventAggregationGateway, times(2)).dispatch(smsCaptor.capture());
         assertThat(smsCaptor.getAllValues().size(), is(2));
         assertThat(smsCaptor.getAllValues().get(0).phoneNumber(), isIn(phoneNumbers));
         assertThat(smsCaptor.getAllValues().get(1).phoneNumber(), isIn(phoneNumbers));

@@ -51,11 +51,11 @@ public class ReferralAlertServiceTest {
     public void setUp() throws Exception {
         initMocks(this);
         referralAlertService = new ReferralAlertService();
-        ReflectionTestUtils.setField(referralAlertService,"allAppointments", allAppointments);
-        ReflectionTestUtils.setField(referralAlertService,"smsService", mockSmsService);
-        ReflectionTestUtils.setField(referralAlertService,"allFacilities", mockAllFacilities);
-        ReflectionTestUtils.setField(referralAlertService,"allBeneficiaries", mockAllBeneficiaries);
-        ReflectionTestUtils.setField(referralAlertService,"cmsLiteService", mockCmsLiteService);
+        ReflectionTestUtils.setField(referralAlertService, "allAppointments", allAppointments);
+        ReflectionTestUtils.setField(referralAlertService, "smsService", mockSmsService);
+        ReflectionTestUtils.setField(referralAlertService, "allFacilities", mockAllFacilities);
+        ReflectionTestUtils.setField(referralAlertService, "allBeneficiaries", mockAllBeneficiaries);
+        ReflectionTestUtils.setField(referralAlertService, "cmsLiteService", mockCmsLiteService);
     }
 
     @Test
@@ -79,8 +79,8 @@ public class ReferralAlertServiceTest {
         beneficiary.setName("Ben Name");
         beneficiary.setCode(benCode);
         doReturn(facility).when(mockAllFacilities).findFacilityByCode(referral.getFacilityCode());
-        doReturn(beneficiary).when(mockAllBeneficiaries).findBeneficiary(referral.getBeneficiaryCode());
-        StringContent template = new StringContent(Locale.ENGLISH.getLanguage(), SmsTemplateKeys.IMPENDING_REFERRAL,"%s (%s) will be coming to your facility %s on %s. Please make the necessary arrangements.");
+        doReturn(beneficiary).when(mockAllBeneficiaries).findBeneficiaryByCode(referral.getBeneficiaryCode());
+        StringContent template = new StringContent(Locale.ENGLISH.getLanguage(), SmsTemplateKeys.IMPENDING_REFERRAL, "%s (%s) will be coming to your facility %s on %s. Please make the necessary arrangements.");
         doReturn(template).when(mockCmsLiteService).getStringContent(Locale.ENGLISH.getLanguage(), SmsTemplateKeys.IMPENDING_REFERRAL);
         referralAlertService.newReferralAlert(referral);
 
@@ -88,7 +88,7 @@ public class ReferralAlertServiceTest {
         ArgumentCaptor<CreateVisitRequest> createVisitRequestCaptor = ArgumentCaptor.forClass(CreateVisitRequest.class);
         verify(allAppointments).add(externalIdCaptor.capture(), createVisitRequestCaptor.capture());
         assertVisitRequest(actualVisitRequest, createVisitRequestCaptor.getValue());
-        verify(mockSmsService).sendSMS(phoneNumbers,"Ben Name (BEN001) will be coming to your facility FAC001 on 2012-05-30. Please make the necessary arrangements.");
+        verify(mockSmsService).sendSMS(phoneNumbers, "Ben Name (BEN001) will be coming to your facility FAC001 on 2012-05-30. Please make the necessary arrangements.");
 
     }
 

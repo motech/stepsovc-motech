@@ -16,11 +16,11 @@
         <dependency>
             <artifactId>motech-http-client</artifactId>
             <groupId>org.motechproject</groupId>
-            <version>0.1-SNAPSHOT</version>
+            <version>${motech-contrib.version}</version>
         </dependency>
         <dependency>
             <groupId>org.motechproject</groupId>
-            <artifactId>motech-platform-common</artifactId>
+            <artifactId>motech-platform-common-api</artifactId>
             <version>${motech-platform.version}</version>
         </dependency>
         <dependency>

@@ -47,7 +47,7 @@ public class BeneficiaryServiceTest {
 
         ArgumentCaptor<Beneficiary> beneficiaryCaptor = ArgumentCaptor.forClass(Beneficiary.class);
 
-        doReturn(null).when(allBeneficiaries).findBeneficiary(benCode);
+        doReturn(null).when(allBeneficiaries).findBeneficiaryByCode(benCode);
         verify(allBeneficiaries).add(beneficiaryCaptor.capture());
         assertBeneficiary(beneficiaryCaptor.getValue(), new BeneficiaryMapper().map(stepsOvcCase));
 
@@ -58,7 +58,7 @@ public class BeneficiaryServiceTest {
         String benCode = "BEN001";
         StepsovcCase stepsOvcCase = StepsovcCaseFixture.createNewCase(benCode);
         Beneficiary beneficiary = new Beneficiary();
-        doReturn(beneficiary).when(allBeneficiaries).findBeneficiary(benCode);
+        doReturn(beneficiary).when(allBeneficiaries).findBeneficiaryByCode(benCode);
         beneficiaryService.createBeneficiary(stepsOvcCase);
 
         ArgumentCaptor<Beneficiary> beneficiaryCaptor = ArgumentCaptor.forClass(Beneficiary.class);
@@ -78,7 +78,7 @@ public class BeneficiaryServiceTest {
         String benCode = "BEN001";
         StepsovcCase stepsovcCase = StepsovcCaseFixture.createNewCase(benCode);
 
-        doReturn(null).when(allBeneficiaries).findBeneficiary(benCode);
+        doReturn(null).when(allBeneficiaries).findBeneficiaryByCode(benCode);
         doReturn(new Caregiver()).when(allCaregivers).findCaregiverByCode(stepsovcCase.getCaregiver_code());
 
         beneficiaryService.addUserOwnership(stepsovcCase);
@@ -92,7 +92,7 @@ public class BeneficiaryServiceTest {
         String benCode = "BEN001";
         StepsovcCase stepsovcCase = StepsovcCaseFixture.createNewCase(benCode);
 
-        doReturn(new Beneficiary()).when(allBeneficiaries).findBeneficiary(benCode);
+        doReturn(new Beneficiary()).when(allBeneficiaries).findBeneficiaryByCode(benCode);
         doReturn(null).when(allCaregivers).findCaregiverByCode(stepsovcCase.getCaregiver_code());
 
         beneficiaryService.addUserOwnership(stepsovcCase);
@@ -118,7 +118,7 @@ public class BeneficiaryServiceTest {
         requestingCaregiver.setCgId(caregiverId);
         beneficiary.setCaregiverCode(caregiverCode);
 
-        doReturn(beneficiary).when(allBeneficiaries).findBeneficiary(benCode);
+        doReturn(beneficiary).when(allBeneficiaries).findBeneficiaryByCode(benCode);
         doReturn(requestingCaregiver).when(allCaregivers).findCaregiverByCode(stepsovcCase.getCaregiver_code());
         doReturn(caregiver).when(allCaregivers).findCaregiverByCode(caregiverCode);
 
@@ -138,7 +138,7 @@ public class BeneficiaryServiceTest {
         String benCode = "BenCode";
         StepsovcCase stepsovcCase = StepsovcCaseFixture.createNewCase(benCode);
 
-        doReturn(null).when(allBeneficiaries).findBeneficiary(benCode);
+        doReturn(null).when(allBeneficiaries).findBeneficiaryByCode(benCode);
 
         beneficiaryService.addGroupOwnership(stepsovcCase);
 
@@ -158,7 +158,7 @@ public class BeneficiaryServiceTest {
         caregiver.setCgId("someCaregiverID");
         String caregiverCode = "CG1";
         beneficiary.setCaregiverCode(caregiverCode);
-        doReturn(beneficiary).when(allBeneficiaries).findBeneficiary(bencode);
+        doReturn(beneficiary).when(allBeneficiaries).findBeneficiaryByCode(bencode);
         doReturn(caregiver).when(allCaregivers).findCaregiverByCode(caregiverCode);
         beneficiaryService.addGroupOwnership(stepsovcCase);
         ArgumentCaptor<BeneficiaryInformation> beneficiaryInfoCaptor = ArgumentCaptor.forClass(BeneficiaryInformation.class);

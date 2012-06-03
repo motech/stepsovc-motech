@@ -35,7 +35,7 @@ public class CareGiverImporterTest {
         careGiverImporter = new CareGiverImporter();
         ReflectionTestUtils.setField(careGiverImporter, "dmisDataProcessor", mockDMISDataProcessor);
         ReflectionTestUtils.setField(careGiverImporter, "commcareGateway", mockCommcareGateway);
-        ReflectionTestUtils.setField(careGiverImporter, "allCaregivers", mockCaregiverService);
+        ReflectionTestUtils.setField(careGiverImporter, "caregiverService", mockCaregiverService);
     }
 
     @Test
