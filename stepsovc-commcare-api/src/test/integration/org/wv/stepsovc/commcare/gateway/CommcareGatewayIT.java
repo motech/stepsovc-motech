@@ -14,7 +14,7 @@ import org.wv.stepsovc.commcare.factories.GroupFactory;
 import org.wv.stepsovc.commcare.repository.AllGroups;
 import org.wv.stepsovc.commcare.repository.AllUsers;
 import org.wv.stepsovc.commcare.vo.BeneficiaryInformation;
-import org.wv.stepsovc.commcare.vo.CareGiverInformation;
+import org.wv.stepsovc.commcare.vo.cgInformation;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -51,7 +51,7 @@ public class CommcareGatewayIT {
         assertConversion(CommcareGateway.BENEFICIARY_FORM_KEY, beneficiaryInformation, BENEFICIARY_CASE_FORM_TEMPLATE_PATH, getExpectedBeneficiaryCaseXml());
         assertConversion(CommcareGateway.BENEFICIARY_FORM_KEY, beneficiaryInformation, OWNER_UPDATE_FORM_TEMPLATE_PATH, getExpectedUpdateOwnerXml());
 
-        CareGiverInformation careGiverInformation = TestFixture.createCareGiverInformation();
+        cgInformation careGiverInformation = TestFixture.createCareGiverInformation();
         assertConversion(CommcareGateway.CARE_GIVER_FORM_KEY, careGiverInformation, USER_REGISTRATION_FORM_TEMPLATE_PATH, getExpectedUserFormXml());
     }
 

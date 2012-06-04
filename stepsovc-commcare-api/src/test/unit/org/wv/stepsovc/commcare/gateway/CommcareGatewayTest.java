@@ -12,7 +12,7 @@ import org.wv.stepsovc.commcare.domain.Group;
 import org.wv.stepsovc.commcare.repository.AllGroups;
 import org.wv.stepsovc.commcare.repository.AllUsers;
 import org.wv.stepsovc.commcare.vo.BeneficiaryInformation;
-import org.wv.stepsovc.commcare.vo.CareGiverInformation;
+import org.wv.stepsovc.commcare.vo.cgInformation;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -68,7 +68,7 @@ public class CommcareGatewayTest {
 
     @Test
     public void shouldCreateCareGiverInCommcare() {
-        CareGiverInformation careGiverInformation = getCareGiverInformation("7ac0b33f0dac4a81c6d1fbf1bd9dfee0", "EW/123", "9089091");
+        cgInformation careGiverInformation = getCareGiverInformation("7ac0b33f0dac4a81c6d1fbf1bd9dfee0", "EW/123", "9089091");
         model.put(CommcareGateway.CARE_GIVER_FORM_KEY, careGiverInformation);
         doReturn(getExpectedUserFormXml()).when(spyCommcareGateway).getXmlFromObject(eq(USER_REGISTRATION_FORM_TEMPLATE_PATH), eq(model));
         spyCommcareGateway.registerUser(careGiverInformation);
@@ -131,8 +131,8 @@ public class CommcareGatewayTest {
     }
 
 
-    private CareGiverInformation getCareGiverInformation(String cgId, String cgCode, String phoneNumber) {
-        CareGiverInformation caregiverInfo = new CareGiverInformation();
+    private cgInformation getCareGiverInformation(String cgId, String cgCode, String phoneNumber) {
+        cgInformation caregiverInfo = new cgInformation();
         caregiverInfo.setCaregiverId(cgId);
         caregiverInfo.setCaregiverCode(cgCode);
         caregiverInfo.setFirstName("fName");

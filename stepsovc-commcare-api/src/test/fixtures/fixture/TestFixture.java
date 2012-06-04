@@ -1,11 +1,11 @@
 package fixture;
 
-import org.wv.stepsovc.commcare.vo.CareGiverInformation;
+import org.wv.stepsovc.commcare.vo.cgInformation;
 
 public class TestFixture {
 
-    public static CareGiverInformation createCareGiverInformation() {
-        CareGiverInformation careGiverInformation = new CareGiverInformation();
+    public static cgInformation createCareGiverInformation() {
+        cgInformation careGiverInformation = new cgInformation();
         careGiverInformation.setCaregiverId("id");
         careGiverInformation.setCaregiverCode("code");
         careGiverInformation.setUserName("uName");
@@ -18,8 +18,8 @@ public class TestFixture {
         return careGiverInformation;
     }
 
-    public static CareGiverInformation createCareGiverInformation(String id, String code) {
-        CareGiverInformation careGiverInformation = new CareGiverInformation();
+    public static cgInformation createCareGiverInformation(String id, String code) {
+        cgInformation careGiverInformation = new cgInformation();
         careGiverInformation.setCaregiverId(id);
         careGiverInformation.setCaregiverCode(code);
         careGiverInformation.setFirstName("fName");
