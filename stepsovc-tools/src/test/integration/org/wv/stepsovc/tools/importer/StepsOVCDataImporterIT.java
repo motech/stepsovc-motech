@@ -5,6 +5,7 @@ import org.apache.commons.httpclient.methods.DeleteMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,7 +65,7 @@ public class StepsOVCDataImporterIT {
 
     }
 
-    @Test
+    @Ignore
     public void shouldImportBeneficiaries() throws InterruptedException {
         createAndAssertBeneficiary();
         deleteBeneficiariesCreated();
