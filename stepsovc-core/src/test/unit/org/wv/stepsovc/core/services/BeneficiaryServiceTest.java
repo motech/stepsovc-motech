@@ -28,7 +28,7 @@ public class BeneficiaryServiceTest {
     @Mock
     private CommcareGateway commcareGateway;
     @Mock
-    private AllCaregivers allCaregivers;
+    private AllCaregivers mockAllCaregivers;
 
     @Before
     public void setUp() throws Exception {
@@ -36,7 +36,7 @@ public class BeneficiaryServiceTest {
         beneficiaryService = new BeneficiaryService();
         ReflectionTestUtils.setField(beneficiaryService, "allBeneficiaries", allBeneficiaries);
         ReflectionTestUtils.setField(beneficiaryService, "commcareGateway", commcareGateway);
-        ReflectionTestUtils.setField(beneficiaryService, "mockAllCaregivers", allCaregivers);
+        ReflectionTestUtils.setField(beneficiaryService, "allCaregivers", mockAllCaregivers);
     }
 
     @Test
@@ -79,7 +79,7 @@ public class BeneficiaryServiceTest {
         StepsovcCase stepsovcCase = StepsovcCaseFixture.createNewCase(benCode);
 
         doReturn(null).when(allBeneficiaries).findBeneficiaryByCode(benCode);
-        doReturn(new Caregiver()).when(allCaregivers).findCaregiverByCode(stepsovcCase.getCaregiver_code());
+        doReturn(new Caregiver()).when(mockAllCaregivers).findCaregiverByCode(stepsovcCase.getCaregiver_code());
 
         beneficiaryService.addUserOwnership(stepsovcCase);
 
@@ -93,7 +93,7 @@ public class BeneficiaryServiceTest {
         StepsovcCase stepsovcCase = StepsovcCaseFixture.createNewCase(benCode);
 
         doReturn(new Beneficiary()).when(allBeneficiaries).findBeneficiaryByCode(benCode);
-        doReturn(null).when(allCaregivers).findCaregiverByCode(stepsovcCase.getCaregiver_code());
+        doReturn(null).when(mockAllCaregivers).findCaregiverByCode(stepsovcCase.getCaregiver_code());
 
         beneficiaryService.addUserOwnership(stepsovcCase);
 
@@ -119,8 +119,8 @@ public class BeneficiaryServiceTest {
         beneficiary.setCaregiverCode(caregiverCode);
 
         doReturn(beneficiary).when(allBeneficiaries).findBeneficiaryByCode(benCode);
-        doReturn(requestingCaregiver).when(allCaregivers).findCaregiverByCode(stepsovcCase.getCaregiver_code());
-        doReturn(caregiver).when(allCaregivers).findCaregiverByCode(caregiverCode);
+        doReturn(requestingCaregiver).when(mockAllCaregivers).findCaregiverByCode(stepsovcCase.getCaregiver_code());
+        doReturn(caregiver).when(mockAllCaregivers).findCaregiverByCode(caregiverCode);
 
         beneficiaryService.addUserOwnership(stepsovcCase);
 
@@ -159,7 +159,7 @@ public class BeneficiaryServiceTest {
         String caregiverCode = "CG1";
         beneficiary.setCaregiverCode(caregiverCode);
         doReturn(beneficiary).when(allBeneficiaries).findBeneficiaryByCode(bencode);
-        doReturn(caregiver).when(allCaregivers).findCaregiverByCode(caregiverCode);
+        doReturn(caregiver).when(mockAllCaregivers).findCaregiverByCode(caregiverCode);
         beneficiaryService.addGroupOwnership(stepsovcCase);
         ArgumentCaptor<BeneficiaryInformation> beneficiaryInfoCaptor = ArgumentCaptor.forClass(BeneficiaryInformation.class);
         ArgumentCaptor<String> groupNameCaptor = ArgumentCaptor.forClass(String.class);

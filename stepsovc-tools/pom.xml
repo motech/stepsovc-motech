@@ -41,6 +41,7 @@
     </dependencies>
     <build>
         <finalName>stepsovc-tools</finalName>
+        <testSourceDirectory>src/test</testSourceDirectory>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -69,8 +70,9 @@
                     <includes>
                         <include>**/*Test.java</include>
                     </includes>
+                    <testSourceDirectory>src/test/unit</testSourceDirectory>
                     <excludes>
-                        <exclude>**/integration/**/*IT.java</exclude>
+                        <exclude>**/*IT.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>
@@ -102,8 +104,9 @@
                 <configuration>
                     <encoding>UTF-8</encoding>
                     <includes>
-                        <include>**/integration/**/*IT.java</include>
+                        <include>**/*IT.java</include>
                     </includes>
+                    <testSourceDirectory>src/test/integration</testSourceDirectory>
                 </configuration>
                 <executions>
                     <execution>

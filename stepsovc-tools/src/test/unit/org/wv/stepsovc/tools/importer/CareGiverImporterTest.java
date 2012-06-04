@@ -13,6 +13,7 @@ import org.wv.stepsovc.tools.dmis.DMISDataProcessor;
 
 import java.util.Arrays;
 
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -20,7 +21,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class CareGiverImporterTest {
 
-    CareGiverImporter careGiverImporter;
+    CaregiverImporter careGiverImporter;
     @Mock
     private DMISDataProcessor mockDMISDataProcessor;
     @Mock
@@ -31,7 +32,7 @@ public class CareGiverImporterTest {
     @Before
     public void setUp() throws Exception {
         initMocks(this);
-        careGiverImporter = new CareGiverImporter();
+        careGiverImporter = new CaregiverImporter();
         ReflectionTestUtils.setField(careGiverImporter, "dmisDataProcessor", mockDMISDataProcessor);
         ReflectionTestUtils.setField(careGiverImporter, "commcareGateway", mockCommcareGateway);
         ReflectionTestUtils.setField(careGiverImporter, "caregiverService", mockCaregiverService);

@@ -25,7 +25,6 @@ public class BeneficiaryInformation {
 
     private String ownerId;
 
-
     /* date of created of beneficiary case in commcare */
     private String dateModified;
 
@@ -104,22 +103,6 @@ public class BeneficiaryInformation {
         this.careGiverCode = careGiverCode;
     }
 
-    public String getDateModified() {
-        return dateModified;
-    }
-
-    public void setDateModified(String dateModified) {
-        this.dateModified = dateModified;
-    }
-
-    public String getCaseType() {
-        return caseType;
-    }
-
-    public void setCaseType(String caseType) {
-        this.caseType = caseType;
-    }
-
     public String getCareGiverName() {
         return careGiverName;
     }
@@ -134,6 +117,22 @@ public class BeneficiaryInformation {
 
     public void setOwnerId(String ownerId) {
         this.ownerId = ownerId;
+    }
+
+    public String getDateModified() {
+        return dateModified;
+    }
+
+    public void setDateModified(String dateModified) {
+        this.dateModified = dateModified;
+    }
+
+    public String getCaseType() {
+        return caseType;
+    }
+
+    public void setCaseType(String caseType) {
+        this.caseType = caseType;
     }
 
     public String getCurrentOwnerId() {
