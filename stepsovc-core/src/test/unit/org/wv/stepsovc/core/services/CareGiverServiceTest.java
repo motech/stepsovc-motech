@@ -14,7 +14,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class CaregiverServiceTest {
 
-    CaregiverService caregiverService;
+    CgService caregiverService;
 
     @Mock
     AllCaregivers mockAllCaregivers;
@@ -22,7 +22,7 @@ public class CaregiverServiceTest {
     @Before
     public void setUp() throws Exception {
         initMocks(this);
-        caregiverService = new CaregiverService();
+        caregiverService = new CgService();
         ReflectionTestUtils.setField(caregiverService, "allCaregivers", mockAllCaregivers);
     }
 
