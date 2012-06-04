@@ -8,12 +8,11 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.wv.stepsovc.commcare.gateway.CommcareGateway;
 import org.wv.stepsovc.commcare.vo.CareGiverInformation;
 import org.wv.stepsovc.core.domain.Caregiver;
-import org.wv.stepsovc.core.services.CaregiverService;
+import org.wv.stepsovc.core.services.CgService;
 import org.wv.stepsovc.tools.dmis.DMISDataProcessor;
 
 import java.util.Arrays;
 
-import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -27,7 +26,7 @@ public class CareGiverImporterTest {
     @Mock
     private CommcareGateway mockCommcareGateway;
     @Mock
-    private CaregiverService mockCaregiverService;
+    private CgService mockCaregiverService;
 
     @Before
     public void setUp() throws Exception {

@@ -5,7 +5,7 @@ import org.motechproject.importer.annotation.Post;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.wv.stepsovc.commcare.vo.CareGiverInformation;
-import org.wv.stepsovc.core.services.CaregiverService;
+import org.wv.stepsovc.core.services.CgService;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ import java.util.List;
 @Component
 public class CaregiverPhoneNumberAndFacilityCodeImporter {
     @Autowired
-    private CaregiverService caregiverService;
+    private CgService caregiverService;
 
     @Post
     public void importCaregiverPhoneNumbers(List<CareGiverInformation> caregiverList) {

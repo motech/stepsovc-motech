@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.wv.stepsovc.commcare.gateway.CommcareGateway;
 import org.wv.stepsovc.commcare.vo.CareGiverInformation;
-import org.wv.stepsovc.core.services.CaregiverService;
+import org.wv.stepsovc.core.services.CgService;
 import org.wv.stepsovc.tools.dmis.DMISDataProcessor;
 import org.wv.stepsovc.tools.mapper.CaregiverMapper;
 
@@ -21,7 +21,7 @@ public class CareGiverImporter {
     @Autowired
     private CommcareGateway commcareGateway;
     @Autowired
-    private CaregiverService caregiverService;
+    private CgService caregiverService;
 
     @Post
     public void post(List<CareGiverInformation> entities) {
