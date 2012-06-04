@@ -37,6 +37,7 @@ public class ReferralService {
         Referral newReferral = new ReferralMapper().map(stepsovcCase);
         checkForAvailableDate(newReferral);
         commcareGateway.addGroupOwnership(new BeneficiaryMapper().createFormRequest(stepsovcCase), stepsovcCase.getFacility_code());
+        logger.info("Scheduling new referral alerts");
 
         referralAlertService.newReferralAlert(newReferral);
         allReferrals.add(newReferral);

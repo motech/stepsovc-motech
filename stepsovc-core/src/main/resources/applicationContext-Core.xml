@@ -23,6 +23,7 @@
     <import resource="classpath:applicationContext-stepsovc-commcare-api.xml"/>
     <import resource="classpath:applicationPlatformScheduler.xml"/>
     <import resource="classpath:applicationAppointmentsAPI.xml"/>
+    <import resource="classpath:applicationSchedulerTrackingAPI.xml"/>
     <import resource="classpath:applicationCmsLiteApi.xml"/>
     <import resource="classpath:applicationContext-messaging-gateway.xml"/>
 

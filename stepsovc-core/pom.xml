@@ -57,6 +57,11 @@
             <artifactId>motech-cmslite-api</artifactId>
             <version>${motech-platform.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.motechproject</groupId>
+            <artifactId>motech-scheduletracking-api</artifactId>
+            <version>${motech-platform.version}</version>
+        </dependency>
     </dependencies>
     <build>
         <finalName>stepsovc-core</finalName>

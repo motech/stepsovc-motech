@@ -18,12 +18,12 @@ public class DateUtils {
         try {
             return new SimpleDateFormat(YYYY_MM_DD).parse(dateStr);
         } catch (ParseException e) {
-           logger.error("ParseExcption while parsing date:"+e);
+            logger.error("ParseExcption while parsing date:" + e);
         }
         return null;
     }
 
-    public static String nextDateStr(Date date){
+    public static String nextDateStr(Date date) {
         LocalDate localDate = LocalDate.fromDateFields(date);
 
         return new SimpleDateFormat(YYYY_MM_DD).format(localDate.plusDays(1).toDate());
@@ -35,7 +35,7 @@ public class DateUtils {
         return new SimpleDateFormat(YYYY_MM_DD).format(localDate.plusDays(1).toDate());
     }
 
-    public static Date nextDate(Date date){
+    public static Date nextDate(Date date) {
         LocalDate localDate = LocalDate.fromDateFields(date);
 
         return localDate.plusDays(1).toDate();
@@ -45,6 +45,11 @@ public class DateUtils {
         LocalDate localDate = LocalDate.fromDateFields(getDate(dateStr));
 
         return localDate.plusDays(1).toDate();
+    }
+
+    public static LocalDate prevLocalDate(String dateStr) throws ParseException {
+        LocalDate localDate = LocalDate.fromDateFields(getDate(dateStr));
+        return localDate.minusDays(1);
     }
 
     public static String getFormattedDate(Date date) {

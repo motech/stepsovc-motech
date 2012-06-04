@@ -14,32 +14,33 @@ import static org.wv.stepsovc.core.domain.ServiceType.*;
 
 public class ReferralMapper {
 
-    public static final  String REFERRED = "Referred";
-    public static final  String NOT_REFERRED = "Not Referred";
-    public static final  String SERVICE_RECEIVED = "Received";
-    public static final  String SERVICE_NOT_AVAILED = "Not Availed";
+    public static final String REFERRED = "Referred";
+    public static final String NOT_REFERRED = "Not Referred";
+    public static final String SERVICE_RECEIVED = "Received";
+    public static final String SERVICE_NOT_AVAILED = "Not Availed";
     public static final String REF_ID_PREFIX = "OVC-REF-";
 
     public Referral map(StepsovcCase stepsovcCase) {
         Referral newReferral = new Referral();
         newReferral.setBeneficiaryCode(stepsovcCase.getBeneficiary_code());
         newReferral.setFacilityCode(stepsovcCase.getFacility_code());
+        newReferral.setCgId(stepsovcCase.getUser_id());
         newReferral.setServiceDate(stepsovcCase.getService_date());
         newReferral.setFollowupDate(stepsovcCase.getFollowup_date());
         newReferral.setVisitDate(stepsovcCase.getVisit_date());
         newReferral.setFollowupRequired(stepsovcCase.getFollowup_required());
 
         Map<String, Service> referredServices = new HashMap<String, Service>();
-        referredServices.put(ART_ADHERENCE.getCode(),new Service(REFERRED.equals(stepsovcCase.getArt_adherence_counseling()), ART_ADHERENCE));
-        referredServices.put(CONDOMS.getCode(),new Service(REFERRED.equals(stepsovcCase.getCondoms()), CONDOMS));
-        referredServices.put(END_OF_LIFE_HOSPICE.getCode(),new Service(REFERRED.equals(stepsovcCase.getEnd_of_life_hospice()), END_OF_LIFE_HOSPICE));
-        referredServices.put(FAMILY_PLANNING.getCode(),new Service(REFERRED.equals(stepsovcCase.getFamily_planning()), FAMILY_PLANNING));
-        referredServices.put(HIVE_COUNSELING.getCode(),new Service(REFERRED.equals(stepsovcCase.getHiv_counseling()), HIVE_COUNSELING));
-        referredServices.put(OTHER_HEALTH_SERVICES.getCode(),new Service(REFERRED.equals(stepsovcCase.getOther_health_services()), OTHER_HEALTH_SERVICES));
-        referredServices.put(NEW_DIAGNOSIS.getCode(),new Service(REFERRED.equals(stepsovcCase.getNew_diagnosis()), NEW_DIAGNOSIS));
-        referredServices.put(PAIN_MANAGEMENT.getCode(),new Service(REFERRED.equals(stepsovcCase.getPain_management()), PAIN_MANAGEMENT));
-        referredServices.put(PMTCT.getCode(),new Service(REFERRED.equals(stepsovcCase.getPmtct()), PMTCT));
-        referredServices.put(SEXUALLY_TRANSMITTED_INFEC.getCode(),new Service(REFERRED.equals(stepsovcCase.getSexually_transmitted_infection()), SEXUALLY_TRANSMITTED_INFEC));
+        referredServices.put(ART_ADHERENCE.getCode(), new Service(REFERRED.equals(stepsovcCase.getArt_adherence_counseling()), ART_ADHERENCE));
+        referredServices.put(CONDOMS.getCode(), new Service(REFERRED.equals(stepsovcCase.getCondoms()), CONDOMS));
+        referredServices.put(END_OF_LIFE_HOSPICE.getCode(), new Service(REFERRED.equals(stepsovcCase.getEnd_of_life_hospice()), END_OF_LIFE_HOSPICE));
+        referredServices.put(FAMILY_PLANNING.getCode(), new Service(REFERRED.equals(stepsovcCase.getFamily_planning()), FAMILY_PLANNING));
+        referredServices.put(HIVE_COUNSELING.getCode(), new Service(REFERRED.equals(stepsovcCase.getHiv_counseling()), HIVE_COUNSELING));
+        referredServices.put(OTHER_HEALTH_SERVICES.getCode(), new Service(REFERRED.equals(stepsovcCase.getOther_health_services()), OTHER_HEALTH_SERVICES));
+        referredServices.put(NEW_DIAGNOSIS.getCode(), new Service(REFERRED.equals(stepsovcCase.getNew_diagnosis()), NEW_DIAGNOSIS));
+        referredServices.put(PAIN_MANAGEMENT.getCode(), new Service(REFERRED.equals(stepsovcCase.getPain_management()), PAIN_MANAGEMENT));
+        referredServices.put(PMTCT.getCode(), new Service(REFERRED.equals(stepsovcCase.getPmtct()), PMTCT));
+        referredServices.put(SEXUALLY_TRANSMITTED_INFEC.getCode(), new Service(REFERRED.equals(stepsovcCase.getSexually_transmitted_infection()), SEXUALLY_TRANSMITTED_INFEC));
 
         newReferral.setReferredServices(referredServices);
         newReferral.setActive(true);
@@ -72,7 +73,7 @@ public class ReferralMapper {
     }
 
     public Referral updateReferral(Referral referral, StepsovcCase stepsovcCase) {
-        Map<String, Service> referredServices  = referral.getReferredServices();
+        Map<String, Service> referredServices = referral.getReferredServices();
         referredServices.get(CONDOMS.getCode()).setReason(serviceUnavailedReason(stepsovcCase.getCondoms_na_reason()));
         referredServices.get(ART_ADHERENCE.getCode()).setReason(serviceUnavailedReason(stepsovcCase.getArt_adherence_na_reason()));
         referredServices.get(END_OF_LIFE_HOSPICE.getCode()).setReason(serviceUnavailedReason(stepsovcCase.getEnd_of_life_hospice_na_reason()));
@@ -88,6 +89,6 @@ public class ReferralMapper {
     }
 
     private String serviceUnavailedReason(String key) {
-        return StringUtils.isNotEmpty(key) ? ServiceUnavailedType.valueOf(key).getValue() : "" ;
+        return StringUtils.isNotEmpty(key) ? ServiceUnavailedType.valueOf(key).getValue() : "";
     }
 }
