@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.wv.stepsovc.commcare.vo.CareGiverInformation;
-import org.wv.stepsovc.core.services.CgService;
+import org.wv.stepsovc.core.services.CaregiverService;
 
 import java.util.Arrays;
 import java.util.List;
@@ -18,7 +18,7 @@ public class CaregiverPhoneNumberImporterTest {
     CaregiverPhoneNumberAndFacilityCodeImporter caregiverPhoneNumberAndFacilityCodeImporter;
 
     @Mock
-    private CgService mockCaregiverService;
+    private CaregiverService mockCaregiverService;
 
 
     @Before

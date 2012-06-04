@@ -6,7 +6,7 @@ import org.wv.stepsovc.core.domain.Caregiver;
 import org.wv.stepsovc.core.repository.AllCaregivers;
 
 @Component
-public class CgService {
+public class CaregiverService {
 
     @Autowired
     AllCaregivers allCaregivers;
