@@ -29,7 +29,7 @@ public class CommcareGateway {
 
     public static final String CARE_GIVER_FORM_KEY = "caregiver";
 
-    public static final String COMMCARE_URL = "http://localhost:8000/a/stepsovc/receiver";
+    public static final String COMMCARE_URL = "http://192.168.42.32:7000/a/stepsovc/receiver";
 
     public static final String ALL_USERS_GROUP = "ALL_USERS";
 
