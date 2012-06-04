@@ -15,7 +15,7 @@ import java.util.List;
 
 @CSVImporter(entity = "caregiver", bean = CareGiverInformation.class)
 @Component
-public class CareGiverImporter {
+public class CgImporter {
     @Autowired
     private DMISDataProcessor dmisDataProcessor;
     @Autowired
