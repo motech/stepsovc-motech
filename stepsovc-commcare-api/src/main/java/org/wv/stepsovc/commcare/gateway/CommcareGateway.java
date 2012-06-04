@@ -10,7 +10,7 @@ import org.wv.stepsovc.commcare.factories.GroupFactory;
 import org.wv.stepsovc.commcare.repository.AllGroups;
 import org.wv.stepsovc.commcare.repository.AllUsers;
 import org.wv.stepsovc.commcare.vo.BeneficiaryInformation;
-import org.wv.stepsovc.commcare.vo.CareGiverInformation;
+import org.wv.stepsovc.commcare.vo.CaregiverInformation;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -91,7 +91,7 @@ public class CommcareGateway {
         httpClientService.post(COMMCARE_URL, getXmlFromObject(BENEFICIARY_CASE_FORM_TEMPLATE_PATH, model));
     }
 
-    public void registerUser(CareGiverInformation careGiverInformation) {
+    public void registerUser(CaregiverInformation careGiverInformation) {
         Map<String, Object> model = new HashMap<String, Object>();
         model.put(CARE_GIVER_FORM_KEY, careGiverInformation);
         httpClientService.post(COMMCARE_URL, getXmlFromObject(USER_REGISTRATION_FORM_TEMPLATE_PATH, model));
