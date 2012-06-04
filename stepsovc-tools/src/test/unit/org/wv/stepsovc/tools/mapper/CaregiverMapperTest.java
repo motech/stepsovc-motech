@@ -1,7 +1,7 @@
 package org.wv.stepsovc.tools.mapper;
 
 import org.junit.Test;
-import org.wv.stepsovc.commcare.vo.cgInformation;
+import org.wv.stepsovc.commcare.vo.CaregiverInformation;
 import org.wv.stepsovc.core.domain.Caregiver;
 
 import static org.hamcrest.Matchers.is;
@@ -21,7 +21,7 @@ public class CaregiverMapperTest {
         String phoneNumber = "456";
         String userName = "11111";
 
-        cgInformation caregiverInfo = new cgInformation();
+        CaregiverInformation caregiverInfo = new CaregiverInformation();
         caregiverInfo.setCaregiverId(id);
         caregiverInfo.setCaregiverCode(code);
         caregiverInfo.setFirstName(fName);

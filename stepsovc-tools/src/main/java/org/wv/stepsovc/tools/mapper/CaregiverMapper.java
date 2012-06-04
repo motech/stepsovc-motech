@@ -1,11 +1,11 @@
 package org.wv.stepsovc.tools.mapper;
 
-import org.wv.stepsovc.commcare.vo.cgInformation;
+import org.wv.stepsovc.commcare.vo.CaregiverInformation;
 import org.wv.stepsovc.core.domain.Caregiver;
 
 public class CaregiverMapper {
 
-    public Caregiver map(cgInformation careGiverInformation) {
+    public Caregiver map(CaregiverInformation careGiverInformation) {
         Caregiver caregiver = new Caregiver();
         caregiver.setCgId(careGiverInformation.getCaregiverId());
         caregiver.setCode(careGiverInformation.getCaregiverCode());

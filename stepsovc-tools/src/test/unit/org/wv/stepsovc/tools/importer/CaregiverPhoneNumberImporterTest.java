@@ -4,7 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.wv.stepsovc.commcare.vo.cgInformation;
+import org.wv.stepsovc.commcare.vo.CaregiverInformation;
 import org.wv.stepsovc.core.services.CaregiverService;
 
 import java.util.Arrays;
@@ -35,17 +35,17 @@ public class CaregiverPhoneNumberImporterTest {
         String ph1 = "11111";
         String ph2 = "2222";
 
-        cgInformation careGiverInfo1 = new cgInformation();
+        CaregiverInformation careGiverInfo1 = new CaregiverInformation();
         careGiverInfo1.setCaregiverCode(code1);
         careGiverInfo1.setPhoneNumber(ph1);
-        cgInformation careGiverInfo2 = new cgInformation();
+        CaregiverInformation careGiverInfo2 = new CaregiverInformation();
         careGiverInfo2.setCaregiverCode(code2);
         careGiverInfo2.setPhoneNumber(ph2);
-        List<cgInformation> caregiverList = Arrays.asList(careGiverInfo1, careGiverInfo2);
+        List<CaregiverInformation> caregiverList = Arrays.asList(careGiverInfo1, careGiverInfo2);
 
         caregiverPhoneNumberAndFacilityCodeImporter.importCaregiverPhoneNumbers(caregiverList);
 
-        for (cgInformation careGiverInformation : caregiverList) {
+        for (CaregiverInformation careGiverInformation : caregiverList) {
             verify(mockCaregiverService).updateCaregiverPhoneNumberAndFacilityCode(careGiverInformation.getCaregiverCode(), careGiverInformation.getPhoneNumber(), careGiverInformation.getFacilityCode());
         }
 

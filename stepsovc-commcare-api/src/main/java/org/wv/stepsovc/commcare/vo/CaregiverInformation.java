@@ -1,7 +1,7 @@
 package org.wv.stepsovc.commcare.vo;
 
 
-public class cgInformation {
+public class CaregiverInformation {
 
     /* primary key column cg_id - from DMIS (id)*/
     private String caregiverId;
