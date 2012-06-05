@@ -12,7 +12,7 @@ import static java.text.MessageFormat.format;
 
 public class MockSmsService implements SmsService {
 
-    private Logger logger = LoggerFactory.getLogger(MockSmsService.class);
+    private Logger logger = Logger.getLogger(this.getClass());
 
     @Override
     public void sendSMS(String recipient, String message) {

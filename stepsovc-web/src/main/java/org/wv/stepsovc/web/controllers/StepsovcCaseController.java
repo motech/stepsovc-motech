@@ -24,7 +24,7 @@ import static org.wv.stepsovc.core.request.CaseUpdateType.*;
 @RequestMapping("/case/**")
 public class StepsovcCaseController extends CaseService<StepsovcCase> {
 
-    private static Logger logger = Logger.getLogger(StepsovcCaseController.class);
+    private Logger logger = Logger.getLogger(this.getClass());
 
     private BeneficiaryService beneficiaryService;
     private ReferralService referralService;

@@ -1,5 +1,6 @@
 package org.wv.stepsovc.core.handlers;
 
+import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.motechproject.aggregator.inbound.EventAggregationGateway;
@@ -10,8 +11,6 @@ import org.motechproject.model.MotechEvent;
 import org.motechproject.scheduletracking.api.events.MilestoneEvent;
 import org.motechproject.scheduletracking.api.events.constants.EventSubjects;
 import org.motechproject.server.event.annotations.MotechListener;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.wv.stepsovc.core.aggregator.SMSMessage;
@@ -39,7 +38,7 @@ import static org.wv.stepsovc.core.aggregator.SMSGroupFactory.group;
 @Component
 public class ReferralScheduleHandler {
 
-    private Logger logger = LoggerFactory.getLogger(ReferralScheduleHandler.class);
+    private Logger logger = Logger.getLogger(this.getClass());
     private EventAggregationGateway<SMSMessage> eventAggregationGateway;
     private AllReferrals allReferrals;
     private AllFacilities allFacilities;

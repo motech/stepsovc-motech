@@ -1,10 +1,9 @@
 package org.wv.stepsovc.tools.importer;
 
 
+import org.apache.log4j.Logger;
 import org.motechproject.importer.annotation.CSVImporter;
 import org.motechproject.importer.annotation.Post;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.wv.stepsovc.commcare.gateway.CommcareGateway;
@@ -17,7 +16,7 @@ import java.util.List;
 @Component
 public class BeneficiaryImporter {
 
-    private Logger logger = LoggerFactory.getLogger(BeneficiaryImporter.class);
+    private Logger logger = Logger.getLogger(this.getClass());
 
     @Autowired
     private CommcareGateway commcareGateway;

@@ -1,5 +1,6 @@
 package org.wv.stepsovc.core.mapper;
 
+import org.apache.log4j.Logger;
 import org.joda.time.LocalDate;
 import org.motechproject.model.Time;
 import org.motechproject.scheduletracking.api.service.EnrollmentRequest;
@@ -10,13 +11,16 @@ import org.wv.stepsovc.core.utils.DateUtils;
 import java.text.ParseException;
 
 public class ScheduleEnrollmentMapper {
+
+    private Logger logger = Logger.getLogger(this.getClass());
+
     public EnrollmentRequest map(Referral referral) {
         try {
             LocalDate previousDate = DateUtils.prevLocalDate(referral.getServiceDate());
             return new EnrollmentRequest(referral.getOvcId(), ScheduleNames.REFERRAL.getName(), new Time(0, 0),
                     previousDate, null, previousDate, null, null, referral.appointmentDataMap());
         } catch (ParseException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            logger.error("ParseException while creating EnrollmentRequest , "+referral.getServiceDate());
         }
         return null;
     }

@@ -35,7 +35,7 @@ public class ReferralAlertService {
     @Autowired
     private ScheduleTrackingService scheduleTrackingService;
 
-    private static Logger logger = Logger.getLogger(FacilityService.class);
+    private Logger logger = Logger.getLogger(this.getClass());
 
     public void newReferralAlert(Referral referral) {
         scheduleTrackingService.enroll(new ScheduleEnrollmentMapper().map(referral));

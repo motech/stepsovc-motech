@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class RecreateDB {
     public static final String APPLICATION_CONTEXT_XML = "applicationContext-Tools.xml";
-    static Logger log = Logger.getLogger(RecreateDB.class);
+    private static Logger logger = Logger.getLogger(RecreateDB.class);
 
     @Autowired
     @Qualifier("couchDbInstance")
@@ -21,12 +21,12 @@ public class RecreateDB {
     private CouchDbConnector cmsLiteDatabase;
 
     public static void main(String[] args) {
-        log.info("Recreate DB: START");
+        logger.info("Recreate DB: START");
         ApplicationContext context = new ClassPathXmlApplicationContext(APPLICATION_CONTEXT_XML);
         RecreateDB recreateDB = context.getBean(RecreateDB.class);
         recreateDB.recreateAllDB(recreateDB);
         ((ClassPathXmlApplicationContext) context).close();
-        log.info("Recreate DB: END");
+        logger.info("Recreate DB: END");
     }
 
     private void recreateAllDB(RecreateDB recreateDB) {

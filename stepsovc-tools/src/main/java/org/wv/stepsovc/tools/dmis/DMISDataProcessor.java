@@ -1,11 +1,10 @@
 package org.wv.stepsovc.tools.dmis;
 
+import org.apache.log4j.Logger;
 import org.bouncycastle.crypto.digests.SHA1Digest;
 import org.bouncycastle.crypto.generators.PKCS5S1ParametersGenerator;
 import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.wv.stepsovc.tools.crypto.PasswordDeriveBytes;
 import sun.misc.BASE64Decoder;
@@ -26,7 +25,7 @@ public class DMISDataProcessor {
     public static final String UTF_8 = "UTF-8";
     private String SALT_STR = "Kosher";
     private String INITIAL_VECTOR_STR = "#FZ/Pv%mXYB[mQq<";
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private Logger logger = Logger.getLogger(this.getClass());
 
     public String decrypt(String cipherStr) {
         String decryptedString;

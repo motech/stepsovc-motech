@@ -1,17 +1,16 @@
 package org.wv.stepsovc.core.utils;
 
+import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.motechproject.util.DateUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class DateUtils {
-    private static Logger logger = LoggerFactory.getLogger(DateUtils.class);
+    private static Logger logger = Logger.getLogger(DateUtils.class);
     public static final String YYYY_MM_DD = "yyyy-MM-dd";
 
     public static Date getDate(String dateStr) {

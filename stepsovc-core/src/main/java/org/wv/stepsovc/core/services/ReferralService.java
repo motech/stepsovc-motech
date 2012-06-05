@@ -16,17 +16,13 @@ import java.util.List;
 
 public class ReferralService {
 
-    private static Logger logger = Logger.getLogger(BeneficiaryService.class);
-
+    private Logger logger = Logger.getLogger(this.getClass());
     @Autowired
     private AllReferrals allReferrals;
-
     @Autowired
     private CommcareGateway commcareGateway;
-
     @Autowired
     private FacilityService facilityService;
-
     @Autowired
     private ReferralAlertService referralAlertService;
 
