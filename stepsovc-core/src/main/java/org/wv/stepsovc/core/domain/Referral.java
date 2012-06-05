@@ -22,6 +22,8 @@ public class Referral extends MotechBaseDataObject {
     @JsonProperty
     private String facilityCode;
     @JsonProperty
+    private String cgId;
+    @JsonProperty
     private String visitDate;
     @JsonProperty
     private String serviceDate;
@@ -40,6 +42,14 @@ public class Referral extends MotechBaseDataObject {
 
     public static final String VISIT_NAME = "Referral";
 
+    public String getCgId() {
+        return cgId;
+    }
+
+    public void setCgId(String cgId) {
+        this.cgId = cgId;
+    }
+
     public Map<String, Service> getReferredServices() {
         return referredServices;
     }
@@ -47,9 +57,11 @@ public class Referral extends MotechBaseDataObject {
     public void setReferredServices(Map<String, Service> referredServices) {
         this.referredServices = referredServices;
     }
+
     public String getOvcId() {
         return ovcId;
     }
+
     public Referral setOvcId(String ovcId) {
         this.ovcId = ovcId;
         return this;
@@ -114,8 +126,8 @@ public class Referral extends MotechBaseDataObject {
         return this;
     }
 
-    public Map<String,Object> appointmentDataMap() {
-        Map<String, Object> params = new HashMap<String, Object>();
+    public Map<String, String> appointmentDataMap() {
+        Map<String, String> params = new HashMap<String, String>();
         params.put(META_FACILITY_ID, facilityCode);
         return params;
     }
@@ -137,13 +149,13 @@ public class Referral extends MotechBaseDataObject {
             serviceCodes.add(serviceType.getCode());
         }
 
-        return sort(serviceCodes,on(String.class));
+        return sort(serviceCodes, on(String.class));
     }
 
     public WindowType window() {
-        if(DateUtil.today().toDate().before(DateUtils.getDate(serviceDate)))
+        if (DateUtil.today().toDate().before(DateUtils.getDate(serviceDate)))
             return WindowType.UPCOMING;
-        else if(DateUtil.today().toDate().after(DateUtils.getDate(serviceDate)))
+        else if (DateUtil.today().toDate().after(DateUtils.getDate(serviceDate)))
             return WindowType.LATE;
         else
             return WindowType.DUE;

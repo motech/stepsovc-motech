@@ -1,9 +1,8 @@
 package org.wv.stepsovc.core.stub;
 
+import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.motechproject.sms.api.service.SmsService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +11,7 @@ import static java.text.MessageFormat.format;
 
 public class MockSmsService implements SmsService {
 
-    private Logger logger = LoggerFactory.getLogger(MockSmsService.class);
+    private Logger logger = Logger.getLogger(this.getClass());
 
     @Override
     public void sendSMS(String recipient, String message) {

@@ -22,8 +22,7 @@ import static org.wv.stepsovc.core.utils.DateUtils.*;
 
 public class FacilityService {
 
-    private static Logger logger = Logger.getLogger(FacilityService.class);
-
+    private Logger logger = Logger.getLogger(this.getClass());
     @Autowired
     private AllFacilities allFacilities;
     @Autowired

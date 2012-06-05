@@ -1,9 +1,10 @@
 package org.wv.stepsovc.tools.seed;
 
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 
 public abstract class Seed {
-    org.slf4j.Logger LOG = LoggerFactory.getLogger(this.getClass());
+
+    private Logger logger = Logger.getLogger(this.getClass());
 
     public void run() {
         preLoad();
@@ -12,11 +13,11 @@ public abstract class Seed {
     }
 
     protected void postLoad() {
-        LOG.info("Seed finished.");
+        logger.info("Seed finished.");
     }
 
     protected void preLoad() {
-        LOG.info("Seed started.");
+        logger.info("Seed started.");
     }
 
     protected abstract void load();

@@ -29,13 +29,14 @@ public class ReferralMapperTest {
     @Test
     public void shouldExtractReferredServices() throws Exception {
         Referral referral = new ReferralMapper().map(StepsovcCaseFixture.createCaseForReferral("Ben_Code", "2012-4-12", "FAC001"));
-        assertThat(referral.referredServiceCodes().size(),is(8));
+        assertThat(referral.referredServiceCodes().size(), is(8));
     }
 
     public static void assertReferrals(StepsovcCase stepsovcCase, Referral newReferral) {
-        Map<String,Service> referredServices = newReferral.getReferredServices();
+        Map<String, Service> referredServices = newReferral.getReferredServices();
         assertThat(referredServices.get(ART_ADHERENCE.getCode()).isReferred(), is(ReferralMapper.REFERRED.equals(stepsovcCase.getArt_adherence_counseling())));
         assertThat(newReferral.getBeneficiaryCode(), is(stepsovcCase.getBeneficiary_code()));
+        assertThat(newReferral.getCgId(), is(stepsovcCase.getUser_id()));
         assertThat(referredServices.get(CONDOMS.getCode()).isReferred(), is(ReferralMapper.REFERRED.equals(stepsovcCase.getCondoms())));
         assertThat(referredServices.get(END_OF_LIFE_HOSPICE.getCode()).isReferred(), is(ReferralMapper.REFERRED.equals(stepsovcCase.getEnd_of_life_hospice())));
         assertThat(newReferral.getFacilityCode(), is(stepsovcCase.getFacility_code()));
@@ -77,7 +78,7 @@ public class ReferralMapperTest {
         assertThat(referredServices.get(PMTCT.getCode()).isProvided(), is(ReferralMapper.SERVICE_RECEIVED.equals(stepsovcCase.getPmtct())));
         assertThat(referredServices.get(SEXUALLY_TRANSMITTED_INFEC.getCode()).isProvided(), is(ReferralMapper.SERVICE_RECEIVED.equals(stepsovcCase.getSexually_transmitted_infection())));
 
-        assertThat(newReferral.getServiceDetails(),is(stepsovcCase.getService_details()));
+        assertThat(newReferral.getServiceDetails(), is(stepsovcCase.getService_details()));
         assertThat(newReferral.getFacilityCode(), is(stepsovcCase.getFacility_code()));
         assertThat(newReferral.getServiceDate(), is(stepsovcCase.getService_date()));
     }
@@ -108,7 +109,7 @@ public class ReferralMapperTest {
     }
 
     private static String serviceUnavailedReason(String key) {
-        return StringUtils.isNotEmpty(key) ? ServiceUnavailedType.valueOf(key).getValue() : "" ;
+        return StringUtils.isNotEmpty(key) ? ServiceUnavailedType.valueOf(key).getValue() : "";
     }
 
 

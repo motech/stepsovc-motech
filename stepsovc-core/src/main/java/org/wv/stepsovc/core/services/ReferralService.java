@@ -16,17 +16,13 @@ import java.util.List;
 
 public class ReferralService {
 
-    private static Logger logger = Logger.getLogger(BeneficiaryService.class);
-
+    private Logger logger = Logger.getLogger(this.getClass());
     @Autowired
     private AllReferrals allReferrals;
-
     @Autowired
     private CommcareGateway commcareGateway;
-
     @Autowired
     private FacilityService facilityService;
-
     @Autowired
     private ReferralAlertService referralAlertService;
 
@@ -37,6 +33,7 @@ public class ReferralService {
         Referral newReferral = new ReferralMapper().map(stepsovcCase);
         checkForAvailableDate(newReferral);
         commcareGateway.addGroupOwnership(new BeneficiaryMapper().createFormRequest(stepsovcCase), stepsovcCase.getFacility_code());
+        logger.info("Scheduling new referral alerts");
 
         referralAlertService.newReferralAlert(newReferral);
         allReferrals.add(newReferral);

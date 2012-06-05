@@ -22,11 +22,6 @@
             <version>${motech-platform.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.motechproject</groupId>
-            <artifactId>motech-appointments-api</artifactId>
-            <version>${motech-platform.version}</version>
-        </dependency>
-        <dependency>
             <groupId>postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>9.1-901.jdbc4</version>
@@ -40,12 +35,6 @@
             <groupId>org.motechproject</groupId>
             <artifactId>motech-sms-smpp</artifactId>
             <version>${motech-platform.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-log4j12</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.motechproject</groupId>
@@ -55,6 +44,11 @@
         <dependency>
             <groupId>org.motechproject</groupId>
             <artifactId>motech-cmslite-api</artifactId>
+            <version>${motech-platform.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.motechproject</groupId>
+            <artifactId>motech-scheduletracking-api</artifactId>
             <version>${motech-platform.version}</version>
         </dependency>
     </dependencies>

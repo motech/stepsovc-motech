@@ -15,7 +15,7 @@ import org.wv.stepsovc.core.request.StepsovcCase;
 @Service
 public class BeneficiaryService {
 
-    private static Logger logger = Logger.getLogger(BeneficiaryService.class);
+    private Logger logger = Logger.getLogger(this.getClass());
     @Autowired
     AllBeneficiaries allBeneficiaries;
     @Autowired

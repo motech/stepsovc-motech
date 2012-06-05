@@ -10,7 +10,7 @@ import org.wv.stepsovc.core.request.CustomForm;
 @RequestMapping("/form/**")
 public class StepsovcFormController extends CaseService<CustomForm> {
 
-    private static Logger logger = Logger.getLogger(StepsovcFormController.class);
+    private Logger logger = Logger.getLogger(this.getClass());
 
     public StepsovcFormController() {
         super(CustomForm.class);

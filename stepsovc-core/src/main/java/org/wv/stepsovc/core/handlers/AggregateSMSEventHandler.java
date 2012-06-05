@@ -1,14 +1,13 @@
 package org.wv.stepsovc.core.handlers;
 
 import ch.lambdaj.Lambda;
+import org.apache.log4j.Logger;
 import org.motechproject.aggregator.aggregation.AggregateMotechEvent;
 import org.motechproject.cmslite.api.model.StringContent;
 import org.motechproject.cmslite.api.service.CMSLiteService;
 import org.motechproject.model.MotechEvent;
 import org.motechproject.server.event.annotations.MotechListener;
 import org.motechproject.sms.api.service.SmsService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -30,7 +29,7 @@ public class AggregateSMSEventHandler {
     @Autowired
     SmsService smsService;
 
-    private Logger logger = LoggerFactory.getLogger(ReferralScheduleHandler.class);
+    private Logger logger = Logger.getLogger(this.getClass());
 
     @MotechListener(subjects = {AggregateMotechEvent.SUBJECT})
     public void handleAggregatedSMSByIdentifier(MotechEvent event) {

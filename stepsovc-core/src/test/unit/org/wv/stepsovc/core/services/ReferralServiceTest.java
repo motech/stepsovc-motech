@@ -46,7 +46,7 @@ public class ReferralServiceTest {
     }
 
     @Test
-    public void shouldSendSMSToFacility_CreateAppointmentsAndUpdateReferralOwnerWhileCreatingNewReferral() {
+    public void shouldSendSMSToFacility_CreateSchedulesAndUpdateReferralOwnerWhileCreatingNewReferral() {
 
         ArgumentCaptor<Referral> referralArgumentCaptor = ArgumentCaptor.forClass(Referral.class);
         ArgumentCaptor<BeneficiaryInformation> updatedBeneficiary = ArgumentCaptor.forClass(BeneficiaryInformation.class);
@@ -211,7 +211,7 @@ public class ReferralServiceTest {
     }
 
     @Test
-    public void shouldUpdateUnAvailedReasons(){
+    public void shouldUpdateUnAvailedReasons() {
         String benCode = "ABC";
         StepsovcCase stepsovcCase = StepsovcCaseFixture.createNewCase(benCode);
         Referral toBeReturned = new ReferralMapper().map(stepsovcCase);
