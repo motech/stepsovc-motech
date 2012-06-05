@@ -7,7 +7,6 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.aggregator.inbound.EventAggregationGateway;
-import org.motechproject.appointments.api.EventKeys;
 import org.motechproject.cmslite.api.model.ContentNotFoundException;
 import org.motechproject.cmslite.api.model.StringContent;
 import org.motechproject.cmslite.api.service.CMSLiteService;
@@ -25,7 +24,9 @@ import org.wv.stepsovc.core.repository.AllReferrals;
 import org.wv.stepsovc.core.utils.DateUtils;
 
 import java.text.ParseException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.isIn;
@@ -83,8 +84,6 @@ public class ReferralScheduleHandlerTest {
         StringContent templateString = new StringContent(null, null, "%s (%s) Services (%s)");
         when(mockCmsLiteService.getStringContent(Locale.ENGLISH.getLanguage(), REFERRAL_ALERT_WITH_SERVICE)).thenReturn(templateString);
 
-        Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put(EventKeys.EXTERNAL_ID_KEY, externalId);
         MilestoneEvent milestoneEvent = new MilestoneEvent(externalId, "Referral", null, "due", DateUtils.prevLocalDate(referral.getServiceDate()).toDateTime(new LocalTime(0, 0)));
 
         referralScheduleHandler.handleAlert(milestoneEvent.toMotechEvent());
