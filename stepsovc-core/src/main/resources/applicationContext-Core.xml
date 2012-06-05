@@ -26,6 +26,7 @@
     <import resource="classpath:applicationSchedulerTrackingAPI.xml"/>
     <import resource="classpath:applicationCmsLiteApi.xml"/>
     <import resource="classpath:applicationContext-messaging-gateway.xml"/>
+    <import resource="classpath:applicationSmsAPI.xml"/>
 
     <context:annotation-config/>
     <context:spring-configured/>
