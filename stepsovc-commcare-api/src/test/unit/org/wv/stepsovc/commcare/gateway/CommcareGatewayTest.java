@@ -91,7 +91,7 @@ public class CommcareGatewayTest {
     @Test
     public void shouldSubmitUpdateOwnerFormForGroupOwnershipRequest() {
         BeneficiaryInformation beneficiaryInformation = getBeneficiaryInformation("f98589102c60fcc2e0f3c422bb361ebd", "cg1", UUID.randomUUID().toString(), "Albie-case", "ABC", "cg1", "null");
-        String currentOwnerId = beneficiaryInformation.getCurrentOwnerId();
+        String currentOwnerId = beneficiaryInformation.getCareGiverId();
         model.put(CommcareGateway.BENEFICIARY_FORM_KEY, beneficiaryInformation);
         doReturn(getBeneficiaryCaseExpectedXml()).when(spyCommcareGateway).getXmlFromObject(eq(OWNER_UPDATE_FORM_TEMPLATE_PATH), eq(model));
         String someGroup = "someGroup";
@@ -111,7 +111,7 @@ public class CommcareGatewayTest {
     @Test
     public void shouldSendOwnershipUpdateXmlForAddUserOwnershipRequest() throws Exception {
         BeneficiaryInformation beneficiaryInformation = getBeneficiaryInformation("f98589102c60fcc2e0f3c422bb361ebd", "cg1", UUID.randomUUID().toString(), "Albie-case", "ABC", "cg1", "null");
-        String currentOwnerId = beneficiaryInformation.getCurrentOwnerId();
+        String currentOwnerId = beneficiaryInformation.getCareGiverId();
         model.put(CommcareGateway.BENEFICIARY_FORM_KEY, beneficiaryInformation);
         doReturn(getBeneficiaryCaseExpectedXml()).when(spyCommcareGateway).getXmlFromObject(eq(OWNER_UPDATE_FORM_TEMPLATE_PATH), eq(model));
         String userId = "userId";

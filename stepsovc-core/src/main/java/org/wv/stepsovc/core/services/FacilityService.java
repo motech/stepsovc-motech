@@ -62,27 +62,28 @@ public class FacilityService {
 
         boolean isAvailable = true;
         Date serviceDate = null;
-            serviceDate = getDate(serviceDateStr);
-            List<ServiceUnavailability> serviceUnavailabilities = new ArrayList<ServiceUnavailability>(facility.getServiceUnavailabilities());
-            if (isNotEmpty(serviceUnavailabilities)) {
-                sort(serviceUnavailabilities);
-                for (ServiceUnavailability serviceUnavailability : serviceUnavailabilities) {
-                    Date fromDate = getDate(serviceUnavailability.getFromDate());
-                    Date toDate = getDate(serviceUnavailability.getToDate());
+        serviceDate = getDate(serviceDateStr);
+        List<ServiceUnavailability> serviceUnavailabilities = new ArrayList<ServiceUnavailability>(facility.getServiceUnavailabilities());
+        if (isNotEmpty(serviceUnavailabilities)) {
+            sort(serviceUnavailabilities);
+            for (ServiceUnavailability serviceUnavailability : serviceUnavailabilities) {
+                Date fromDate = getDate(serviceUnavailability.getFromDate());
+                Date toDate = getDate(serviceUnavailability.getToDate());
 
-                    if ((serviceDate.equals(fromDate) || serviceDate.equals(toDate)) ||
-                            (serviceDate.after(fromDate) && serviceDate.before(toDate))) {
-                        serviceDate = nextDate(toDate);
-                        isAvailable = false;
-                    } else if (!isAvailable) {
-                        break;
-                    }
+                if ((serviceDate.equals(fromDate) || serviceDate.equals(toDate)) ||
+                        (serviceDate.after(fromDate) && serviceDate.before(toDate))) {
+                    serviceDate = nextDate(toDate);
+                    isAvailable = false;
+                } else if (!isAvailable) {
+                    break;
                 }
             }
+        }
         return new FacilityAvailability(isAvailable, getFormattedDate(serviceDate));
     }
 
     public void registerFacility(StepsovcCase stepsovcCase) {
-        commcareGateway.addGroupOwnership(new BeneficiaryMapper().createFormRequest(stepsovcCase),CommcareGateway.ALL_USERS_GROUP);
+        allFacilities.add(new Facility(stepsovcCase.getFacility_code(), stepsovcCase.getFacility_name(), new ArrayList<ServiceUnavailability>(), new ArrayList<String>()));
+        commcareGateway.addGroupOwnership(new BeneficiaryMapper().createFormRequest(stepsovcCase), CommcareGateway.ALL_USERS_GROUP);
     }
 }

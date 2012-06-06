@@ -27,13 +27,12 @@ public class ReferralService {
     private ReferralAlertService referralAlertService;
 
     public void addNewReferral(StepsovcCase stepsovcCase) {
-        logger.info("Handling new referral");
+        logger.info("Handling new referral for " + stepsovcCase.getBeneficiary_code());
         inactivateOldReferral(stepsovcCase);
 
         Referral newReferral = new ReferralMapper().map(stepsovcCase);
         checkForAvailableDate(newReferral);
         commcareGateway.addGroupOwnership(new BeneficiaryMapper().createFormRequest(stepsovcCase), stepsovcCase.getFacility_code());
-        logger.info("Scheduling new referral alerts");
 
         referralAlertService.newReferralAlert(newReferral);
         allReferrals.add(newReferral);
@@ -56,24 +55,22 @@ public class ReferralService {
     }
 
     public void updateNotAvailedReasons(StepsovcCase stepsovcCase) {
-        logger.info("Handling update referral");
+        logger.info("Handling update referral for " + stepsovcCase.getBeneficiary_code());
         Referral existingReferral = allReferrals.findActiveReferral(stepsovcCase.getBeneficiary_code());
         referralAlertService.removeAlertSchedules(existingReferral);
         allReferrals.update(new ReferralMapper().updateReferral(existingReferral, stepsovcCase));
     }
 
     public void updateAvailedServices(StepsovcCase stepsovcCase) {
-        logger.info("Handling update service");
+        logger.info("Handling update service for " + stepsovcCase.getBeneficiary_code());
         Referral existingReferral = allReferrals.findActiveReferral(stepsovcCase.getBeneficiary_code());
-
         referralAlertService.removeAlertSchedules(existingReferral);
-
         Referral referral = new ReferralMapper().updateServices(existingReferral, stepsovcCase);
 
         if (stepsovcCase.getFacility_code() != null && !"".equals(stepsovcCase.getFacility_code().trim())) {
             checkForAvailableDate(referral);
-            referralAlertService.newReferralAlert(referral);
             commcareGateway.addGroupOwnership(new BeneficiaryMapper().createFormRequest(stepsovcCase), stepsovcCase.getFacility_code());
+            referralAlertService.newReferralAlert(referral);
         } else {
             commcareGateway.removeGroupOwnership(new BeneficiaryMapper().createFormRequest(stepsovcCase), stepsovcCase.getFacility_code());
         }
@@ -93,8 +90,8 @@ public class ReferralService {
 
     private void updateReferrals(String nextAvailableDate, List<Referral> referrals) {
         for (Referral referral : referrals) {
-            referral.setServiceDate(nextAvailableDate);
-            allReferrals.update(referral);
+            referralAlertService.removeAlertSchedules(referral);
+            allReferrals.update(referral.setServiceDate(nextAvailableDate));
             referralAlertService.newReferralAlert(referral);
         }
     }

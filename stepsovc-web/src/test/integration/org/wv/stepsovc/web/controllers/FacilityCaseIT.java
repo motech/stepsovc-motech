@@ -3,7 +3,6 @@ package org.wv.stepsovc.web.controllers;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.motechproject.appointments.api.repository.AllAppointmentCalendars;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -23,14 +22,10 @@ public class FacilityCaseIT {
 
     @Autowired
     StepsovcCaseController stepsovcCaseController;
-
     @Autowired
     AllFacilities allFacilities;
     @Autowired
     AllReferrals allReferrals;
-
-    @Autowired
-    private AllAppointmentCalendars allAppointmentCalendars;
 
     private String facilityId = "testId";
     private String benCode1 = "BEN001";
@@ -41,9 +36,9 @@ public class FacilityCaseIT {
     public void shouldCreateOrUpdateFacilityWithServiceUnavailability() {
         String mayFirst = "2012-05-01";
         String maySecond = "2012-05-02";
-        StepsovcCase caseForReferral1 = StepsovcCaseFixture.createCaseForReferral(benCode1, mayFirst, facilityId);
-        StepsovcCase caseForReferral2 = StepsovcCaseFixture.createCaseForReferral(benCode2, mayFirst, facilityId);
-        StepsovcCase caseForReferral3 = StepsovcCaseFixture.createCaseForReferral(benCode3, "2012-01-03", facilityId);
+        StepsovcCase caseForReferral1 = org.wv.stepsovc.web.controllers.StepsovcCaseFixture.createCaseForReferral(benCode1, mayFirst, facilityId);
+        StepsovcCase caseForReferral2 = org.wv.stepsovc.web.controllers.StepsovcCaseFixture.createCaseForReferral(benCode2, mayFirst, facilityId);
+        StepsovcCase caseForReferral3 = org.wv.stepsovc.web.controllers.StepsovcCaseFixture.createCaseForReferral(benCode3, "2012-01-03", facilityId);
         StepsovcCase facilityCase = createFacilityCase(facilityId, mayFirst, mayFirst);
 
         caseForReferral1.setForm_type(CaseUpdateType.NEW_REFERRAL.getType());
@@ -67,7 +62,7 @@ public class FacilityCaseIT {
         stepsovcCaseController.createCase(facilityCase);
         assertThat(allFacilities.findFacilityByCode(facilityId).getServiceUnavailabilities().size(), is(2));
 
-        StepsovcCase caseForReferral4 = StepsovcCaseFixture.createCaseForReferral(benCode3, "2012-02-01", facilityId);
+        StepsovcCase caseForReferral4 = org.wv.stepsovc.web.controllers.StepsovcCaseFixture.createCaseForReferral(benCode3, "2012-02-01", facilityId);
         caseForReferral4.setForm_type(CaseUpdateType.NEW_REFERRAL.getType());
 
         stepsovcCaseController.createCase(caseForReferral4);
@@ -79,6 +74,7 @@ public class FacilityCaseIT {
     private StepsovcCase createFacilityCase(String facilityId, String from, String toDate) {
         StepsovcCase stepsovcCase = new StepsovcCase();
         stepsovcCase.setCase_type(CaseType.FACILITY_CASE.getType());
+        stepsovcCase.setForm_type(CaseUpdateType.FACILITY_UNAVAILABILITY.getType());
         stepsovcCase.setFacility_code(facilityId);
         stepsovcCase.setFacility_name("testName");
         stepsovcCase.setService_unavailable_reason("testReason");
@@ -91,6 +87,5 @@ public class FacilityCaseIT {
     public void clearAll() throws SchedulerException {
         allFacilities.removeAll();
         allReferrals.removeAll();
-        allAppointmentCalendars.removeAll();
     }
 }

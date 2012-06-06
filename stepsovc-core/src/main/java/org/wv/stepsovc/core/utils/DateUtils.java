@@ -1,9 +1,7 @@
 package org.wv.stepsovc.core.utils;
 
 import org.apache.log4j.Logger;
-import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
-import org.motechproject.util.DateUtil;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -22,12 +20,6 @@ public class DateUtils {
         return null;
     }
 
-    public static String nextDateStr(Date date) {
-        LocalDate localDate = LocalDate.fromDateFields(date);
-
-        return new SimpleDateFormat(YYYY_MM_DD).format(localDate.plusDays(1).toDate());
-    }
-
     public static String nextDateStr(String dateStr) throws ParseException {
         LocalDate localDate = LocalDate.fromDateFields(getDate(dateStr));
 
@@ -36,12 +28,6 @@ public class DateUtils {
 
     public static Date nextDate(Date date) {
         LocalDate localDate = LocalDate.fromDateFields(date);
-
-        return localDate.plusDays(1).toDate();
-    }
-
-    public static Date nextDate(String dateStr) throws ParseException {
-        LocalDate localDate = LocalDate.fromDateFields(getDate(dateStr));
 
         return localDate.plusDays(1).toDate();
     }
@@ -57,13 +43,5 @@ public class DateUtils {
 
     public static LocalDate getLocalDate(String fromDate) {
         return LocalDate.fromDateFields(DateUtils.getDate(fromDate));
-    }
-
-    public static DateTime getDateTime(String serviceDate) {
-        try {
-            return DateUtil.newDateTime(new SimpleDateFormat(YYYY_MM_DD).parse(serviceDate));
-        } catch (ParseException e) {
-            throw new RuntimeException("Date format wrong:" + serviceDate, e);
-        }
     }
 }

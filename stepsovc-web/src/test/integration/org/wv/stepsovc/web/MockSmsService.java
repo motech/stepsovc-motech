@@ -1,9 +1,8 @@
 package org.wv.stepsovc.web;
 
+import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.motechproject.sms.api.service.SmsService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;

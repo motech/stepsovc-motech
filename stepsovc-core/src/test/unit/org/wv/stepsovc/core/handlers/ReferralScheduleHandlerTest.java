@@ -11,11 +11,11 @@ import org.motechproject.cmslite.api.model.ContentNotFoundException;
 import org.motechproject.cmslite.api.model.StringContent;
 import org.motechproject.cmslite.api.service.CMSLiteService;
 import org.motechproject.model.MotechEvent;
+import org.motechproject.scheduletracking.api.events.DefaultmentCaptureEvent;
 import org.motechproject.scheduletracking.api.events.MilestoneEvent;
+import org.motechproject.sms.api.service.SmsService;
 import org.wv.stepsovc.core.aggregator.SMSMessage;
-import org.wv.stepsovc.core.domain.Beneficiary;
-import org.wv.stepsovc.core.domain.Facility;
-import org.wv.stepsovc.core.domain.Referral;
+import org.wv.stepsovc.core.domain.*;
 import org.wv.stepsovc.core.mapper.ReferralMapper;
 import org.wv.stepsovc.core.repository.AllBeneficiaries;
 import org.wv.stepsovc.core.repository.AllCaregivers;
@@ -49,6 +49,8 @@ public class ReferralScheduleHandlerTest {
     @Mock
     private EventAggregationGateway<SMSMessage> mockEventAggregationGateway;
     @Mock
+    private SmsService smsService;
+    @Mock
     private AllCaregivers allCaregivers;
 
     private Referral referral;
@@ -60,10 +62,15 @@ public class ReferralScheduleHandlerTest {
     public void setUp() {
         initMocks(this);
         referralScheduleHandler = new ReferralScheduleHandler(mockEventAggregationGateway, mockCmsLiteService,
-                mockAllReferrals, mockAllFacilities, mockAllBeneficiaries, allCaregivers);
+                mockAllReferrals, mockAllFacilities, mockAllBeneficiaries, allCaregivers, smsService);
         referral = new Referral();
         facility = new Facility();
         beneficiary = new Beneficiary();
+        referral.setBeneficiaryCode("someBenCode");
+        referral.setServiceDate("2013-12-12");
+        referral.setFacilityCode("FAC001");
+        beneficiary.setName("Smith");
+        beneficiary.setCode("BEN001");
     }
 
     @Test
@@ -106,4 +113,25 @@ public class ReferralScheduleHandlerTest {
         } catch (EventHandlerException ehe) {
         }
     }
+
+    @Test
+    public void shouldSendSMSToCareGiverForDefaultedReferral() throws ContentNotFoundException {
+        String externalId = "ovcId";
+        String caregiverId = "caregiverId";
+        String phoneNumber = "9812345678";
+        String msg = "Smith (BEN001) has not fulfilled the referral to FAC001 due on 2013-12-12";
+        StringContent template = new StringContent("", "", "%s (%s) has not fulfilled the referral to %s due on %s");
+        referral.setCgId(caregiverId);
+        Caregiver caregiver = new Caregiver();
+        caregiver.setPhoneNumber(phoneNumber);
+
+        doReturn(referral).when(mockAllReferrals).findActiveByOvcId(externalId);
+        doReturn(beneficiary).when(mockAllBeneficiaries).findBeneficiaryByCode(referral.getBeneficiaryCode());
+        doReturn(caregiver).when(allCaregivers).findCaregiverById(caregiverId);
+        doReturn(template).when(mockCmsLiteService).getStringContent("en", SmsTemplateKeys.DEFAULTED_REFERRAL);
+        referralScheduleHandler.handleDefaultmentAlert(new DefaultmentCaptureEvent("", "", externalId).toMotechEvent());
+        verify(smsService).sendSMS(phoneNumber, msg);
+
+    }
+
 }

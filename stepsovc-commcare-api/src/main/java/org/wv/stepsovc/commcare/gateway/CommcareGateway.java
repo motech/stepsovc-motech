@@ -66,7 +66,7 @@ public class CommcareGateway {
     }
 
     public void addGroupOwnership(BeneficiaryInformation beneficiaryInformation, String groupName) {
-        beneficiaryInformation.setOwnerId(beneficiaryInformation.getCurrentOwnerId() + "," + getGroupId(groupName));
+        beneficiaryInformation.setOwnerId(beneficiaryInformation.getCareGiverId() + "," + getGroupId(groupName));
         postOwnerUpdate(beneficiaryInformation);
     }
 
@@ -79,7 +79,7 @@ public class CommcareGateway {
     }
 
     public void addUserOwnership(BeneficiaryInformation beneficiaryInformation, String userId) {
-        beneficiaryInformation.setOwnerId(beneficiaryInformation.getCurrentOwnerId() + "," + userId);
+        beneficiaryInformation.setOwnerId(beneficiaryInformation.getCareGiverId() + "," + userId);
         postOwnerUpdate(beneficiaryInformation);
     }
 
