@@ -3,9 +3,13 @@ package org.wv.stepsovc.commcare.gateway;
 import org.apache.velocity.app.VelocityEngine;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.http.client.service.HttpClientService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.wv.stepsovc.commcare.domain.CaseType;
 import org.wv.stepsovc.commcare.domain.Group;
@@ -25,9 +29,13 @@ import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.wv.stepsovc.commcare.gateway.CommcareGateway.*;
 
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration("classpath*:applicationContext-stepsovc-commcare-api.xml")
 public class CommcareGatewayTest {
 
-    CommcareGateway spyCommcareGateway;
+    @Autowired
+    CommcareGateway commcareGateway;
 
     @Mock
     HttpClientService mockHttpClientService;
@@ -40,12 +48,16 @@ public class CommcareGatewayTest {
 
     @Mock
     private AllUsers allUsers;
+
     private Map<String, Object> model;
+
+    private CommcareGateway spyCommcareGateway;
+
 
     @Before
     public void setup() {
         initMocks(this);
-        spyCommcareGateway = spy(new CommcareGateway());
+        spyCommcareGateway = spy(commcareGateway);
         ReflectionTestUtils.setField(spyCommcareGateway, "httpClientService", mockHttpClientService);
         ReflectionTestUtils.setField(spyCommcareGateway, "velocityEngine", mockVelocityEngine);
         ReflectionTestUtils.setField(spyCommcareGateway, "allGroups", allGroups);
@@ -63,7 +75,7 @@ public class CommcareGatewayTest {
 
         spyCommcareGateway.createCase(beneficiaryInformation);
 
-        verify(mockHttpClientService).post(COMMCARE_URL, getBeneficiaryCaseExpectedXml());
+        verify(mockHttpClientService).post(spyCommcareGateway.getCOMMCARE_RECIEVER_URL(), getBeneficiaryCaseExpectedXml());
     }
 
     @Test
@@ -72,7 +84,7 @@ public class CommcareGatewayTest {
         model.put(CommcareGateway.CARE_GIVER_FORM_KEY, careGiverInformation);
         doReturn(getExpectedUserFormXml()).when(spyCommcareGateway).getXmlFromObject(eq(USER_REGISTRATION_FORM_TEMPLATE_PATH), eq(model));
         spyCommcareGateway.registerUser(careGiverInformation);
-        verify(mockHttpClientService).post(COMMCARE_URL, getExpectedUserFormXml());
+        verify(mockHttpClientService).post(spyCommcareGateway.getCOMMCARE_RECIEVER_URL(), getExpectedUserFormXml());
     }
 
 
@@ -91,7 +103,7 @@ public class CommcareGatewayTest {
         spyCommcareGateway.addGroupOwnership(beneficiaryInformation, someGroup);
 
         verify(spyCommcareGateway).postOwnerUpdate(beneficiaryInfoCaptor.capture());
-        verify(mockHttpClientService).post(COMMCARE_URL, getBeneficiaryCaseExpectedXml());
+        verify(mockHttpClientService).post(spyCommcareGateway.getCOMMCARE_RECIEVER_URL(), getBeneficiaryCaseExpectedXml());
 
         assertThat(beneficiaryInfoCaptor.getValue().getOwnerId(), is(currentOwnerId + "," + group.getId()));
     }
@@ -108,7 +120,7 @@ public class CommcareGatewayTest {
         spyCommcareGateway.addUserOwnership(beneficiaryInformation, userId);
 
         verify(spyCommcareGateway).postOwnerUpdate(beneficiaryInfoCaptor.capture());
-        verify(mockHttpClientService).post(COMMCARE_URL, getBeneficiaryCaseExpectedXml());
+        verify(mockHttpClientService).post(spyCommcareGateway.getCOMMCARE_RECIEVER_URL(), getBeneficiaryCaseExpectedXml());
 
         assertThat(beneficiaryInfoCaptor.getValue().getOwnerId(), is(currentOwnerId + "," + userId));
 

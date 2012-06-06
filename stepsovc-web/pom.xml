@@ -269,12 +269,15 @@
                         <configuration>
                             <type>jar</type>
                             <outputDirectory>${project.build.directory}/generated-resources</outputDirectory>
-                            <includeArtifactIds>stepsovc-core</includeArtifactIds>
+                            <includeArtifactIds>stepsovc-core,stepsovc-tools,stepsovc-commcare-api</includeArtifactIds>
                             <includeGroupIds>org.wv.stepsovc</includeGroupIds>
                             <excludeTransitive>true</excludeTransitive>
                             <includes>
-                                schedule_tracking.properties,schedules/**,*.properties,*.xml
+                                schedules/**,*.properties,log4j.xml
                             </includes>
+                            <excludes>
+                                activemq.properties,httpclient.properties
+                            </excludes>
                         </configuration>
                     </execution>
                 </executions>

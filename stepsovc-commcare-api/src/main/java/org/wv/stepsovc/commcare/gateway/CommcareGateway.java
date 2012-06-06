@@ -3,6 +3,7 @@ package org.wv.stepsovc.commcare.gateway;
 import org.apache.velocity.app.VelocityEngine;
 import org.motechproject.http.client.service.HttpClientService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 import org.wv.stepsovc.commcare.domain.Group;
@@ -29,7 +30,8 @@ public class CommcareGateway {
 
     public static final String CARE_GIVER_FORM_KEY = "caregiver";
 
-    public static final String COMMCARE_URL = "http://192.168.42.32:8000/a/stepsovc/receiver";
+    @Value("#{stepovcProperties['commcare.receiver']}")
+    private String COMMCARE_RECIEVER_URL;
 
     public static final String ALL_USERS_GROUP = "ALL_USERS";
 
@@ -88,22 +90,26 @@ public class CommcareGateway {
     public void createCase(BeneficiaryInformation beneficiaryInformation) {
         Map<String, Object> model = new HashMap<String, Object>();
         model.put(BENEFICIARY_FORM_KEY, beneficiaryInformation);
-        httpClientService.post(COMMCARE_URL, getXmlFromObject(BENEFICIARY_CASE_FORM_TEMPLATE_PATH, model));
+        httpClientService.post(COMMCARE_RECIEVER_URL, getXmlFromObject(BENEFICIARY_CASE_FORM_TEMPLATE_PATH, model));
     }
 
     public void registerUser(CaregiverInformation careGiverInformation) {
         Map<String, Object> model = new HashMap<String, Object>();
         model.put(CARE_GIVER_FORM_KEY, careGiverInformation);
-        httpClientService.post(COMMCARE_URL, getXmlFromObject(USER_REGISTRATION_FORM_TEMPLATE_PATH, model));
+        httpClientService.post(COMMCARE_RECIEVER_URL, getXmlFromObject(USER_REGISTRATION_FORM_TEMPLATE_PATH, model));
     }
 
     void postOwnerUpdate(BeneficiaryInformation beneficiaryInformation) {
         Map<String, Object> model = new HashMap<String, Object>();
         model.put(BENEFICIARY_FORM_KEY, beneficiaryInformation);
-        httpClientService.post(COMMCARE_URL, getXmlFromObject(OWNER_UPDATE_FORM_TEMPLATE_PATH, model));
+        httpClientService.post(COMMCARE_RECIEVER_URL, getXmlFromObject(OWNER_UPDATE_FORM_TEMPLATE_PATH, model));
     }
 
     public String getXmlFromObject(String templatePath, Map model) {
         return VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, templatePath, "UTF-8", model);
+    }
+
+    public String getCOMMCARE_RECIEVER_URL() {
+        return COMMCARE_RECIEVER_URL;
     }
 }
