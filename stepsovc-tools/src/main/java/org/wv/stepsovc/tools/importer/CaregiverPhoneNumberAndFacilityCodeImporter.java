@@ -17,8 +17,10 @@ public class CaregiverPhoneNumberAndFacilityCodeImporter {
 
     @Post
     public void importCaregiverPhoneNumbers(List<CaregiverInformation> caregiverList) {
-        for (CaregiverInformation careGiverInformation : caregiverList) {
-            caregiverService.updateCaregiverPhoneNumberAndFacilityCode(careGiverInformation.getCaregiverCode(), careGiverInformation.getPhoneNumber(), careGiverInformation.getFacilityCode());
+        for (CaregiverInformation caregiverInformation : caregiverList) {
+            if (!caregiverService.updateCaregiverPhoneNumberAndFacilityCode(caregiverInformation.getCaregiverCode(), caregiverInformation.getPhoneNumber(), caregiverInformation.getFacilityCode())) {
+                System.err.println(caregiverInformation.getCaregiverCode() + " - is  invalid . This  record is  not  imported !! ");
+            }
         }
     }
 

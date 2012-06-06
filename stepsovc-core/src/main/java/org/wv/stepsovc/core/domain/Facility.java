@@ -16,6 +16,14 @@ public class Facility extends MotechBaseDataObject {
     private List<ServiceUnavailability> serviceUnavailabilities;
     @JsonProperty
     private List<String> phoneNumbers;
+    @JsonProperty
+    private String district;
+    @JsonProperty
+    private String constituency;
+    @JsonProperty
+    private String ward;
+    @JsonProperty
+    private String village;
 
     public Facility() {
 
@@ -57,7 +65,39 @@ public class Facility extends MotechBaseDataObject {
     }
 
     public Facility setPhoneNumber(List<String> phoneNumbers) {
-        this.phoneNumbers=phoneNumbers;
+        this.phoneNumbers = phoneNumbers;
         return this;
+    }
+
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
+    }
+
+    public String getConstituency() {
+        return constituency;
+    }
+
+    public void setConstituency(String constituency) {
+        this.constituency = constituency;
+    }
+
+    public String getWard() {
+        return ward;
+    }
+
+    public void setWard(String ward) {
+        this.ward = ward;
+    }
+
+    public String getVillage() {
+        return village;
+    }
+
+    public void setVillage(String village) {
+        this.village = village;
     }
 }
