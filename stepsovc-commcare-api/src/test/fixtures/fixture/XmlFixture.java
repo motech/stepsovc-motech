@@ -76,7 +76,7 @@ public class XmlFixture {
                 "    <uuid>FAC1</uuid>\n" +
                 "    <date></date>\n" +
                 "    <registering_phone_id>1234567890</registering_phone_id>\n" +
-                "    <user_data>\n" +
+                /*"    <user_data>\n" +
                 "        <data key=\"district\">someFacilityDistrict</data>\n" +
                 "        <data key=\"village\">someFacilityVillage</data>\n" +
                 "        <data key=\"ward\">someFacilityWard</data>\n" +
@@ -84,7 +84,7 @@ public class XmlFixture {
                 "        <data key=\"optionalPhoneNumber1\">987654321</data>\n" +
                 "        <data key=\"optionalPhoneNumber2\">23142345645</data>\n" +
                 "        <data key=\"optionalPhoneNumber3\">253767569</data>\n" +
-                "    </user_data>\n" +
+                "    </user_data>\n" +*/
                 "</Registration>";
     }
 
