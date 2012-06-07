@@ -38,6 +38,11 @@
             <artifactId>stepsovc-core</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+        <dependency>
+            <groupId>postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>9.1-901.jdbc4</version>
+        </dependency>
     </dependencies>
     <build>
         <finalName>stepsovc-tools</finalName>
@@ -61,6 +66,24 @@
                     <encoding>UTF-8</encoding>
                     <outputDirectory/>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>properties-maven-plugin</artifactId>
+                <version>1.0-alpha-2</version>
+                <executions>
+                    <execution>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>read-project-properties</goal>
+                        </goals>
+                        <configuration>
+                            <files>
+                                <file>../build/maven.properties</file>
+                            </files>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -148,6 +171,44 @@
                         <configuration>
                             <mainClass>org.wv.stepsovc.tools.seed.SeedLoader</mainClass>
                             <classpathScope>test</classpathScope>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>sql-maven-plugin</artifactId>
+                <version>1.5</version>
+
+                <dependencies>
+                    <!-- specify the dependent jdbc driver here -->
+                    <dependency>
+                        <groupId>postgresql</groupId>
+                        <artifactId>postgresql</artifactId>
+                        <version>9.1-901.jdbc4</version>
+                    </dependency>
+                </dependencies>
+                <!-- common configuration shared by all executions -->
+                <configuration>
+                    <driver>org.postgresql.Driver</driver>
+                    <!--all executions are ignored if -Dmaven.test.skip=true-->
+                    <skip>${maven.test.skip}</skip>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>delete-test-facility</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <url>jdbc:postgresql://${postgres.server}:${postgres.port}/${postgres.commcarehq}</url>
+                            <username>${postgres.user}</username>
+                            <password>${postgres.password}</password>
+                            <autocommit>true</autocommit>
+                            <srcFiles>
+                                <srcFile>../build/sql/delete_test_facility_codes.sql</srcFile>
+                            </srcFiles>
                         </configuration>
                     </execution>
                 </executions>

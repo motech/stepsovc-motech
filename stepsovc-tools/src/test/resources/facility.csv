@@ -1,0 +1,4 @@
+facilityCode,facilityName,village,ward,constituency,district,mandatoryPhoneNumber,optionalPhoneNumber1,optionalPhoneNumber2,optionalPhoneNumber3
+1,facName1,village1,ward1,constituency1,district1,1,11,111,1111
+2,facName2,village2,ward2,constituency2,district2,2,22,222,2222
+3,facName3,village3,ward3,constituency3,district3,3,33,333,3333

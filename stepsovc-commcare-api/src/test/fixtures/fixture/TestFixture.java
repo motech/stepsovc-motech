@@ -37,7 +37,7 @@ public class TestFixture {
 
     public static FacilityInformation createFacilityInformation() {
         FacilityInformation facilityInformation = new FacilityInformation();
-        facilityInformation.setFacilityId("FAC1");
+        facilityInformation.setId("FAC1");
         facilityInformation.setFacilityCode("someFacilityCode");
         facilityInformation.setConstituency("someFacilityConstituency");
         facilityInformation.setDistrict("someFacilityDistrict");

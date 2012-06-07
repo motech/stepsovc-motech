@@ -1,6 +1,7 @@
 package org.wv.stepsovc.core.mapper;
 
 import org.springframework.stereotype.Component;
+import org.wv.stepsovc.commcare.vo.FacilityInformation;
 import org.wv.stepsovc.core.domain.Facility;
 
 @Component
@@ -15,5 +16,18 @@ public class FacilityMapper {
         existingFacility.setPhoneNumber(newFacility.getPhoneNumbers());
         existingFacility.setWard(newFacility.getWard());
         return existingFacility;
+    }
+
+    public Facility mapFacilityInformationToFacility(FacilityInformation facilityInformation) {
+        Facility facility = new Facility();
+        facility.setId(facilityInformation.getId());
+        facility.setFacilityCode(facilityInformation.getFacilityCode());
+        facility.setFacilityName(facilityInformation.getFacilityName());
+        facility.setDistrict(facilityInformation.getDistrict());
+        facility.setVillage(facilityInformation.getVillage());
+        facility.setWard(facilityInformation.getWard());
+        facility.setConstituency(facilityInformation.getConstituency());
+        facility.setPhoneNumber(facilityInformation.getPhoneNumbers());
+        return facility;
     }
 }

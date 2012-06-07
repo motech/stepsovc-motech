@@ -6,7 +6,7 @@ import java.util.List;
 public class FacilityInformation {
 
     private String facilityCode;
-    private String facilityId;
+    private String id;
     private String facilityName;
     private List<String> phoneNumbers;
     private String district;
@@ -19,16 +19,24 @@ public class FacilityInformation {
     private String optionalPhoneNumber3;
     private String creationDate;
 
+    public String getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(String creationDate) {
+        this.creationDate = creationDate;
+    }
+
     public String getFacilityCode() {
         return facilityCode;
     }
 
-    public String getFacilityId() {
-        return facilityId;
+    public String getId() {
+        return id;
     }
 
-    public void setFacilityId(String facilityId) {
-        this.facilityId = facilityId;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public void setFacilityCode(String facilityCode) {
@@ -47,6 +55,9 @@ public class FacilityInformation {
         return Arrays.asList(getMandatoryPhoneNumber(), getOptionalPhoneNumber1(), getOptionalPhoneNumber2(), getOptionalPhoneNumber3());
     }
 
+    public void setPhoneNumbers(List<String> phoneNumbers) {
+        this.phoneNumbers = phoneNumbers;
+    }
 
     public String getDistrict() {
         return district;

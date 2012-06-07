@@ -14,6 +14,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.wv.stepsovc.commcare.repository.AllUsers;
 import org.wv.stepsovc.core.repository.AllBeneficiaries;
 import org.wv.stepsovc.core.repository.AllCaregivers;
+import org.wv.stepsovc.core.repository.AllFacilities;
 
 import java.io.IOException;
 
@@ -29,12 +30,14 @@ public class StepsOVCDataImporterIT {
     @Autowired
     private AllCaregivers allCaregivers;
     @Autowired
+    private AllFacilities allFacilities;
+
+    @Autowired
     private AllBeneficiaries allBeneficiaries;
 
     private String beneficiaryId1 = "00146713-7772-43e0-9d47-3a7200953cea";
 
     private String beneficiaryId2 = "001723a8-1b83-47f3-a7a1-0d2907f00d49";
-
     String commcareHqUrl = "http://localhost:5984/commcarehq/";
 
     @Test
@@ -77,6 +80,37 @@ public class StepsOVCDataImporterIT {
         assertCaregiverFacilityCode();
         deleteCareGiverCreated();
 
+    }
+
+    @Test
+    public void shouldImportFacilities() {
+        assertFacilitiesNotPresent();
+        String filePath = this.getClass().getResource("/facility.csv").getPath();
+        String[] newArgs = {"facility", filePath};
+        StepsOVCDataImporter.main(newArgs);
+        assertFacilitiesPresent();
+        deleteFacilityCreated();
+    }
+
+    private void deleteFacilityCreated() {
+        for (int i = 1; i <= 3; i++) {
+            allUsers.remove(allUsers.getUserByName(String.valueOf(i) + "@stepsovc.commcarehq.org"));
+            allFacilities.remove(allFacilities.findFacilityByCode(String.valueOf(i)));
+        }
+    }
+
+    private void assertFacilitiesNotPresent() {
+        for (int i = 1; i <= 3; i++) {
+            assertNull(allUsers.getUserByName(String.valueOf(i)));
+            assertNull(allFacilities.findFacilityByCode(String.valueOf(i)));
+        }
+    }
+
+    private void assertFacilitiesPresent() {
+        for (int i = 1; i <= 3; i++) {
+            assertNotNull(allUsers.getUserByName(String.valueOf(i) + "@stepsovc.commcarehq.org"));
+            assertNotNull(allFacilities.findFacilityByCode(String.valueOf(i)));
+        }
     }
 
     @Ignore
