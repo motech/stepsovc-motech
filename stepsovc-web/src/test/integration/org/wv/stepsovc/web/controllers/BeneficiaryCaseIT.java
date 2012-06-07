@@ -4,6 +4,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.motechproject.appointments.api.service.contract.VisitsQuery;
 import org.motechproject.scheduletracking.api.repository.AllEnrollments;
 import org.motechproject.scheduletracking.api.service.ScheduleTrackingService;
 import org.quartz.SchedulerException;
@@ -15,6 +16,7 @@ import org.wv.stepsovc.core.domain.Beneficiary;
 import org.wv.stepsovc.core.domain.Facility;
 import org.wv.stepsovc.core.domain.Referral;
 import org.wv.stepsovc.core.domain.ServiceUnavailability;
+import org.wv.stepsovc.core.repository.AllAppointments;
 import org.wv.stepsovc.core.repository.AllBeneficiaries;
 import org.wv.stepsovc.core.repository.AllFacilities;
 import org.wv.stepsovc.core.repository.AllReferrals;
@@ -22,7 +24,9 @@ import org.wv.stepsovc.core.request.StepsovcCase;
 
 import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertNotNull;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 import static org.wv.stepsovc.core.request.CaseUpdateType.*;
 import static org.wv.stepsovc.web.controllers.StepsovcCaseFixture.*;
 
@@ -42,6 +46,8 @@ public class BeneficiaryCaseIT {
     private ScheduleTrackingService scheduleTrackingService;
     @Autowired
     private AllEnrollments allEnrollments;
+    @Autowired
+    private AllAppointments allAppointments;
 
     private Facility facility;
     private String beneficiaryCode = "8888";
@@ -73,6 +79,7 @@ public class BeneficiaryCaseIT {
         assertReferrals(stepsovcCase, activeReferral);
         String firstOvcId = activeReferral.getOvcId();
         Assert.assertNotNull(allEnrollments.getActiveEnrollment(firstOvcId, ScheduleNames.REFERRAL.getName()));
+        assertThat(allAppointments.find(new VisitsQuery().havingExternalId(firstOvcId)).size(), is(1));
 
 
         /* Test New Referral Creation - Replace existing */
@@ -83,7 +90,9 @@ public class BeneficiaryCaseIT {
         assertNotNull(activeReferral);
         assertReferrals(stepsovcCase, allReferrals.findActiveReferral(beneficiaryCode));
         assertNull(allEnrollments.getActiveEnrollment(firstOvcId, ScheduleNames.REFERRAL.getName()));
+        assertThat(allAppointments.find(new VisitsQuery().havingExternalId(firstOvcId)).size(), is(0));
         assertNotNull(allEnrollments.getActiveEnrollment(secondOvcId, ScheduleNames.REFERRAL.getName()));
+        assertThat(allAppointments.find(new VisitsQuery().havingExternalId(secondOvcId)).size(), is(1));
 
 
         /* Test Availed Service - fulfil existing schedule */

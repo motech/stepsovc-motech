@@ -15,13 +15,11 @@ import java.util.Map;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.wv.stepsovc.core.domain.ServiceType.*;
-import static org.wv.stepsovc.core.domain.ServiceType.PMTCT;
-import static org.wv.stepsovc.core.domain.ServiceType.SEXUALLY_TRANSMITTED_INFEC;
 
 public class StepsovcCaseFixture {
 
     public static void assertReferrals(StepsovcCase stepsovcCase, Referral newReferral) {
-        Map<String,Service> referredServices = newReferral.getReferredServices();
+        Map<String, Service> referredServices = newReferral.getReferredServices();
         assertThat(referredServices.get(ART_ADHERENCE.getCode()).isReferred(), is(ReferralMapper.REFERRED.equals(stepsovcCase.getArt_adherence_counseling())));
         assertThat(newReferral.getBeneficiaryCode(), is(stepsovcCase.getBeneficiary_code()));
         assertThat(referredServices.get(CONDOMS.getCode()).isReferred(), is(ReferralMapper.REFERRED.equals(stepsovcCase.getCondoms())));
@@ -47,7 +45,7 @@ public class StepsovcCaseFixture {
         stepsovcCase.setEnd_of_life_hospice("Not Referred");
         stepsovcCase.setFamily_planning("Referred");
         stepsovcCase.setFollowup_date("2012-12-12");
-        stepsovcCase.setFollowup_required("Yes");
+        stepsovcCase.setFollowup_required("yes");
         stepsovcCase.setHiv_counseling("Referred");
         stepsovcCase.setPmtct("Referred");
         stepsovcCase.setNew_diagnosis("Referred");
@@ -100,7 +98,7 @@ public class StepsovcCaseFixture {
         assertThat(referredServices.get(PMTCT.getCode()).isProvided(), is(ReferralMapper.SERVICE_RECEIVED.equals(stepsovcCase.getPmtct())));
         assertThat(referredServices.get(SEXUALLY_TRANSMITTED_INFEC.getCode()).isProvided(), is(ReferralMapper.SERVICE_RECEIVED.equals(stepsovcCase.getSexually_transmitted_infection())));
 
-        assertThat(newReferral.getServiceDetails(),is(stepsovcCase.getService_details()));
+        assertThat(newReferral.getServiceDetails(), is(stepsovcCase.getService_details()));
         assertThat(newReferral.getFacilityCode(), is(stepsovcCase.getFacility_code()));
         assertThat(newReferral.getServiceDate(), is(stepsovcCase.getService_date()));
     }
@@ -168,7 +166,7 @@ public class StepsovcCaseFixture {
     }
 
     private static String serviceUnavailedReason(String key) {
-        return StringUtils.isNotEmpty(key) ? ServiceUnavailedType.valueOf(key).getValue() : "" ;
+        return StringUtils.isNotEmpty(key) ? ServiceUnavailedType.valueOf(key).getValue() : "";
     }
 
 }

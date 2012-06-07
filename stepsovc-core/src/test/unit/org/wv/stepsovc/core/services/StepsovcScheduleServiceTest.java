@@ -26,7 +26,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class StepsovcScheduleServiceTest {
 
-    private StepsovcScheduleService mockStepsovcScheduleService;
+    private StepsovcScheduleService stepsovcScheduleService;
     @Mock
     private ScheduleTrackingService mockScheduleTrackingService;
     @Mock
@@ -40,11 +40,11 @@ public class StepsovcScheduleServiceTest {
     @Before
     public void setUp() throws Exception {
         initMocks(this);
-        mockStepsovcScheduleService = new StepsovcScheduleService();
-        ReflectionTestUtils.setField(mockStepsovcScheduleService, "scheduleTrackingService", mockScheduleTrackingService);
-        ReflectionTestUtils.setField(mockStepsovcScheduleService, "stepsovcAlertService", mockStepsovcAlertService);
-        ReflectionTestUtils.setField(mockStepsovcScheduleService, "allAppointments", mockAllAppointments);
-        ReflectionTestUtils.setField(mockStepsovcScheduleService, "followUpVisitFactory", mockFollowUpVisitFactory);
+        stepsovcScheduleService = new StepsovcScheduleService();
+        ReflectionTestUtils.setField(stepsovcScheduleService, "scheduleTrackingService", mockScheduleTrackingService);
+        ReflectionTestUtils.setField(stepsovcScheduleService, "stepsovcAlertService", mockStepsovcAlertService);
+        ReflectionTestUtils.setField(stepsovcScheduleService, "allAppointments", mockAllAppointments);
+        ReflectionTestUtils.setField(stepsovcScheduleService, "followUpVisitFactory", mockFollowUpVisitFactory);
     }
 
     @Test
@@ -59,7 +59,7 @@ public class StepsovcScheduleServiceTest {
         String ovcId = "someOvcId";
         referral.setOvcId(ovcId);
 
-        mockStepsovcScheduleService.scheduleNewReferral(referral);
+        stepsovcScheduleService.scheduleNewReferral(referral);
 
         verify(mockScheduleTrackingService).enroll(Matchers.<EnrollmentRequest>anyObject());
         verify(mockStepsovcAlertService).sendInstantReferralAlertToFacility(referral);
@@ -85,7 +85,7 @@ public class StepsovcScheduleServiceTest {
         DateTime dateTime = new DateTime(2013, 5, 12, 0, 0);
 
         doReturn(visitRequest).when(mockFollowUpVisitFactory).createFollowUpVisitRequest(anyMap(), Matchers.<DateTime>anyObject());
-        mockStepsovcScheduleService.scheduleNewReferral(referral);
+        stepsovcScheduleService.scheduleNewReferral(referral);
 
         verify(mockAllAppointments).add(ovcId, visitRequest);
         verify(mockScheduleTrackingService).enroll(Matchers.<EnrollmentRequest>anyObject());
@@ -93,6 +93,12 @@ public class StepsovcScheduleServiceTest {
 
     }
 
+    @Test
+    public void shouldRemoveAppointments() {
+        String referralId = "referralId";
+        stepsovcScheduleService.unscheduleFollowUpVisit(referralId);
+        verify(mockAllAppointments).remove(referralId);
+    }
 
 }
 
