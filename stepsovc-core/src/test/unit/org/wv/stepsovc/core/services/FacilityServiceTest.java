@@ -6,6 +6,7 @@ import org.mockito.Mock;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.wv.stepsovc.core.domain.Facility;
 import org.wv.stepsovc.core.domain.ServiceUnavailability;
+import org.wv.stepsovc.core.mapper.FacilityMapper;
 import org.wv.stepsovc.core.repository.AllFacilities;
 
 import java.util.Arrays;
@@ -13,7 +14,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class FacilityServiceTest {
@@ -23,6 +24,8 @@ public class FacilityServiceTest {
     private AllFacilities mockAllFacilities;
     private String facilityId = "123";
     private String serviceDate = "2012-01-02";
+    @Mock
+    private FacilityMapper mockFacilityMapper;
 
 
     @Before
@@ -30,6 +33,7 @@ public class FacilityServiceTest {
         initMocks(this);
         facilityService = new FacilityService();
         ReflectionTestUtils.setField(facilityService, "allFacilities", mockAllFacilities);
+        ReflectionTestUtils.setField(facilityService, "facilityMapper", mockFacilityMapper);
     }
 
     @Test
@@ -67,6 +71,33 @@ public class FacilityServiceTest {
         String availableDate = facilityService.getFacilityAvailability(facilityId, unavailableDate).getNextAvailableDate();
         assertThat(availableDate, is("2012-01-07"));
     }
+
+    @Test
+    public void shouldAddFacilityIfNotExists() {
+        Facility facility = new Facility();
+        String code = "code";
+        facility.setFacilityCode(code);
+        when(mockAllFacilities.findFacilityByCode(code)).thenReturn(null);
+        facilityService.addFacility(facility);
+        verify(mockAllFacilities).add(facility);
+    }
+
+    @Test
+    public void shouldUpdateIfFacilityExists() {
+        Facility facility = new Facility();
+        String code = "code";
+        facility.setFacilityCode(code);
+        facility.setId("1234");
+        List<String> phoneNumbers = Arrays.asList("1234", "2222");
+        facility.setPhoneNumber(phoneNumbers);
+        Facility existingFacility = new Facility();
+        existingFacility.setId("222222");
+        when(mockAllFacilities.findFacilityByCode(code)).thenReturn(existingFacility);
+        when(mockFacilityMapper.map(existingFacility, facility)).thenReturn(facility);
+        facilityService.addFacility(facility);
+        verify(mockAllFacilities).update(facility);
+    }
+
 
     private Facility getFacilityWithServiceUnavailability() {
         Facility facility = new Facility();

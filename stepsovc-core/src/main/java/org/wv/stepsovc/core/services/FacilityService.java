@@ -6,6 +6,7 @@ import org.wv.stepsovc.commcare.gateway.CommcareGateway;
 import org.wv.stepsovc.core.domain.Facility;
 import org.wv.stepsovc.core.domain.ServiceUnavailability;
 import org.wv.stepsovc.core.mapper.BeneficiaryMapper;
+import org.wv.stepsovc.core.mapper.FacilityMapper;
 import org.wv.stepsovc.core.repository.AllFacilities;
 import org.wv.stepsovc.core.request.StepsovcCase;
 import org.wv.stepsovc.core.vo.FacilityAvailability;
@@ -29,6 +30,9 @@ public class FacilityService {
     private ReferralService referralService;
     @Autowired
     private CommcareGateway commcareGateway;
+    @Autowired
+    private FacilityMapper facilityMapper;
+
 
     public void makeFacilityUnavailable(StepsovcCase facilityCase) {
         String nextAvailableDate = null;
@@ -88,4 +92,12 @@ public class FacilityService {
     }
 
 
+    public void addFacility(Facility facility) {
+        Facility existingFacility = allFacilities.findFacilityByCode(facility.getFacilityCode());
+        if (existingFacility == null) {
+            allFacilities.add(facility);
+        } else {
+            allFacilities.update(facilityMapper.map(existingFacility, facility));
+        }
+    }
 }

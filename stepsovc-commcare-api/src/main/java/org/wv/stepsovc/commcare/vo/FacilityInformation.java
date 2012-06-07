@@ -6,6 +6,7 @@ import java.util.List;
 public class FacilityInformation {
 
     private String facilityCode;
+    private String facilityId;
     private String facilityName;
     private List<String> phoneNumbers;
     private String district;
@@ -16,9 +17,18 @@ public class FacilityInformation {
     private String optionalPhoneNumber1;
     private String optionalPhoneNumber2;
     private String optionalPhoneNumber3;
+    private String creationDate;
 
     public String getFacilityCode() {
         return facilityCode;
+    }
+
+    public String getFacilityId() {
+        return facilityId;
+    }
+
+    public void setFacilityId(String facilityId) {
+        this.facilityId = facilityId;
     }
 
     public void setFacilityCode(String facilityCode) {
