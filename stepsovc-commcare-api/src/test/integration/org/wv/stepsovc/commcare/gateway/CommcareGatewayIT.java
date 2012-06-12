@@ -26,6 +26,7 @@ import static org.wv.stepsovc.commcare.gateway.CommcareGateway.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath*:applicationContext-stepsovc-commcare-api.xml")
+@Ignore
 public class CommcareGatewayIT {
 
     @Autowired
