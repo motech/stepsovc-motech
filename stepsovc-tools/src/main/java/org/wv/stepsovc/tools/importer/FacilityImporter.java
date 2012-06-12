@@ -23,7 +23,7 @@ public class FacilityImporter {
     @Autowired
     private FacilityService facilityService;
 
-
+    @Autowired
     private FacilityMapper facilityMapper;
 
     @Post
