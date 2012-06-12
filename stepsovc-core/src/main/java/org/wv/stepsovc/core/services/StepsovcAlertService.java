@@ -49,8 +49,8 @@ public class StepsovcAlertService {
     private EventAggregationGateway<SMSMessage> eventAggregationGateway;
     @Autowired
     private AllReferrals allReferrals;
-
-    private Time preferredAggregateTime = new Time(7, 30);
+    //This does not have any significance in aggregation time. Change cron expression in aggregator.properties instead.
+    private Time preferredAggregateTime = new Time(5, 0);
     private Logger logger = Logger.getLogger(this.getClass());
 
     public void sendInstantReferralAlertToFacility(Referral referral) {
