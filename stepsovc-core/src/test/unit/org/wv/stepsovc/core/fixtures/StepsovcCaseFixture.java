@@ -96,7 +96,15 @@ public class StepsovcCaseFixture {
         stepsovcCase.setFacility_code("ABC");
         stepsovcCase.setService_date(null);
         stepsovcCase.setService_date(serviceDate);
-
         return stepsovcCase;
+    }
+
+    public static StepsovcCase createNewCaseWithFacilityCode(String facilityCode, String unavailableDateFrom, String unavailableDateTo) {
+        StepsovcCase stepsovcCase = new StepsovcCase();
+        stepsovcCase.setFacility_code(facilityCode);
+        stepsovcCase.setService_unavailable_from(unavailableDateFrom);
+        stepsovcCase.setService_unavailable_to(unavailableDateTo);
+        return stepsovcCase;
+
     }
 }

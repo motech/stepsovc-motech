@@ -21,8 +21,7 @@ import org.wv.stepsovc.core.repository.AllReferrals;
 import org.wv.stepsovc.core.utils.DateUtils;
 
 import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 import static java.lang.String.format;
 import static org.apache.commons.lang.StringUtils.join;
@@ -112,5 +111,22 @@ public class StepsovcAlertService {
         logger.info("Sms Content : " + smsContent);
 
         eventAggregationGateway.dispatch(new SMSMessage(newDateTime(new LocalDate(), preferredAggregateTime), phoneNumber, smsContent, group(VisitNames.FOLLOW_UP, "", CAREGIVER).key(), null));
+    }
+
+    public void sendInstantServiceUnavailabilityMsgToCareGivers(List<Referral> referrals, String facilityCode, String unavailableFromDate,
+                                                                String unavailableToDate, String nextAvailableDate) throws ContentNotFoundException {
+        Set<String> phoneNumbers = new HashSet<String>();
+        for (Referral referral : referrals) {
+            Caregiver caregiver = allCaregivers.findCaregiverById(referral.getCgId());
+            phoneNumbers.add(caregiver.getPhoneNumber());
+        }
+        List<Caregiver> caregiversForFacility = allCaregivers.findCaregiverByFacilityCode(facilityCode);
+        for (Caregiver caregiver : caregiversForFacility) {
+            phoneNumbers.add(caregiver.getPhoneNumber());
+        }
+        StringContent smsTemplate = cmsLiteService.getStringContent(Locale.ENGLISH.getLanguage(), SmsTemplateKeys.FACILITY_SERVICE_UNAVAILABLE);
+        String smsContent = format(smsTemplate.getValue(), facilityCode, unavailableFromDate, unavailableToDate, nextAvailableDate);
+        logger.info("Sms Content : " + smsContent);
+        smsService.sendSMS(new ArrayList<String>(phoneNumbers), smsContent);
     }
 }

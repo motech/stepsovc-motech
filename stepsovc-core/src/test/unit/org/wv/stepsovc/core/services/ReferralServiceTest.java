@@ -17,6 +17,7 @@ import org.wv.stepsovc.core.vo.FacilityAvailability;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
@@ -200,8 +201,9 @@ public class ReferralServiceTest {
         doReturn(new ArrayList<Referral>()).when(mockAllReferrals).findActiveReferrals(facilityId, "2012-05-03");
         doReturn(Arrays.asList(new Referral().setServiceDate(fromDateStr))).when(mockAllReferrals).findActiveReferrals(facilityId, toDateStr);
 
-        referralService.updateReferralsServiceDate(facilityId, fromDateStr, toDateStr, nextAvailDate);
+        List<Referral> updatedReferrals = referralService.updateReferralsServiceDate(facilityId, fromDateStr, toDateStr, nextAvailDate);
 
+        assertThat(updatedReferrals.size(), is(4));
         verify(mockAllReferrals, times(4)).update(referralArgumentCaptor.capture());
 
         for (Referral referral : referralArgumentCaptor.getAllValues()) {

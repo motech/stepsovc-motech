@@ -1,4 +1,4 @@
-package unit.org.wv.stepsovc.core.services;
+package org.wv.stepsovc.core.services;
 
 import org.joda.time.LocalDate;
 import org.junit.Before;
@@ -19,9 +19,9 @@ import org.wv.stepsovc.core.repository.AllCaregivers;
 import org.wv.stepsovc.core.repository.AllFacilities;
 import org.wv.stepsovc.core.repository.AllReferrals;
 import org.wv.stepsovc.core.request.StepsovcCase;
-import org.wv.stepsovc.core.services.StepsovcAlertService;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -33,23 +33,24 @@ import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.motechproject.util.DateUtil.newDateTime;
 import static org.wv.stepsovc.core.domain.SmsTemplateKeys.BENEFICIARY_WITH_SERVICES;
+import static org.wv.stepsovc.core.domain.SmsTemplateKeys.FACILITY_SERVICE_UNAVAILABLE;
 import static org.wv.stepsovc.core.fixtures.StepsovcCaseFixture.createCaseForReferral;
 
 public class StepsovcAlertServiceTest {
     @Mock
-    private AllReferrals allReferrals;
+    private AllReferrals mockAllReferrals;
     @Mock
-    private AllFacilities allFacilities;
+    private AllFacilities mockAllFacilities;
     @Mock
-    private CMSLiteService cmsLiteService;
+    private CMSLiteService mockCmsLiteService;
     @Mock
-    private AllBeneficiaries allBeneficiaries;
+    private AllBeneficiaries mockAllBeneficiaries;
     @Mock
-    private EventAggregationGateway<SMSMessage> eventAggregationGateway;
+    private EventAggregationGateway<SMSMessage> mockEventAggregationGateway;
     @Mock
-    private SmsService smsService;
+    private SmsService mockSmsService;
     @Mock
-    private AllCaregivers allCaregivers;
+    private AllCaregivers mockAllCaregivers;
 
     private StepsovcAlertService stepsovcAlertService;
     private Referral referral;
@@ -60,13 +61,13 @@ public class StepsovcAlertServiceTest {
     public void setUp() {
         initMocks(this);
         stepsovcAlertService = new StepsovcAlertService();
-        ReflectionTestUtils.setField(stepsovcAlertService, "allCaregivers", allCaregivers);
-        ReflectionTestUtils.setField(stepsovcAlertService, "allBeneficiaries", allBeneficiaries);
-        ReflectionTestUtils.setField(stepsovcAlertService, "allFacilities", allFacilities);
-        ReflectionTestUtils.setField(stepsovcAlertService, "allReferrals", allReferrals);
-        ReflectionTestUtils.setField(stepsovcAlertService, "cmsLiteService", cmsLiteService);
-        ReflectionTestUtils.setField(stepsovcAlertService, "eventAggregationGateway", eventAggregationGateway);
-        ReflectionTestUtils.setField(stepsovcAlertService, "smsService", smsService);
+        ReflectionTestUtils.setField(stepsovcAlertService, "allCaregivers", mockAllCaregivers);
+        ReflectionTestUtils.setField(stepsovcAlertService, "allBeneficiaries", mockAllBeneficiaries);
+        ReflectionTestUtils.setField(stepsovcAlertService, "allFacilities", mockAllFacilities);
+        ReflectionTestUtils.setField(stepsovcAlertService, "allReferrals", mockAllReferrals);
+        ReflectionTestUtils.setField(stepsovcAlertService, "cmsLiteService", mockCmsLiteService);
+        ReflectionTestUtils.setField(stepsovcAlertService, "eventAggregationGateway", mockEventAggregationGateway);
+        ReflectionTestUtils.setField(stepsovcAlertService, "smsService", mockSmsService);
         referral = new Referral();
         facility = new Facility();
         beneficiary = new Beneficiary();
@@ -88,16 +89,16 @@ public class StepsovcAlertServiceTest {
         beneficiary.setCode(bencode).setName("test").setCaregiverCode("caregivercode");
 
         String externalId = "someID";
-        when(allReferrals.findActiveByOvcId(externalId)).thenReturn(referral);
-        when(allFacilities.findFacilityByCode(facilityCode)).thenReturn(facility);
-        when(allBeneficiaries.findBeneficiaryByCode(bencode)).thenReturn(beneficiary);
+        when(mockAllReferrals.findActiveByOvcId(externalId)).thenReturn(referral);
+        when(mockAllFacilities.findFacilityByCode(facilityCode)).thenReturn(facility);
+        when(mockAllBeneficiaries.findBeneficiaryByCode(bencode)).thenReturn(beneficiary);
 
         StringContent templateString = new StringContent(null, null, "%s (%s) Services (%s)");
-        when(cmsLiteService.getStringContent(Locale.ENGLISH.getLanguage(), BENEFICIARY_WITH_SERVICES)).thenReturn(templateString);
+        when(mockCmsLiteService.getStringContent(Locale.ENGLISH.getLanguage(), BENEFICIARY_WITH_SERVICES)).thenReturn(templateString);
 
         stepsovcAlertService.sendAggregatedReferralAlertToFacility(externalId, "due");
         ArgumentCaptor<SMSMessage> smsCaptor = ArgumentCaptor.forClass(SMSMessage.class);
-        verify(eventAggregationGateway, times(2)).dispatch(smsCaptor.capture());
+        verify(mockEventAggregationGateway, times(2)).dispatch(smsCaptor.capture());
         assertThat(smsCaptor.getAllValues().size(), is(2));
         assertThat(smsCaptor.getAllValues().get(0).phoneNumber(), isIn(phoneNumbers));
         assertThat(smsCaptor.getAllValues().get(1).phoneNumber(), isIn(phoneNumbers));
@@ -116,12 +117,12 @@ public class StepsovcAlertServiceTest {
         Caregiver caregiver = new Caregiver();
         caregiver.setPhoneNumber(phoneNumber);
 
-        doReturn(referral).when(allReferrals).findActiveByOvcId(externalId);
-        doReturn(beneficiary).when(allBeneficiaries).findBeneficiaryByCode(referral.getBeneficiaryCode());
-        doReturn(caregiver).when(allCaregivers).findCaregiverById(caregiverId);
-        doReturn(template).when(cmsLiteService).getStringContent("en", SmsTemplateKeys.DEFAULTED_REFERRAL);
+        doReturn(referral).when(mockAllReferrals).findActiveByOvcId(externalId);
+        doReturn(beneficiary).when(mockAllBeneficiaries).findBeneficiaryByCode(referral.getBeneficiaryCode());
+        doReturn(caregiver).when(mockAllCaregivers).findCaregiverById(caregiverId);
+        doReturn(template).when(mockCmsLiteService).getStringContent("en", SmsTemplateKeys.DEFAULTED_REFERRAL);
         stepsovcAlertService.sendInstantDefaultedAlertToCaregiver(externalId);
-        verify(smsService).sendSMS(phoneNumber, msg);
+        verify(mockSmsService).sendSMS(phoneNumber, msg);
 
     }
 
@@ -144,15 +145,15 @@ public class StepsovcAlertServiceTest {
         beneficiary.setName("Ben Name");
         beneficiary.setCode(benCode);
 
-        doReturn(facility).when(allFacilities).findFacilityByCode(referral.getFacilityCode());
-        doReturn(beneficiary).when(allBeneficiaries).findBeneficiaryByCode(benCode);
+        doReturn(facility).when(mockAllFacilities).findFacilityByCode(referral.getFacilityCode());
+        doReturn(beneficiary).when(mockAllBeneficiaries).findBeneficiaryByCode(benCode);
 
         StringContent template = new StringContent(Locale.ENGLISH.getLanguage(), SmsTemplateKeys.IMPENDING_REFERRAL, "%s (%s) will be coming to your facility %s on %s. Please make the necessary arrangements.");
-        doReturn(template).when(cmsLiteService).getStringContent(Locale.ENGLISH.getLanguage(), SmsTemplateKeys.IMPENDING_REFERRAL);
+        doReturn(template).when(mockCmsLiteService).getStringContent(Locale.ENGLISH.getLanguage(), SmsTemplateKeys.IMPENDING_REFERRAL);
 
         stepsovcAlertService.sendInstantReferralAlertToFacility(referral);
 
-        verify(smsService).sendSMS(phoneNumbers, "Ben Name (BEN001) will be coming to your facility FAC001 on 2012-05-30. Please make the necessary arrangements.");
+        verify(mockSmsService).sendSMS(phoneNumbers, "Ben Name (BEN001) will be coming to your facility FAC001 on 2012-05-30. Please make the necessary arrangements.");
 
     }
 
@@ -161,8 +162,7 @@ public class StepsovcAlertServiceTest {
         String externalId = "someOvcId";
         String benCode = "someBenCode";
         String cgId = "someCgId";
-        Referral toBeReturned = new Referral();
-        toBeReturned.setCgId(cgId);
+        Referral toBeReturned = getReferral(cgId);
         toBeReturned.setBeneficiaryCode(benCode);
         Caregiver caregiver = new Caregiver();
         caregiver.setPhoneNumber("somePhoneNumber");
@@ -170,18 +170,73 @@ public class StepsovcAlertServiceTest {
         beneficiary1.setCode("someCode");
         beneficiary1.setName("someName");
 
-        doReturn(toBeReturned).when(allReferrals).findActiveByOvcId(externalId);
-        doReturn(caregiver).when(allCaregivers).findCaregiverById(cgId);
-        doReturn(beneficiary1).when(allBeneficiaries).findBeneficiaryByCode(benCode);
-        doReturn(new StringContent("", "", "%s (%s)")).when(cmsLiteService).getStringContent("en", SmsTemplateKeys.BENEFICIARY_WITHOUT_SERVICES);
+        doReturn(toBeReturned).when(mockAllReferrals).findActiveByOvcId(externalId);
+        doReturn(caregiver).when(mockAllCaregivers).findCaregiverById(cgId);
+        doReturn(beneficiary1).when(mockAllBeneficiaries).findBeneficiaryByCode(benCode);
+        doReturn(new StringContent("", "", "%s (%s)")).when(mockCmsLiteService).getStringContent("en", SmsTemplateKeys.BENEFICIARY_WITHOUT_SERVICES);
 
         ArgumentCaptor<SMSMessage> smsMessageCaptor = ArgumentCaptor.forClass(SMSMessage.class);
         stepsovcAlertService.sendFollowUpAlertToCaregiver(externalId);
-        verify(eventAggregationGateway).dispatch(smsMessageCaptor.capture());
+        verify(mockEventAggregationGateway).dispatch(smsMessageCaptor.capture());
 
         assertThat(smsMessageCaptor.getValue().phoneNumber(), is(caregiver.getPhoneNumber()));
         assertThat(smsMessageCaptor.getValue().content(), is("someName (someCode)"));
         assertThat(smsMessageCaptor.getValue().group(), is("G-CAREGIVER-FollowUp-"));
         assertThat(smsMessageCaptor.getValue().deliveryTime(), is(newDateTime(new LocalDate(), 7, 30, 0)));
     }
+
+    @Test
+    public void shouldSendInstantServiceUnavailabilityMsgToCareGivers() throws ContentNotFoundException {
+        String facilityCode = "FAC001";
+
+        String cg1 = "CG1";
+        String cg2 = "CG2";
+        String cg3 = "CG3";
+        String cg4 = "CG4";
+        String cg5 = "CG5";
+
+        String phoneNumber1 = "111111";
+        String phoneNumber2 = "222222";
+        String phoneNumber3 = "333333";
+        String phoneNumber4 = "444444";
+        String phoneNumber5 = "555555";
+
+        List<Caregiver> caregiversForFacility = Arrays.asList(getCaregiver(cg3, phoneNumber3), getCaregiver(cg4, phoneNumber4), getCaregiver(cg5, phoneNumber5));
+        doReturn(caregiversForFacility).when(mockAllCaregivers).findCaregiverByFacilityCode(facilityCode);
+
+        doReturn(getCaregiver(cg1, phoneNumber1)).when(mockAllCaregivers).findCaregiverById(cg1);
+        doReturn(getCaregiver(cg2, phoneNumber2)).when(mockAllCaregivers).findCaregiverById(cg2);
+        doReturn(getCaregiver(cg3, phoneNumber3)).when(mockAllCaregivers).findCaregiverById(cg3);
+
+        doReturn(new StringContent("", "", "%s will be closed from %s to %s. Referral moved to %s.")).when(mockCmsLiteService)
+                .getStringContent(Locale.ENGLISH.getLanguage(), FACILITY_SERVICE_UNAVAILABLE);
+
+        List<Referral> referrals = Arrays.asList(getReferral(cg1), getReferral(cg2), getReferral(cg3));
+        stepsovcAlertService.sendInstantServiceUnavailabilityMsgToCareGivers(referrals,
+                facilityCode, "2012-12-12", "2012-12-12", "2012-12-13");
+
+        ArgumentCaptor<ArrayList> phoneNumberCaptor = ArgumentCaptor.forClass(ArrayList.class);
+        verify(mockSmsService).sendSMS(phoneNumberCaptor.capture(), eq(facilityCode + " will be closed from 2012-12-12 to 2012-12-12. Referral moved to 2012-12-13."));
+        List phoneNumbers = phoneNumberCaptor.getAllValues().get(0);
+        assertThat(phoneNumbers.size(), is(5));
+        assertThat(phoneNumber1, isIn(phoneNumbers));
+        assertThat(phoneNumber2, isIn(phoneNumbers));
+        assertThat(phoneNumber3, isIn(phoneNumbers));
+        assertThat(phoneNumber4, isIn(phoneNumbers));
+        assertThat(phoneNumber5, isIn(phoneNumbers));
+    }
+
+    private Caregiver getCaregiver(String cg3, String phoneNumber3) {
+        Caregiver caregiver3 = new Caregiver();
+        caregiver3.setCgId(cg3);
+        caregiver3.setPhoneNumber(phoneNumber3);
+        return caregiver3;
+    }
+
+    private Referral getReferral(String cg1) {
+        Referral referral1 = new Referral();
+        referral1.setCgId(cg1);
+        return referral1;
+    }
+
 }

@@ -13,6 +13,7 @@ import org.wv.stepsovc.core.request.StepsovcCase;
 import org.wv.stepsovc.core.utils.DateUtils;
 import org.wv.stepsovc.core.vo.FacilityAvailability;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ReferralService {
@@ -87,15 +88,18 @@ public class ReferralService {
         }
     }
 
-    public void updateReferralsServiceDate(String facilityId, String fromDateStr, String toDateStr, String nextAvailableDate) {
+    public List<Referral> updateReferralsServiceDate(String facilityCode, String fromDateStr, String toDateStr, String nextAvailableDate) {
         LocalDate fromDate = DateUtils.getLocalDate(fromDateStr);
         LocalDate toDate = DateUtils.getLocalDate(toDateStr);
+        List<Referral> updatedReferrals = new ArrayList<Referral>();
 
         while (!fromDate.isAfter(toDate)) {
-            List<Referral> referrals = allReferrals.findActiveReferrals(facilityId, DateUtils.getFormattedDate(fromDate.toDate()));
+            List<Referral> referrals = allReferrals.findActiveReferrals(facilityCode, DateUtils.getFormattedDate(fromDate.toDate()));
             updateReferrals(nextAvailableDate, referrals);
             fromDate = fromDate.plusDays(1);
+            updatedReferrals.addAll(referrals);
         }
+        return updatedReferrals;
     }
 
     private void updateReferrals(String nextAvailableDate, List<Referral> referrals) {

@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.wv.stepsovc.commcare.gateway.CommcareGateway;
 import org.wv.stepsovc.core.domain.Facility;
+import org.wv.stepsovc.core.domain.Referral;
 import org.wv.stepsovc.core.domain.ServiceUnavailability;
 import org.wv.stepsovc.core.mapper.BeneficiaryMapper;
 import org.wv.stepsovc.core.mapper.FacilityMapper;
@@ -11,7 +12,6 @@ import org.wv.stepsovc.core.repository.AllFacilities;
 import org.wv.stepsovc.core.request.StepsovcCase;
 import org.wv.stepsovc.core.vo.FacilityAvailability;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -29,20 +29,24 @@ public class FacilityService {
     @Autowired
     private ReferralService referralService;
     @Autowired
+    private StepsovcAlertService stepsovcAlertService;
+    @Autowired
     private CommcareGateway commcareGateway;
     @Autowired
     private FacilityMapper facilityMapper;
 
 
     public void makeFacilityUnavailable(StepsovcCase facilityCase) {
-        String nextAvailableDate = null;
+        String facilityCode = facilityCase.getFacility_code();
+        String serviceUnavailableFrom = facilityCase.getService_unavailable_from();
         String serviceUnavailableTo = facilityCase.getService_unavailable_to();
-        Facility facility = allFacilities.findFacilityByCode(facilityCase.getFacility_code());
+        String nextAvailableDate = null;
+        Facility facility = allFacilities.findFacilityByCode(facilityCode);
 
-        ServiceUnavailability serviceUnavailability = new ServiceUnavailability(facilityCase.getService_unavailable_reason(), facilityCase.getService_unavailable_from(), serviceUnavailableTo);
+        ServiceUnavailability serviceUnavailability = new ServiceUnavailability(facilityCase.getService_unavailable_reason(), serviceUnavailableFrom, serviceUnavailableTo);
         if (facility == null) {
             List<ServiceUnavailability> serviceUnavailabilities = Arrays.asList(serviceUnavailability);
-            facility = new Facility(facilityCase.getFacility_code(), facilityCase.getFacility_name(), serviceUnavailabilities, null); // Todo: remove this if block
+            facility = new Facility(facilityCode, facilityCase.getFacility_name(), serviceUnavailabilities, null); // Todo: remove this if block
             allFacilities.add(facility);
         } else {
             facility.getServiceUnavailabilities().add(serviceUnavailability);
@@ -51,9 +55,11 @@ public class FacilityService {
 
         try {
             nextAvailableDate = getFacilityAvailability(nextDateStr(serviceUnavailableTo), facility).getNextAvailableDate();
-        } catch (ParseException e) {
+            List<Referral> updatedReferrals = referralService.updateReferralsServiceDate(facilityCode, serviceUnavailableFrom, serviceUnavailableTo, nextAvailableDate);
+            stepsovcAlertService.sendInstantServiceUnavailabilityMsgToCareGivers(updatedReferrals, facilityCode, serviceUnavailableFrom, serviceUnavailableTo, nextAvailableDate);
+        } catch (Exception e) {
+            logger.error("Exception while making facility service unavailable -  ", e);
         }
-        referralService.updateReferralsServiceDate(facilityCase.getFacility_code(), facilityCase.getService_unavailable_from(), facilityCase.getService_unavailable_to(), nextAvailableDate);
     }
 
     public FacilityAvailability getFacilityAvailability(String facilityId, String serviceDateStr) {

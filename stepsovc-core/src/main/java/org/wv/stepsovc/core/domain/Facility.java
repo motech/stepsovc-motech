@@ -4,6 +4,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.ektorp.support.TypeDiscriminator;
 import org.motechproject.model.MotechBaseDataObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @TypeDiscriminator("doc.type == 'Facility'")
@@ -26,7 +27,7 @@ public class Facility extends MotechBaseDataObject {
     private String village;
 
     public Facility() {
-
+        this.serviceUnavailabilities = new ArrayList<ServiceUnavailability>();
     }
 
     public Facility(String facilityCode, String facilityName, List<ServiceUnavailability> serviceUnavailabilities, List<String> phoneNumbers) {

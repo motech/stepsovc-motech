@@ -35,5 +35,9 @@ public class AllCaregivers extends MotechBaseRepository<Caregiver> {
         return CollectionUtils.isEmpty(caregivers) ? null : caregivers.get(0);
     }
 
-
+    @View(name = "by_facility_code", map = "function(doc){ if(doc.type == 'Caregiver') emit([doc.facilityCode],doc) }")
+    public List<Caregiver> findCaregiverByFacilityCode(String facilityCode) {
+        ViewQuery viewQuery = createQuery("by_facility_code").key(ComplexKey.of(facilityCode)).includeDocs(true);
+        return db.queryView(viewQuery, Caregiver.class);
+    }
 }
