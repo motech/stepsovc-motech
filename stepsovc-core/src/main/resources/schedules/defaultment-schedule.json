@@ -4,10 +4,10 @@
         {
             "name":"Defaultment",
             "scheduleWindows":{
-                "earliest":["1 Day"],
-                "due":["2 Day"],
-                "late":["3 Days"],
-                "max":["3 Days"]
+                "earliest":["7 Days"],
+                "due":["8 Days"],
+                "late":["8 Days"],
+                "max":["8 Days"]
             },
             "alerts":[
                 {

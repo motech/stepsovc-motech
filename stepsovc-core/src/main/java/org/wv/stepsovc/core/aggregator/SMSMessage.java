@@ -33,7 +33,7 @@ public class SMSMessage implements Serializable {
     }
 
     public Boolean canBeDispatched() {
-        return deliveryTime().toDate().before(DateUtil.now().toDate());
+        return deliveryTime().toLocalDate().isBefore(DateUtil.now().toLocalDate());
     }
 
     public String content() {

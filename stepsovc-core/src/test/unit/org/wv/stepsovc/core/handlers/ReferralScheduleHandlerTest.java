@@ -5,9 +5,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.cmslite.api.model.ContentNotFoundException;
-import org.motechproject.model.MotechEvent;
-import org.motechproject.scheduletracking.api.events.DefaultmentCaptureEvent;
 import org.motechproject.scheduletracking.api.events.MilestoneEvent;
+import org.wv.stepsovc.core.configuration.ScheduleNames;
 import org.wv.stepsovc.core.services.StepsovcAlertService;
 
 import java.text.ParseException;
@@ -43,7 +42,8 @@ public class ReferralScheduleHandlerTest {
     public void shouldThrowEventHandlerExceptionOnAnyFailure() {
         try {
             doThrow(new RuntimeException("some exception")).when(stepsovcAlertService).sendAggregatedReferralAlertToFacility(anyString(), anyString());
-            referralScheduleHandler.handleAlert(new MotechEvent(""));
+            MilestoneEvent milestoneEvent = new MilestoneEvent("", "Referral", null, "", null);
+            referralScheduleHandler.handleAlert(milestoneEvent.toMotechEvent());
             Assert.fail("expected exception here");
         } catch (EventHandlerException ehe) {
         } catch (ContentNotFoundException e) {
@@ -53,7 +53,8 @@ public class ReferralScheduleHandlerTest {
     @Test
     public void shouldSendSMSToCareGiverForDefaultedReferral() throws ContentNotFoundException {
         String externalId = "ovcId";
-        referralScheduleHandler.handleDefaultmentAlert(new DefaultmentCaptureEvent("", "", externalId).toMotechEvent());
+        MilestoneEvent milestoneEvent = new MilestoneEvent(externalId, ScheduleNames.DEFAULTMENT.getName(), null, null, null);
+        referralScheduleHandler.handleAlert(milestoneEvent.toMotechEvent());
         verify(stepsovcAlertService).sendInstantDefaultedAlertToCaregiver(externalId);
 
     }

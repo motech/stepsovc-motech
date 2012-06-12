@@ -7,6 +7,7 @@ import org.motechproject.scheduletracking.api.events.constants.EventSubjects;
 import org.motechproject.server.event.annotations.MotechListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.wv.stepsovc.core.configuration.ScheduleNames;
 import org.wv.stepsovc.core.services.StepsovcAlertService;
 
 @Component
@@ -23,23 +24,12 @@ public class ReferralScheduleHandler {
     @MotechListener(subjects = {EventSubjects.MILESTONE_ALERT})
     public void handleAlert(MotechEvent motechEvent) {
         MilestoneEvent milestoneEvent = new MilestoneEvent(motechEvent);
-        logger.info("Handling Milestone alert " + milestoneEvent.getWindowName() + " - for External Id:" + milestoneEvent.getExternalId());
+        logger.info("Handling schedule " + milestoneEvent.getScheduleName() + ", window " + milestoneEvent.getWindowName() + " - for External Id:" + milestoneEvent.getExternalId());
         try {
-            stepsovcAlertService.sendAggregatedReferralAlertToFacility(milestoneEvent.getExternalId(), milestoneEvent.getWindowName());
-        } catch (Exception e) {
-            logger.error("<Milestone Alert Exception>: Encountered error while sending alert: ", e);
-            throw new EventHandlerException(motechEvent, e);
-        }
-
-    }
-
-    @MotechListener(subjects = {EventSubjects.DEFAULTMENT_CAPTURE})
-    public void handleDefaultmentAlert(MotechEvent motechEvent) {
-        MilestoneEvent milestoneEvent = new MilestoneEvent(motechEvent);
-        logger.info("Handling Defaulted Schedule - for External Id:" + milestoneEvent.getExternalId());
-
-        try {
-            stepsovcAlertService.sendInstantDefaultedAlertToCaregiver(milestoneEvent.getExternalId());
+            if (ScheduleNames.REFERRAL.getName().equals(milestoneEvent.getScheduleName()))
+                stepsovcAlertService.sendAggregatedReferralAlertToFacility(milestoneEvent.getExternalId(), milestoneEvent.getWindowName());
+            else if (ScheduleNames.DEFAULTMENT.getName().equals(milestoneEvent.getScheduleName()))
+                stepsovcAlertService.sendInstantDefaultedAlertToCaregiver(milestoneEvent.getExternalId());
         } catch (Exception e) {
             logger.error("<Milestone Alert Exception>: Encountered error while sending alert: ", e);
             throw new EventHandlerException(motechEvent, e);
