@@ -1,5 +1,6 @@
 package org.wv.stepsovc.core.services;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +50,7 @@ public class ReferralService {
         Referral oldActiveReferral = allReferrals.findActiveReferral(stepsovcCase.getBeneficiary_code());
         if (oldActiveReferral != null) {
             stepsovcScheduleService.unscheduleReferral(oldActiveReferral);
+            stepsovcScheduleService.unscheduleDefaultment(oldActiveReferral);
             stepsovcScheduleService.unscheduleFollowUpVisit(oldActiveReferral.getOvcId());
             oldActiveReferral.setActive(false);
             allReferrals.update(oldActiveReferral);
@@ -65,17 +67,24 @@ public class ReferralService {
     public void updateAvailedServices(StepsovcCase stepsovcCase) {
         logger.info("Handling update service for " + stepsovcCase.getBeneficiary_code());
         Referral existingReferral = allReferrals.findActiveReferral(stepsovcCase.getBeneficiary_code());
+        String existingFacilityCode = existingReferral.getFacilityCode();
+        existingReferral = new ReferralMapper().updateServices(existingReferral, stepsovcCase);
         stepsovcScheduleService.unscheduleReferral(existingReferral);
-        Referral referral = new ReferralMapper().updateServices(existingReferral, stepsovcCase);
+        checkForReferralForward(stepsovcCase, existingFacilityCode, existingReferral);
+        allReferrals.update(existingReferral);
+    }
 
-        if (stepsovcCase.getFacility_code() != null && !"".equals(stepsovcCase.getFacility_code().trim())) {
+    private void checkForReferralForward(StepsovcCase stepsovcCase, String existingFacilityCode, Referral referral) {
+        if (StringUtils.isNotEmpty(stepsovcCase.getFacility_code())) {
+            stepsovcScheduleService.unscheduleDefaultment(referral);
             checkForAvailableDate(referral);
             commcareGateway.addGroupOwnership(new BeneficiaryMapper().createFormRequest(stepsovcCase), stepsovcCase.getFacility_code());
             stepsovcScheduleService.scheduleNewReferral(referral);
         } else {
-            commcareGateway.removeGroupOwnership(new BeneficiaryMapper().createFormRequest(stepsovcCase), stepsovcCase.getFacility_code());
+            if (referral.fullfilled())
+                stepsovcScheduleService.unscheduleDefaultment(referral);
+            commcareGateway.removeGroupOwnership(new BeneficiaryMapper().createFormRequest(stepsovcCase), existingFacilityCode);
         }
-        allReferrals.update(referral);
     }
 
     public void updateReferralsServiceDate(String facilityId, String fromDateStr, String toDateStr, String nextAvailableDate) {

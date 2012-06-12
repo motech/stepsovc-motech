@@ -162,4 +162,11 @@ public class Referral extends MotechBaseDataObject {
         else
             return WindowType.DUE;
     }
+
+    public boolean fullfilled() {
+        for (Service service : referredServices.values())
+            if (service.isReferred() && !service.isProvided())
+                return false;
+        return true;
+    }
 }

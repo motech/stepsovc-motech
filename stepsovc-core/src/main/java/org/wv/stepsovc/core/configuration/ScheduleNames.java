@@ -1,7 +1,8 @@
 package org.wv.stepsovc.core.configuration;
 
 public enum ScheduleNames {
-    REFERRAL("Referral");
+    REFERRAL("Referral"),
+    DEFAULTMENT("Defaultment");
 
     public String getName() {
         return name;

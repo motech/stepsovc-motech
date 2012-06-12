@@ -1,0 +1,23 @@
+{
+    "name":"Defaultment",
+    "milestones":[
+        {
+            "name":"Defaultment",
+            "scheduleWindows":{
+                "earliest":["1 Day"],
+                "due":["2 Day"],
+                "late":["3 Days"],
+                "max":["3 Days"]
+            },
+            "alerts":[
+                {
+                    "window":"earliest",
+                    "interval":["1 Week"],
+                    "count":"1",
+                    "offset":["5 Day"]
+                }
+            ]
+        }
+
+    ]
+}

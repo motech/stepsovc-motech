@@ -15,6 +15,7 @@ import java.util.Map;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.wv.stepsovc.core.domain.ServiceType.*;
+import static org.wv.stepsovc.core.mapper.ReferralMapper.SERVICE_RECEIVED;
 
 public class StepsovcCaseFixture {
 
@@ -145,7 +146,7 @@ public class StepsovcCaseFixture {
     }
 
     public static StepsovcCase createCaseForUpdateService(String code, String serviceDate, String facility_code) {
-        StepsovcCase stepsovcCase = createCaseForReferral(code, null, "FAC001");
+        StepsovcCase stepsovcCase = createCaseForReferral(code, null, facility_code);
         stepsovcCase.setCondoms("Not Availed");
         stepsovcCase.setEnd_of_life_hospice("Not Availed");
         stepsovcCase.setFamily_planning("Not Availed");
@@ -159,6 +160,27 @@ public class StepsovcCaseFixture {
         stepsovcCase.setOther_health_services("Not Availed");
         stepsovcCase.setArt_adherence_counseling("Not Availed");
         stepsovcCase.setFacility_code(facility_code);
+        stepsovcCase.setService_date(null);
+        stepsovcCase.setService_date(serviceDate);
+
+        return stepsovcCase;
+    }
+
+    public static StepsovcCase createCaseForUpdateServiceWithServicesFullfilled(String code, String serviceDate, String facilityId) {
+        StepsovcCase stepsovcCase = createCaseForReferral(code, null, facilityId);
+        stepsovcCase.setCondoms(SERVICE_RECEIVED);
+        stepsovcCase.setEnd_of_life_hospice(SERVICE_RECEIVED);
+        stepsovcCase.setFamily_planning(SERVICE_RECEIVED);
+        stepsovcCase.setFollowup_date("2012-12-12");
+        stepsovcCase.setFollowup_required("Yes");
+        stepsovcCase.setHiv_counseling(SERVICE_RECEIVED);
+        stepsovcCase.setPmtct(SERVICE_RECEIVED);
+        stepsovcCase.setNew_diagnosis(SERVICE_RECEIVED);
+        stepsovcCase.setSexually_transmitted_infection(SERVICE_RECEIVED);
+        stepsovcCase.setPain_management(SERVICE_RECEIVED);
+        stepsovcCase.setOther_health_services(SERVICE_RECEIVED);
+        stepsovcCase.setArt_adherence_counseling(SERVICE_RECEIVED);
+        stepsovcCase.setFacility_code(facilityId);
         stepsovcCase.setService_date(null);
         stepsovcCase.setService_date(serviceDate);
 

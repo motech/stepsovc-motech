@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.wv.stepsovc.core.configuration.ScheduleNames;
 import org.wv.stepsovc.core.domain.Referral;
 import org.wv.stepsovc.core.factories.FollowUpVisitFactory;
-import org.wv.stepsovc.core.mapper.ScheduleEnrollmentMapper;
+import org.wv.stepsovc.core.factories.ScheduleEnrollmentFactory;
 import org.wv.stepsovc.core.repository.AllAppointments;
 import org.wv.stepsovc.core.utils.DateUtils;
 
@@ -24,11 +24,14 @@ public class StepsovcScheduleService {
     private AllAppointments allAppointments;
     @Autowired
     private FollowUpVisitFactory followUpVisitFactory;
+    @Autowired
+    private ScheduleEnrollmentFactory scheduleEnrollmentFactory;
 
     private static final String FOLLOW_UP_REQUIRED = "yes";
 
     public void scheduleNewReferral(Referral referral) {
-        scheduleTrackingService.enroll(new ScheduleEnrollmentMapper().map(referral));
+        scheduleTrackingService.enroll(scheduleEnrollmentFactory.createEnrollmentRequest(referral, ScheduleNames.REFERRAL.getName()));
+        scheduleTrackingService.enroll(scheduleEnrollmentFactory.createEnrollmentRequest(referral, ScheduleNames.DEFAULTMENT.getName()));
         stepsovcAlertService.sendInstantReferralAlertToFacility(referral);
 
         if (FOLLOW_UP_REQUIRED.equals(referral.getFollowupRequired()))
@@ -38,6 +41,10 @@ public class StepsovcScheduleService {
 
     public void unscheduleReferral(Referral referral) {
         scheduleTrackingService.unenroll(referral.getOvcId(), Arrays.asList(ScheduleNames.REFERRAL.getName()));
+    }
+
+    public void unscheduleDefaultment(Referral referral) {
+        scheduleTrackingService.unenroll(referral.getOvcId(), Arrays.asList(ScheduleNames.DEFAULTMENT.getName()));
     }
 
     public void unscheduleFollowUpVisit(String ovcId) {

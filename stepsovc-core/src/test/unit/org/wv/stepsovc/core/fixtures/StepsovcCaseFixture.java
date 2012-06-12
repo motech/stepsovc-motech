@@ -3,6 +3,8 @@ package org.wv.stepsovc.core.fixtures;
 import org.wv.stepsovc.commcare.domain.CaseType;
 import org.wv.stepsovc.core.request.StepsovcCase;
 
+import static org.wv.stepsovc.core.mapper.ReferralMapper.SERVICE_RECEIVED;
+
 public class StepsovcCaseFixture {
     public static StepsovcCase createCaseForReferral(String benCode, String serviceDate, String facilityId) {
         StepsovcCase stepsovcCase = createNewCase(benCode);
@@ -70,6 +72,27 @@ public class StepsovcCaseFixture {
         stepsovcCase.setPain_management("Not Availed");
         stepsovcCase.setOther_health_services("Not Availed");
         stepsovcCase.setArt_adherence_counseling("Not Availed");
+        stepsovcCase.setFacility_code("ABC");
+        stepsovcCase.setService_date(null);
+        stepsovcCase.setService_date(serviceDate);
+
+        return stepsovcCase;
+    }
+
+    public static StepsovcCase createCaseForUpdateServiceWithServicesFullfilled(String code, String serviceDate) {
+        StepsovcCase stepsovcCase = createCaseForReferral(code, null, "FAC001");
+        stepsovcCase.setCondoms(SERVICE_RECEIVED);
+        stepsovcCase.setEnd_of_life_hospice(SERVICE_RECEIVED);
+        stepsovcCase.setFamily_planning(SERVICE_RECEIVED);
+        stepsovcCase.setFollowup_date("2012-12-12");
+        stepsovcCase.setFollowup_required("Yes");
+        stepsovcCase.setHiv_counseling(SERVICE_RECEIVED);
+        stepsovcCase.setPmtct(SERVICE_RECEIVED);
+        stepsovcCase.setNew_diagnosis(SERVICE_RECEIVED);
+        stepsovcCase.setSexually_transmitted_infection(SERVICE_RECEIVED);
+        stepsovcCase.setPain_management(SERVICE_RECEIVED);
+        stepsovcCase.setOther_health_services(SERVICE_RECEIVED);
+        stepsovcCase.setArt_adherence_counseling(SERVICE_RECEIVED);
         stepsovcCase.setFacility_code("ABC");
         stepsovcCase.setService_date(null);
         stepsovcCase.setService_date(serviceDate);
