@@ -182,7 +182,7 @@ public class StepsovcAlertServiceTest {
         assertThat(smsMessageCaptor.getValue().phoneNumber(), is(caregiver.getPhoneNumber()));
         assertThat(smsMessageCaptor.getValue().content(), is("someName (someCode)"));
         assertThat(smsMessageCaptor.getValue().group(), is("G-CAREGIVER-FollowUp-"));
-        assertThat(smsMessageCaptor.getValue().deliveryTime(), is(newDateTime(new LocalDate(), 7, 30, 0)));
+        assertThat(smsMessageCaptor.getValue().deliveryTime(), is(newDateTime(new LocalDate(), 5, 0, 0)));
     }
 
     @Test
