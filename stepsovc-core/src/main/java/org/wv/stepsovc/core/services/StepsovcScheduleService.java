@@ -39,12 +39,12 @@ public class StepsovcScheduleService {
                     , DateUtils.getLocalDate(referral.getFollowupDate()).toDateTime(new LocalTime(0, 0))));
     }
 
-    public void unscheduleReferral(Referral referral) {
-        scheduleTrackingService.unenroll(referral.getOvcId(), Arrays.asList(ScheduleNames.REFERRAL.getName()));
+    public void unscheduleReferral(String ovcId) {
+        scheduleTrackingService.unenroll(ovcId, Arrays.asList(ScheduleNames.REFERRAL.getName()));
     }
 
-    public void unscheduleDefaultment(Referral referral) {
-        scheduleTrackingService.unenroll(referral.getOvcId(), Arrays.asList(ScheduleNames.DEFAULTMENT.getName()));
+    public void unscheduleDefaultment(String ovcId) {
+        scheduleTrackingService.unenroll(ovcId, Arrays.asList(ScheduleNames.DEFAULTMENT.getName()));
     }
 
     public void unscheduleFollowUpVisit(String ovcId) {

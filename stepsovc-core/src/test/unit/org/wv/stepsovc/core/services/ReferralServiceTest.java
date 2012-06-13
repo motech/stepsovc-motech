@@ -124,7 +124,7 @@ public class ReferralServiceTest {
 
         ArgumentCaptor<String> facilityCodeCaptor = ArgumentCaptor.forClass(String.class);
         verify(commcareGateway).removeGroupOwnership(updatedBeneficiary.capture(), facilityCodeCaptor.capture());
-        verify(mockStepsovcScheduleService).unscheduleReferral(referral);
+        verify(mockStepsovcScheduleService).unscheduleReferral(referral.getOvcId());
 
         assertNull(facilityCodeCaptor.getValue());
         assertThat(updatedBeneficiary.getValue().getCareGiverId(), is(stepsovcCase.getUser_id()));
@@ -154,7 +154,7 @@ public class ReferralServiceTest {
         referralService.updateAvailedServices(stepsovcCase);
 
         verify(mockAllReferrals).update(referralArgumentCaptor.capture());
-        verify(mockStepsovcScheduleService).unscheduleReferral(referral);
+        verify(mockStepsovcScheduleService).unscheduleReferral(referral.getOvcId());
         verify(mockStepsovcScheduleService).scheduleNewReferral(referralArgumentCaptor.getValue());
 
         doNothing().when(mockAllReferrals).update(referralArgumentCaptor.getValue());
@@ -182,7 +182,7 @@ public class ReferralServiceTest {
         referralService.addNewReferral(stepsovcCase);
 
         verify(mockAllReferrals).update(referralArgumentCaptor.capture());
-        verify(mockStepsovcScheduleService).unscheduleReferral(referralArgumentCaptor.getValue());
+        verify(mockStepsovcScheduleService).unscheduleReferral(referralArgumentCaptor.getValue().getOvcId());
         verify(mockStepsovcScheduleService).unscheduleFollowUpVisit(referralArgumentCaptor.getValue().getOvcId());
 
         assertFalse(referralArgumentCaptor.getValue().isActive());
@@ -196,10 +196,10 @@ public class ReferralServiceTest {
         String nextAvailDate = "2012-05-05";
 
         ArgumentCaptor<Referral> referralArgumentCaptor = ArgumentCaptor.forClass(Referral.class);
-        doReturn(Arrays.asList(new Referral().setServiceDate(fromDateStr), new Referral().setServiceDate(fromDateStr))).when(mockAllReferrals).findActiveReferrals(facilityId, fromDateStr);
-        doReturn(Arrays.asList(new Referral().setServiceDate(fromDateStr))).when(mockAllReferrals).findActiveReferrals(facilityId, "2012-05-02");
+        doReturn(Arrays.asList(new Referral().setOvcId("ovc1").setServiceDate(fromDateStr), new Referral().setOvcId("ovc2").setServiceDate(fromDateStr))).when(mockAllReferrals).findActiveReferrals(facilityId, fromDateStr);
+        doReturn(Arrays.asList(new Referral().setOvcId("ovc3").setServiceDate(fromDateStr))).when(mockAllReferrals).findActiveReferrals(facilityId, "2012-05-02");
         doReturn(new ArrayList<Referral>()).when(mockAllReferrals).findActiveReferrals(facilityId, "2012-05-03");
-        doReturn(Arrays.asList(new Referral().setServiceDate(fromDateStr))).when(mockAllReferrals).findActiveReferrals(facilityId, toDateStr);
+        doReturn(Arrays.asList(new Referral().setOvcId("ovc4").setServiceDate(fromDateStr))).when(mockAllReferrals).findActiveReferrals(facilityId, toDateStr);
 
         List<Referral> updatedReferrals = referralService.updateReferralsServiceDate(facilityId, fromDateStr, toDateStr, nextAvailDate);
 
@@ -207,7 +207,7 @@ public class ReferralServiceTest {
         verify(mockAllReferrals, times(4)).update(referralArgumentCaptor.capture());
 
         for (Referral referral : referralArgumentCaptor.getAllValues()) {
-            verify(mockStepsovcScheduleService).unscheduleReferral(referral);
+            verify(mockStepsovcScheduleService).unscheduleReferral(referral.getOvcId());
             assertThat(referral.getServiceDate(), is(nextAvailDate));
         }
 
@@ -224,7 +224,7 @@ public class ReferralServiceTest {
         toBeReturned.setOvcId(ovcId);
         doReturn(toBeReturned).when(mockAllReferrals).findActiveReferral(benCode);
         referralService.updateNotAvailedReasons(stepsovcCase);
-        verify(mockStepsovcScheduleService).unscheduleReferral(toBeReturned);
+        verify(mockStepsovcScheduleService).unscheduleReferral(toBeReturned.getOvcId());
         verify(mockAllReferrals).update(toBeReturned);
 
     }
