@@ -6,11 +6,16 @@ import org.motechproject.util.DateUtil;
 import java.io.Serializable;
 
 public class SMSMessage implements Serializable {
+    private static final long serialVersionUID = 1276213456622776147L;
     private DateTime deliveryTime;
     private String phoneNumber;
     private String content;
     private String groupKey;
     private String patientDueDate;
+
+    public SMSMessage() {
+
+    }
 
     public SMSMessage(DateTime deliveryTime, String phoneNumber, String content, String groupKey, String patientDueDate) {
         this.deliveryTime = deliveryTime;
