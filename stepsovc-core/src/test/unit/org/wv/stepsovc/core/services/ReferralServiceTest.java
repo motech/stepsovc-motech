@@ -5,7 +5,6 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Matchers;
 import org.mockito.Mock;
-import org.motechproject.cmslite.api.model.ContentNotFoundException;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.wv.stepsovc.commcare.gateway.CommcareGateway;
 import org.wv.stepsovc.commcare.vo.BeneficiaryInformation;
@@ -61,7 +60,7 @@ public class ReferralServiceTest {
         StepsovcCase stepsovcCase = StepsovcCaseFixture.createCaseForReferral(code, "2012-05-30", "FAC001");
 
         doReturn(null).when(mockAllReferrals).findActiveReferral(code);
-        doReturn(new FacilityAvailability(true, null, null, null)).when(mockFacilityService).getFacilityAvailability(stepsovcCase.getFacility_code(), stepsovcCase.getService_date());
+        doReturn(new FacilityAvailability(true)).when(mockFacilityService).getFacilityAvailability(stepsovcCase.getFacility_code(), stepsovcCase.getService_date());
 
         spyReferralService.addNewReferral(stepsovcCase);
 
@@ -102,7 +101,7 @@ public class ReferralServiceTest {
     }
 
     @Test
-    public void shouldAlertCareGiverIfNewReferralIsAddedOnServiceUnavailableDate() throws ContentNotFoundException {
+    public void shouldAlertCareGiverIfNewReferralIsAddedOnServiceUnavailableDate() {
         String caregiverId = "CG1";
         String facilityCode = "FAC001";
         String unavailableFrom = "2012-12-12";
@@ -122,7 +121,7 @@ public class ReferralServiceTest {
     }
 
     @Test
-    public void shouldNotAlertCareGiverIfNewReferralIsAddedOnServiceAvailableDate() throws ContentNotFoundException {
+    public void shouldNotAlertCareGiverIfNewReferralIsAddedOnServiceAvailableDate() {
         String facilityCode = "FAC001";
         String serviceDate = "2012-12-11";
         String unavailableFrom = "2012-12-12";

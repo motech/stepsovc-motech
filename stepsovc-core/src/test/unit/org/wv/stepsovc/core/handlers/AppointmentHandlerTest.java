@@ -4,7 +4,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.appointments.api.EventKeys;
-import org.motechproject.cmslite.api.model.ContentNotFoundException;
 import org.motechproject.model.MotechEvent;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.wv.stepsovc.core.services.StepsovcAlertService;
@@ -30,7 +29,7 @@ public class AppointmentHandlerTest {
     }
 
     @Test
-    public void shouldSendFollowUpAlertToCaregiver() throws ContentNotFoundException {
+    public void shouldSendFollowUpAlertToCaregiver() {
         String externalId = "ovcId";
         Map<String, Object> params = new HashMap<String, Object>();
         params.put(EventKeys.EXTERNAL_ID_KEY, externalId);

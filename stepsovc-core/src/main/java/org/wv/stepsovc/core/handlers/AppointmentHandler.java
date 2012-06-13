@@ -18,14 +18,9 @@ public class AppointmentHandler {
 
     @MotechListener(subjects = {EventKeys.APPOINTMENT_REMINDER_EVENT_SUBJECT})
     public void handleAlert(MotechEvent motechEvent) {
-        try {
-            Map<String, Object> parameters = motechEvent.getParameters();
-            String externalId = (String) parameters.get(EventKeys.EXTERNAL_ID_KEY);
-            logger.info("Handling Appointment - for External Id:" + externalId);
-            stepsovcAlertService.sendFollowUpAlertToCaregiver(externalId);
-        } catch (Exception e) {
-            logger.debug("<Appointment Alert Exception>: Encountered error while sending alert: ", e);
-            throw new EventHandlerException(motechEvent, e);
-        }
+        Map<String, Object> parameters = motechEvent.getParameters();
+        String externalId = (String) parameters.get(EventKeys.EXTERNAL_ID_KEY);
+        logger.info("Handling Appointment - for External Id:" + externalId);
+        stepsovcAlertService.sendFollowUpAlertToCaregiver(externalId);
     }
 }

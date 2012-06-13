@@ -3,7 +3,6 @@ package org.wv.stepsovc.core.services;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.motechproject.cmslite.api.model.ContentNotFoundException;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.wv.stepsovc.core.domain.Facility;
 import org.wv.stepsovc.core.domain.Referral;
@@ -114,7 +113,7 @@ public class FacilityServiceTest {
     }
 
     @Test
-    public void shouldInvokeAlertServiceToSendInstantMsgToCareGiverWhenFacilityIsUnavailable() throws ParseException, ContentNotFoundException {
+    public void shouldInvokeAlertServiceToSendInstantMsgToCareGiverWhenFacilityIsUnavailable() throws ParseException {
         String facilityCode = "testCode";
         String unavailableDate = "2012-12-12";
         String nextAvailableDate = "2012-12-13";

@@ -58,17 +58,18 @@ public class StepsovcAlertService {
             List<String> phoneNumbers = facility.getPhoneNumbers();
             String message = null;
             try {
-                StringContent template = cmsLiteService.getStringContent(Locale.ENGLISH.getLanguage(), SmsTemplateKeys.IMPENDING_REFERRAL);
+                StringContent stringContent = cmsLiteService.getStringContent(Locale.ENGLISH.getLanguage(), SmsTemplateKeys.IMPENDING_REFERRAL);
                 Beneficiary beneficiary = allBeneficiaries.findBeneficiaryByCode(referral.getBeneficiaryCode());
-                message = String.format(template.getValue(), beneficiary.getName(), beneficiary.getCode(), facility.getFacilityName(), referral.getServiceDate());
+                message = String.format(stringContent.getValue(), beneficiary.getName(), beneficiary.getCode(), facility.getFacilityName(), referral.getServiceDate());
                 smsService.sendSMS(phoneNumbers, message);
             } catch (ContentNotFoundException e) {
-                logger.debug("Content for SMS not found");
+                logger.error("Content for SMS not found - " + SmsTemplateKeys.IMPENDING_REFERRAL, e);
             }
         }
     }
 
-    public void sendAggregatedReferralAlertToFacility(String ovcId, String window) throws ContentNotFoundException {
+
+    public void sendAggregatedReferralAlertToFacility(String ovcId, String window) {
         Referral referral = allReferrals.findActiveByOvcId(ovcId);
         Beneficiary beneficiary = allBeneficiaries.findBeneficiaryByCode(referral.getBeneficiaryCode());
         Facility facility = allFacilities.findFacilityByCode(referral.getFacilityCode());
@@ -76,17 +77,21 @@ public class StepsovcAlertService {
         if (isEmpty(phoneNumbers)) {
             logger.error("Facility - No Phone Numbers to send SMS.");
         } else {
-            StringContent smsTemplate = cmsLiteService.getStringContent(Locale.ENGLISH.getLanguage(), SmsTemplateKeys.BENEFICIARY_WITH_SERVICES);
-            String smsContent = format(smsTemplate.getValue(), beneficiary.getName(), beneficiary.getCode(), join(referral.referredServiceCodes(), ","));
-            logger.info("Sms Content : " + smsContent + "dateTime :" + preferredAggregateTime);
-            String patientDueDate = new SimpleDateFormat("dd-MMM-yyyy").format(DateUtils.getDate(referral.getServiceDate()));
-            for (String phoneNumber : phoneNumbers) {
-                eventAggregationGateway.dispatch(new SMSMessage(newDateTime(new LocalDate(), preferredAggregateTime), phoneNumber, smsContent, group(VisitNames.REFERRAL, window, FACILITY).key(), patientDueDate));
+            try {
+                StringContent stringContent = cmsLiteService.getStringContent(Locale.ENGLISH.getLanguage(), SmsTemplateKeys.BENEFICIARY_WITH_SERVICES);
+                String smsContent = format(stringContent.getValue(), beneficiary.getName(), beneficiary.getCode(), join(referral.referredServiceCodes(), ","));
+                logger.info("Sms Content : " + smsContent + "dateTime :" + preferredAggregateTime);
+                String patientDueDate = new SimpleDateFormat("dd-MMM-yyyy").format(DateUtils.getDate(referral.getServiceDate()));
+                for (String phoneNumber : phoneNumbers) {
+                    eventAggregationGateway.dispatch(new SMSMessage(newDateTime(new LocalDate(), preferredAggregateTime), phoneNumber, smsContent, group(VisitNames.REFERRAL, window, FACILITY).key(), patientDueDate));
+                }
+            } catch (ContentNotFoundException e) {
+                logger.error("Content for SMS not found - " + SmsTemplateKeys.BENEFICIARY_WITH_SERVICES, e);
             }
         }
     }
 
-    public void sendInstantDefaultedAlertToCaregiver(String ovcId) throws ContentNotFoundException {
+    public void sendInstantDefaultedAlertToCaregiver(String ovcId) {
         Referral referral = allReferrals.findActiveByOvcId(ovcId);
         Beneficiary beneficiary = allBeneficiaries.findBeneficiaryByCode(referral.getBeneficiaryCode());
         Caregiver caregiver = allCaregivers.findCaregiverById(referral.getCgId());
@@ -94,23 +99,32 @@ public class StepsovcAlertService {
         if (StringUtil.isNullOrEmpty(phoneNumber)) {
             logger.error("Caregiver - No Phone Numbers to send SMS.");
         } else {
-            StringContent smsTemplate = cmsLiteService.getStringContent(Locale.ENGLISH.getLanguage(), SmsTemplateKeys.DEFAULTED_REFERRAL);
-            String smsContent = format(smsTemplate.getValue(), beneficiary.getName(), beneficiary.getCode(), referral.getFacilityCode(), referral.getServiceDate());
-            logger.info("Sms Content : " + smsContent);
-            smsService.sendSMS(phoneNumber, smsContent);
+            try {
+                StringContent stringContent = cmsLiteService.getStringContent(Locale.ENGLISH.getLanguage(), SmsTemplateKeys.DEFAULTED_REFERRAL);
+                String smsContent = format(stringContent.getValue(), beneficiary.getName(), beneficiary.getCode(),
+                        referral.getFacilityCode(), referral.getServiceDate());
+                logger.info("Sms Content : " + smsContent);
+                smsService.sendSMS(phoneNumber, smsContent);
+            } catch (ContentNotFoundException e) {
+                logger.error("Content for SMS not found - " + SmsTemplateKeys.DEFAULTED_REFERRAL, e);
+            }
         }
     }
 
-    public void sendFollowUpAlertToCaregiver(String ovcId) throws ContentNotFoundException {
+    public void sendFollowUpAlertToCaregiver(String ovcId) {
         Referral referral = allReferrals.findActiveByOvcId(ovcId);
         Beneficiary beneficiary = allBeneficiaries.findBeneficiaryByCode(referral.getBeneficiaryCode());
         Caregiver caregiver = allCaregivers.findCaregiverById(referral.getCgId());
         String phoneNumber = caregiver.getPhoneNumber();
-        StringContent smsTemplate = cmsLiteService.getStringContent(Locale.ENGLISH.getLanguage(), SmsTemplateKeys.BENEFICIARY_WITHOUT_SERVICES);
-        String smsContent = format(smsTemplate.getValue(), beneficiary.getName(), beneficiary.getCode());
-        logger.info("Sms Content : " + smsContent);
-
-        eventAggregationGateway.dispatch(new SMSMessage(newDateTime(new LocalDate(), preferredAggregateTime), phoneNumber, smsContent, group(VisitNames.FOLLOW_UP, "", CAREGIVER).key(), null));
+        try {
+            StringContent stringContent = cmsLiteService.getStringContent(Locale.ENGLISH.getLanguage(), SmsTemplateKeys.BENEFICIARY_WITHOUT_SERVICES);
+            String smsContent = format(stringContent.getValue(), beneficiary.getName(), beneficiary.getCode());
+            logger.info("Sms Content : " + smsContent);
+            eventAggregationGateway.dispatch(new SMSMessage(newDateTime(new LocalDate(), preferredAggregateTime), phoneNumber,
+                    smsContent, group(VisitNames.FOLLOW_UP, "", CAREGIVER).key(), null));
+        } catch (ContentNotFoundException e) {
+            logger.error("Content for SMS not found - " + SmsTemplateKeys.BENEFICIARY_WITHOUT_SERVICES, e);
+        }
     }
 
     public void sendInstantServiceUnavailabilityMsgToCareGivers(List<Referral> referrals, String facilityCode, String unavailableFromDate,
@@ -133,21 +147,22 @@ public class StepsovcAlertService {
     public void sendInstantServiceUnavailabilityMsgToCareGiverOfReferral(String caregiverId, String facilityCode, String unavailableFromDate,
                                                                          String unavailableToDate, String nextAvailableDate) {
         Caregiver caregiver = allCaregivers.findCaregiverById(caregiverId);
-        if (caregiver != null) {
-            String smsContent = getServiceUnavailableAlertMsg(facilityCode, unavailableFromDate, unavailableToDate, nextAvailableDate);
+        String smsContent = getServiceUnavailableAlertMsg(facilityCode, unavailableFromDate, unavailableToDate, nextAvailableDate);
+        if (caregiver != null && smsContent != null) {
             smsService.sendSMS(caregiver.getPhoneNumber(), smsContent);
         }
     }
 
     private String getServiceUnavailableAlertMsg(String facilityCode, String unavailableFromDate, String unavailableToDate, String nextAvailableDate) {
-        StringContent smsTemplate = null;
+        String smsContent = null;
         try {
-            smsTemplate = cmsLiteService.getStringContent(Locale.ENGLISH.getLanguage(), SmsTemplateKeys.FACILITY_SERVICE_UNAVAILABLE);
+            StringContent stringContent = cmsLiteService.getStringContent(Locale.ENGLISH.getLanguage(), SmsTemplateKeys.FACILITY_SERVICE_UNAVAILABLE);
+            smsContent = format(stringContent.getValue(), facilityCode, unavailableFromDate, unavailableToDate, nextAvailableDate);
+            logger.info("Sms Content : " + smsContent);
         } catch (ContentNotFoundException e) {
-            logger.error("Content for SMS not found");
+            logger.error("Content for SMS not found - " + SmsTemplateKeys.FACILITY_SERVICE_UNAVAILABLE, e);
         }
-        String smsContent = format(smsTemplate.getValue(), facilityCode, unavailableFromDate, unavailableToDate, nextAvailableDate);
-        logger.info("Sms Content : " + smsContent);
         return smsContent;
     }
+
 }

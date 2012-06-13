@@ -25,14 +25,9 @@ public class ReferralScheduleHandler {
     public void handleAlert(MotechEvent motechEvent) {
         MilestoneEvent milestoneEvent = new MilestoneEvent(motechEvent);
         logger.info("Handling schedule " + milestoneEvent.getScheduleName() + ", window " + milestoneEvent.getWindowName() + " - for External Id:" + milestoneEvent.getExternalId());
-        try {
-            if (ScheduleNames.REFERRAL.getName().equals(milestoneEvent.getScheduleName()))
-                stepsovcAlertService.sendAggregatedReferralAlertToFacility(milestoneEvent.getExternalId(), milestoneEvent.getWindowName());
-            else if (ScheduleNames.DEFAULTMENT.getName().equals(milestoneEvent.getScheduleName()))
-                stepsovcAlertService.sendInstantDefaultedAlertToCaregiver(milestoneEvent.getExternalId());
-        } catch (Exception e) {
-            logger.error("<Milestone Alert Exception>: Encountered error while sending alert: ", e);
-            throw new EventHandlerException(motechEvent, e);
-        }
+        if (ScheduleNames.REFERRAL.getName().equals(milestoneEvent.getScheduleName()))
+            stepsovcAlertService.sendAggregatedReferralAlertToFacility(milestoneEvent.getExternalId(), milestoneEvent.getWindowName());
+        else if (ScheduleNames.DEFAULTMENT.getName().equals(milestoneEvent.getScheduleName()))
+            stepsovcAlertService.sendInstantDefaultedAlertToCaregiver(milestoneEvent.getExternalId());
     }
 }

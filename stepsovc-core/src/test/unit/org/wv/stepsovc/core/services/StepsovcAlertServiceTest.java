@@ -20,7 +20,6 @@ import org.wv.stepsovc.core.repository.AllFacilities;
 import org.wv.stepsovc.core.repository.AllReferrals;
 import org.wv.stepsovc.core.request.StepsovcCase;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -79,7 +78,7 @@ public class StepsovcAlertServiceTest {
     }
 
     @Test
-    public void shouldSendSmsToAllFacilityNumbers() throws ContentNotFoundException, ParseException {
+    public void shouldSendSmsToAllFacilityNumbers() throws ContentNotFoundException {
 
         String facilityCode = "code";
         String bencode = "bencode";

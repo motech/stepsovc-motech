@@ -1,18 +1,12 @@
 package org.wv.stepsovc.core.handlers;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.motechproject.cmslite.api.model.ContentNotFoundException;
 import org.motechproject.scheduletracking.api.events.MilestoneEvent;
 import org.wv.stepsovc.core.configuration.ScheduleNames;
 import org.wv.stepsovc.core.services.StepsovcAlertService;
 
-import java.text.ParseException;
-
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -28,7 +22,7 @@ public class ReferralScheduleHandlerTest {
     }
 
     @Test
-    public void shouldAlertFacilityOnReferral() throws ContentNotFoundException, ParseException {
+    public void shouldAlertFacilityOnReferral() {
 
         String externalId = "someExternalId";
         String windowName = "due";
@@ -38,20 +32,9 @@ public class ReferralScheduleHandlerTest {
         verify(stepsovcAlertService).sendAggregatedReferralAlertToFacility(externalId, windowName);
     }
 
-    @Test
-    public void shouldThrowEventHandlerExceptionOnAnyFailure() {
-        try {
-            doThrow(new RuntimeException("some exception")).when(stepsovcAlertService).sendAggregatedReferralAlertToFacility(anyString(), anyString());
-            MilestoneEvent milestoneEvent = new MilestoneEvent("", "Referral", null, "", null);
-            referralScheduleHandler.handleAlert(milestoneEvent.toMotechEvent());
-            Assert.fail("expected exception here");
-        } catch (EventHandlerException ehe) {
-        } catch (ContentNotFoundException e) {
-        }
-    }
 
     @Test
-    public void shouldSendSMSToCareGiverForDefaultedReferral() throws ContentNotFoundException {
+    public void shouldSendSMSToCareGiverForDefaultedReferral() {
         String externalId = "ovcId";
         MilestoneEvent milestoneEvent = new MilestoneEvent(externalId, ScheduleNames.DEFAULTMENT.getName(), null, null, null);
         referralScheduleHandler.handleAlert(milestoneEvent.toMotechEvent());
