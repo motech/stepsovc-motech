@@ -99,6 +99,16 @@ public class StepsovcCaseFixture {
         return stepsovcCase;
     }
 
+    public static StepsovcCase createCaseForServiceUnavailable(String caregiverId, String facility_code, String serviceDate, String unavailableFrom, String unavailableTo) {
+        StepsovcCase stepsovcCase = new StepsovcCase();
+        stepsovcCase.setUser_id(caregiverId);
+        stepsovcCase.setFacility_code(facility_code);
+        stepsovcCase.setService_date(serviceDate);
+        stepsovcCase.setService_unavailable_from(unavailableFrom);
+        stepsovcCase.setService_unavailable_to(unavailableTo);
+        return stepsovcCase;
+    }
+
     public static StepsovcCase createNewCaseWithFacilityCode(String facilityCode, String unavailableDateFrom, String unavailableDateTo) {
         StepsovcCase stepsovcCase = new StepsovcCase();
         stepsovcCase.setFacility_code(facilityCode);

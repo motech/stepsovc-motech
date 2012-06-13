@@ -226,10 +226,28 @@ public class StepsovcAlertServiceTest {
         assertThat(phoneNumber5, isIn(phoneNumbers));
     }
 
-    private Caregiver getCaregiver(String cg3, String phoneNumber3) {
+    @Test
+    public void shouldSendInstantServiceUnavailableMsgToGivenCaregiver() throws ContentNotFoundException {
+        String caregiverId = "CG1";
+        String facilityCode = "FAC001";
+        String phoneNumber = "11111";
+        String unavailableFromDate = "2012-12-12";
+        String unavailableToDate = "2012-12-13";
+        String nextAvailableDate = "2012-12-14";
+        doReturn(getCaregiver(caregiverId, phoneNumber)).when(mockAllCaregivers).findCaregiverById(caregiverId);
+        doReturn(new StringContent("", "", "%s will be closed from %s to %s. Referral moved to %s.")).when(mockCmsLiteService)
+                .getStringContent(Locale.ENGLISH.getLanguage(), FACILITY_SERVICE_UNAVAILABLE);
+
+        stepsovcAlertService.sendInstantServiceUnavailabilityMsgToCareGiverOfReferral(caregiverId, facilityCode, unavailableFromDate, unavailableToDate, nextAvailableDate);
+
+        String expectedMsg = facilityCode + " will be closed from " + unavailableFromDate + " to " + unavailableToDate + ". Referral moved to " + nextAvailableDate + ".";
+        verify(mockSmsService).sendSMS(phoneNumber, expectedMsg);
+    }
+
+    private Caregiver getCaregiver(String caregiverId, String phoneNumber) {
         Caregiver caregiver3 = new Caregiver();
-        caregiver3.setCgId(cg3);
-        caregiver3.setPhoneNumber(phoneNumber3);
+        caregiver3.setCgId(caregiverId);
+        caregiver3.setPhoneNumber(phoneNumber);
         return caregiver3;
     }
 

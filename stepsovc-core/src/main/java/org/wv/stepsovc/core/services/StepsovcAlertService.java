@@ -114,19 +114,40 @@ public class StepsovcAlertService {
     }
 
     public void sendInstantServiceUnavailabilityMsgToCareGivers(List<Referral> referrals, String facilityCode, String unavailableFromDate,
-                                                                String unavailableToDate, String nextAvailableDate) throws ContentNotFoundException {
+                                                                String unavailableToDate, String nextAvailableDate) {
         Set<String> phoneNumbers = new HashSet<String>();
         for (Referral referral : referrals) {
             Caregiver caregiver = allCaregivers.findCaregiverById(referral.getCgId());
-            phoneNumbers.add(caregiver.getPhoneNumber());
+            if (caregiver != null) {
+                phoneNumbers.add(caregiver.getPhoneNumber());
+            }
         }
         List<Caregiver> caregiversForFacility = allCaregivers.findCaregiverByFacilityCode(facilityCode);
         for (Caregiver caregiver : caregiversForFacility) {
             phoneNumbers.add(caregiver.getPhoneNumber());
         }
-        StringContent smsTemplate = cmsLiteService.getStringContent(Locale.ENGLISH.getLanguage(), SmsTemplateKeys.FACILITY_SERVICE_UNAVAILABLE);
+        String smsContent = getServiceUnavailableAlertMsg(facilityCode, unavailableFromDate, unavailableToDate, nextAvailableDate);
+        smsService.sendSMS(new ArrayList<String>(phoneNumbers), smsContent);
+    }
+
+    public void sendInstantServiceUnavailabilityMsgToCareGiverOfReferral(String caregiverId, String facilityCode, String unavailableFromDate,
+                                                                         String unavailableToDate, String nextAvailableDate) {
+        Caregiver caregiver = allCaregivers.findCaregiverById(caregiverId);
+        if (caregiver != null) {
+            String smsContent = getServiceUnavailableAlertMsg(facilityCode, unavailableFromDate, unavailableToDate, nextAvailableDate);
+            smsService.sendSMS(caregiver.getPhoneNumber(), smsContent);
+        }
+    }
+
+    private String getServiceUnavailableAlertMsg(String facilityCode, String unavailableFromDate, String unavailableToDate, String nextAvailableDate) {
+        StringContent smsTemplate = null;
+        try {
+            smsTemplate = cmsLiteService.getStringContent(Locale.ENGLISH.getLanguage(), SmsTemplateKeys.FACILITY_SERVICE_UNAVAILABLE);
+        } catch (ContentNotFoundException e) {
+            logger.error("Content for SMS not found");
+        }
         String smsContent = format(smsTemplate.getValue(), facilityCode, unavailableFromDate, unavailableToDate, nextAvailableDate);
         logger.info("Sms Content : " + smsContent);
-        smsService.sendSMS(new ArrayList<String>(phoneNumbers), smsContent);
+        return smsContent;
     }
 }

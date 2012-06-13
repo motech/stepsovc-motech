@@ -13,6 +13,7 @@ import org.wv.stepsovc.core.mapper.FacilityMapper;
 import org.wv.stepsovc.core.repository.AllFacilities;
 import org.wv.stepsovc.core.request.StepsovcCase;
 import org.wv.stepsovc.core.utils.DateUtils;
+import org.wv.stepsovc.core.vo.FacilityAvailability;
 
 import java.text.ParseException;
 import java.util.Arrays;
@@ -75,13 +76,15 @@ public class FacilityServiceTest {
     }
 
     @Test
-    public void shouldGetNextAvailableDateForGivenFacilityAndDate() {
+    public void shouldGetCorrectDatesForGivenFacilityAndDateWhenServiceIsUnavailable() {
         String unavailableDate = "2012-01-01";
         Facility facility = getFacilityWithServiceUnavailability();
 
         doReturn(facility).when(mockAllFacilities).findFacilityByCode(facilityId);
-        String availableDate = facilityService.getFacilityAvailability(facilityId, unavailableDate).getNextAvailableDate();
-        assertThat(availableDate, is("2012-01-07"));
+        FacilityAvailability facilityAvailability = facilityService.getFacilityAvailability(facilityId, unavailableDate);
+        assertThat(facilityAvailability.getNextAvailableDate(), is("2012-01-07"));
+        assertThat(facilityAvailability.getUnavailableFromDate(), is("2012-01-04"));
+        assertThat(facilityAvailability.getUnavailableToDate(), is("2012-01-06"));
     }
 
     @Test

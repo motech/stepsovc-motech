@@ -12,6 +12,7 @@ import org.wv.stepsovc.core.repository.AllFacilities;
 import org.wv.stepsovc.core.request.StepsovcCase;
 import org.wv.stepsovc.core.vo.FacilityAvailability;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -55,23 +56,25 @@ public class FacilityService {
 
         try {
             nextAvailableDate = getFacilityAvailability(nextDateStr(serviceUnavailableTo), facility).getNextAvailableDate();
-            List<Referral> updatedReferrals = referralService.updateReferralsServiceDate(facilityCode, serviceUnavailableFrom, serviceUnavailableTo, nextAvailableDate);
-            stepsovcAlertService.sendInstantServiceUnavailabilityMsgToCareGivers(updatedReferrals, facilityCode, serviceUnavailableFrom, serviceUnavailableTo, nextAvailableDate);
-        } catch (Exception e) {
-            logger.error("Exception while making facility service unavailable -  ", e);
+        } catch (ParseException e) {
+            logger.error("Date Parse Exception ", e);
         }
+        List<Referral> updatedReferrals = referralService.updateReferralsServiceDate(facilityCode, serviceUnavailableFrom, serviceUnavailableTo, nextAvailableDate);
+        stepsovcAlertService.sendInstantServiceUnavailabilityMsgToCareGivers(updatedReferrals, facilityCode, serviceUnavailableFrom, serviceUnavailableTo, nextAvailableDate);
     }
 
     public FacilityAvailability getFacilityAvailability(String facilityId, String serviceDateStr) {
 
         Facility facility = allFacilities.findFacilityByCode(facilityId);
-        return facility == null ? new FacilityAvailability(true, null) : getFacilityAvailability(serviceDateStr, facility);
+        return facility == null ? new FacilityAvailability(true) : getFacilityAvailability(serviceDateStr, facility);
     }
 
     private FacilityAvailability getFacilityAvailability(String serviceDateStr, Facility facility) {
 
         boolean isAvailable = true;
-        Date serviceDate = null;
+        Date serviceDate;
+        String unavailableToDate = null;
+        String unavailableFromDate = null;
         serviceDate = getDate(serviceDateStr);
         List<ServiceUnavailability> serviceUnavailabilities = new ArrayList<ServiceUnavailability>(facility.getServiceUnavailabilities());
         if (isNotEmpty(serviceUnavailabilities)) {
@@ -84,12 +87,14 @@ public class FacilityService {
                         (serviceDate.after(fromDate) && serviceDate.before(toDate))) {
                     serviceDate = nextDate(toDate);
                     isAvailable = false;
+                    unavailableFromDate = serviceUnavailability.getFromDate();
+                    unavailableToDate = serviceUnavailability.getToDate();
                 } else if (!isAvailable) {
                     break;
                 }
             }
         }
-        return new FacilityAvailability(isAvailable, getFormattedDate(serviceDate));
+        return new FacilityAvailability(isAvailable, getFormattedDate(serviceDate), unavailableFromDate, unavailableToDate);
     }
 
     public void registerFacility(StepsovcCase stepsovcCase) {

@@ -4,6 +4,10 @@ public class FacilityAvailability {
 
     private boolean isAvailable;
 
+    private String unavailableFromDate;
+
+    private String unavailableToDate;
+
     private String nextAvailableDate;
 
     public boolean isAvailable() {
@@ -22,9 +26,33 @@ public class FacilityAvailability {
         this.nextAvailableDate = nextAvailableDate;
     }
 
-    public FacilityAvailability(boolean available, String nextAvailableDate) {
-        isAvailable = available;
+    public String getUnavailableFromDate() {
+        return unavailableFromDate;
+    }
+
+    public void setUnavailableFromDate(String unavailableFromDate) {
+        this.unavailableFromDate = unavailableFromDate;
+    }
+
+    public String getUnavailableToDate() {
+        return unavailableToDate;
+    }
+
+    public void setUnavailableToDate(String unavailableToDate) {
+        this.unavailableToDate = unavailableToDate;
+    }
+
+    public FacilityAvailability(boolean isAvailable) {
+        this.isAvailable = isAvailable;
+
+    }
+
+    public FacilityAvailability(boolean isAvailable, String nextAvailableDate, String unavailableFromDate, String unavailableToDate) {
+        this.isAvailable = isAvailable;
         this.nextAvailableDate = nextAvailableDate;
+        this.unavailableFromDate = unavailableFromDate;
+        this.unavailableToDate = unavailableToDate;
+
     }
 
 }

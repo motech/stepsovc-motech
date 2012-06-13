@@ -27,6 +27,8 @@ public class ReferralService {
     private FacilityService facilityService;
     @Autowired
     private StepsovcScheduleService stepsovcScheduleService;
+    @Autowired
+    private StepsovcAlertService stepsovcAlertService;
 
     public void addNewReferral(StepsovcCase stepsovcCase) {
         logger.info("Handling new referral for " + stepsovcCase.getBeneficiary_code());
@@ -44,6 +46,8 @@ public class ReferralService {
         FacilityAvailability facilityAvailability = facilityService.getFacilityAvailability(referral.getFacilityCode(), referral.getServiceDate());
         if (!facilityAvailability.isAvailable()) {
             referral.setServiceDate(facilityAvailability.getNextAvailableDate());
+            stepsovcAlertService.sendInstantServiceUnavailabilityMsgToCareGiverOfReferral(referral.getCgId(), referral.getFacilityCode(),
+                    facilityAvailability.getUnavailableFromDate(), facilityAvailability.getUnavailableToDate(), facilityAvailability.getNextAvailableDate());
         }
     }
 
