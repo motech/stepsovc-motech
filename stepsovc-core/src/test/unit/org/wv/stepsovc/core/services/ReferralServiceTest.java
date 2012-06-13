@@ -163,7 +163,7 @@ public class ReferralServiceTest {
 
         ArgumentCaptor<String> facilityCodeCaptor = ArgumentCaptor.forClass(String.class);
         verify(mockCommcareGateway).removeGroupOwnership(updatedBeneficiary.capture(), facilityCodeCaptor.capture());
-        verify(mockStepsovcScheduleService).unscheduleReferral(referral);
+        verify(mockStepsovcScheduleService).unscheduleReferral(referral.getOvcId());
 
         assertNull(facilityCodeCaptor.getValue());
         assertThat(updatedBeneficiary.getValue().getCareGiverId(), is(stepsovcCase.getUser_id()));
@@ -262,7 +262,7 @@ public class ReferralServiceTest {
         toBeReturned.setOvcId(ovcId);
         doReturn(toBeReturned).when(mockAllReferrals).findActiveReferral(benCode);
         spyReferralService.updateNotAvailedReasons(stepsovcCase);
-        verify(mockStepsovcScheduleService).unscheduleReferral(toBeReturned);
+        verify(mockStepsovcScheduleService).unscheduleReferral(toBeReturned.getOvcId());
         verify(mockAllReferrals).update(toBeReturned);
 
     }
