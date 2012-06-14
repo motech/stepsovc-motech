@@ -6,7 +6,6 @@
                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
     <import resource="classpath:applicationContext-Tools.xml"/>
-    <import resource="classpath:applicationContext-Core.xml"/>
     <import resource="classpath:applicationSmsSmpp.xml"/>
 
     <context:annotation-config/>
