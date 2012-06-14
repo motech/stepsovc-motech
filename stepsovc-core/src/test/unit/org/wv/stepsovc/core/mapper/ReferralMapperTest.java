@@ -11,6 +11,7 @@ import org.wv.stepsovc.core.request.StepsovcCase;
 import java.text.ParseException;
 import java.util.Map;
 
+import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.wv.stepsovc.core.domain.ServiceType.*;
@@ -92,6 +93,17 @@ public class ReferralMapperTest {
         newReferral = new ReferralMapper().updateReferral(newReferral, stepsovcCase);
 
         assertReferralReasons(stepsovcCase, newReferral);
+    }
+
+    @Test
+    public void shouldRetainTheServiceProvidedStatus() throws Exception {
+        StepsovcCase stepsovcCase = StepsovcCaseFixture.createCaseForUpdateService("Ben_code", "2013-12-12");
+        Referral newReferral = new ReferralMapper().map(stepsovcCase);
+        stepsovcCase.setFamily_planning("Received");
+        new ReferralMapper().updateServices(newReferral, stepsovcCase);
+        stepsovcCase.setFamily_planning("Not Received");
+        new ReferralMapper().updateServices(newReferral, stepsovcCase);
+        assertTrue("Expected isProvided = true", newReferral.getReferredServices().get(FAMILY_PLANNING.getCode()).isProvided());
     }
 
     public static void assertReferralReasons(StepsovcCase stepsovcCase, Referral newReferral) {

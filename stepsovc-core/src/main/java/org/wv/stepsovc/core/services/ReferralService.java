@@ -86,9 +86,11 @@ public class ReferralService {
             commcareGateway.addGroupOwnership(new BeneficiaryMapper().createFormRequest(stepsovcCase), stepsovcCase.getFacility_code());
             stepsovcScheduleService.scheduleNewReferral(referral);
         } else {
-            if (referral.fullfilled())
+            if (referral.fullfilled()) {
                 stepsovcScheduleService.unscheduleDefaultment(referral.getOvcId());
-            commcareGateway.removeGroupOwnership(new BeneficiaryMapper().createFormRequest(stepsovcCase), existingFacilityCode);
+            }
+            //Commented as multiple "update availed services" form submission is possible
+            //commcareGateway.removeGroupOwnership(new BeneficiaryMapper().createFormRequest(stepsovcCase), existingFacilityCode);
         }
     }
 

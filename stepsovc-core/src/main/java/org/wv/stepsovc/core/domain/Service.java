@@ -46,7 +46,7 @@ public class Service {
     }
 
     public void setProvided(boolean provided) {
-        this.provided = provided;
+        this.provided = this.provided || provided;
     }
 
     public String getReason() {
