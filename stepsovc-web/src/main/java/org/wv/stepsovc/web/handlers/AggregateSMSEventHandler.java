@@ -1,4 +1,4 @@
-package org.wv.stepsovc.core.handlers;
+package org.wv.stepsovc.web.handlers;
 
 import ch.lambdaj.Lambda;
 import org.apache.log4j.Logger;

@@ -12,7 +12,7 @@ import org.motechproject.sms.api.service.SmsService;
 import org.springframework.integration.message.GenericMessage;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.wv.stepsovc.core.aggregator.SMSMessage;
-import org.wv.stepsovc.core.handlers.AggregateSMSEventHandler;
+import org.wv.stepsovc.web.handlers.AggregateSMSEventHandler;
 
 import java.util.*;
 
