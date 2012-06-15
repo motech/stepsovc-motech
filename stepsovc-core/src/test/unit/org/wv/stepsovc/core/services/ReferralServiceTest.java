@@ -20,7 +20,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -140,7 +141,6 @@ public class ReferralServiceTest {
     public void shouldRemoveFacilityFromOwnersAndUnScheduleAppointmentsWhileUpdatingReferralServices() {
 
         ArgumentCaptor<Referral> referralArgumentCaptor = ArgumentCaptor.forClass(Referral.class);
-        ArgumentCaptor<BeneficiaryInformation> updatedBeneficiary = ArgumentCaptor.forClass(BeneficiaryInformation.class);
 
         String code = "ben001";
         String groupId = "group001";
@@ -160,12 +160,7 @@ public class ReferralServiceTest {
 
         doNothing().when(mockAllReferrals).update(referralArgumentCaptor.getValue());
 
-        ArgumentCaptor<String> facilityCodeCaptor = ArgumentCaptor.forClass(String.class);
-        verify(mockCommcareGateway).removeGroupOwnership(updatedBeneficiary.capture(), facilityCodeCaptor.capture());
         verify(mockStepsovcScheduleService).unscheduleReferral(referral.getOvcId());
-
-        assertNull(facilityCodeCaptor.getValue());
-        assertThat(updatedBeneficiary.getValue().getCareGiverId(), is(stepsovcCase.getUser_id()));
     }
 
     @Test
