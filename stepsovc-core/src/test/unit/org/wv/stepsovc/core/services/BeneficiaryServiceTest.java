@@ -6,7 +6,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.wv.stepsovc.commcare.gateway.CommcareGateway;
-import org.wv.stepsovc.commcare.vo.BeneficiaryInformation;
+import org.wv.stepsovc.commcare.vo.CaseOwnershipInformation;
 import org.wv.stepsovc.core.domain.Beneficiary;
 import org.wv.stepsovc.core.domain.Caregiver;
 import org.wv.stepsovc.core.fixtures.StepsovcCaseFixture;
@@ -105,17 +105,19 @@ public class BeneficiaryServiceTest {
     public void shouldAddOwnershipIfBothCaregiverAndBeneficiaryExists() throws Exception {
         String benCode = "BEN001";
         StepsovcCase stepsovcCase = StepsovcCaseFixture.createNewCase(benCode);
-        Caregiver requestingCaregiver = new Caregiver();
-        Beneficiary beneficiary = new Beneficiary();
-        String caregiverId = "caregiverId";
-        String caregiverCode = "caregiverCode";
 
-        beneficiary.setCaregiverCode("CG1");
-        beneficiary.setCaseId("SomecaseId");
         Caregiver caregiver = new Caregiver();
         caregiver.setFirstName("caregiver1");
         caregiver.setCgId("someCaregiverID");
+
+        String caregiverId = "caregiverId";
+        String caregiverCode = "caregiverCode";
+        Caregiver requestingCaregiver = new Caregiver();
         requestingCaregiver.setCgId(caregiverId);
+
+        Beneficiary beneficiary = new Beneficiary();
+        beneficiary.setCaregiverCode("CG1");
+        beneficiary.setCaseId("SomecaseId");
         beneficiary.setCaregiverCode(caregiverCode);
 
         doReturn(beneficiary).when(allBeneficiaries).findBeneficiaryByCode(benCode);
@@ -124,13 +126,13 @@ public class BeneficiaryServiceTest {
 
         beneficiaryService.addUserOwnership(stepsovcCase);
 
-        ArgumentCaptor<BeneficiaryInformation> beneficiaryInfoCaptor = ArgumentCaptor.forClass(BeneficiaryInformation.class);
+        ArgumentCaptor<CaseOwnershipInformation> ownershipInformationCaptor = ArgumentCaptor.forClass(CaseOwnershipInformation.class);
         ArgumentCaptor<String> userIdCaptor = ArgumentCaptor.forClass(String.class);
 
-        verify(commcareGateway).addUserOwnership(beneficiaryInfoCaptor.capture(), userIdCaptor.capture());
+        verify(commcareGateway).addUserOwnership(ownershipInformationCaptor.capture(), userIdCaptor.capture());
 
         assertThat(userIdCaptor.getValue(), is(caregiverId));
-        assertBeneficiaryInfo(beneficiary, caregiver, beneficiaryInfoCaptor);
+        assertCaseOwnershipInfo(beneficiary, caregiver, ownershipInformationCaptor);
     }
 
     @Test
@@ -161,19 +163,18 @@ public class BeneficiaryServiceTest {
         doReturn(beneficiary).when(allBeneficiaries).findBeneficiaryByCode(bencode);
         doReturn(caregiver).when(mockAllCaregivers).findCaregiverByCode(caregiverCode);
         beneficiaryService.addGroupOwnership(stepsovcCase);
-        ArgumentCaptor<BeneficiaryInformation> beneficiaryInfoCaptor = ArgumentCaptor.forClass(BeneficiaryInformation.class);
+        ArgumentCaptor<CaseOwnershipInformation> beneficiaryInfoCaptor = ArgumentCaptor.forClass(CaseOwnershipInformation.class);
         ArgumentCaptor<String> groupNameCaptor = ArgumentCaptor.forClass(String.class);
         verify(commcareGateway).addGroupOwnership(beneficiaryInfoCaptor.capture(), groupNameCaptor.capture());
         assertThat(groupNameCaptor.getValue(), is(stepsovcCase.getFacility_code()));
 
-        assertBeneficiaryInfo(beneficiary, caregiver, beneficiaryInfoCaptor);
+        assertCaseOwnershipInfo(beneficiary, caregiver, beneficiaryInfoCaptor);
     }
 
-    private void assertBeneficiaryInfo(Beneficiary beneficiary, Caregiver caregiver, ArgumentCaptor<BeneficiaryInformation> beneficiaryInfoCaptor) {
-        assertThat(beneficiaryInfoCaptor.getValue().getCareGiverName(), is(caregiver.getFirstName()));
-        assertThat(beneficiaryInfoCaptor.getValue().getCareGiverCode(), is(beneficiary.getCaregiverCode()));
-        assertThat(beneficiaryInfoCaptor.getValue().getCareGiverId(), is(caregiver.getCgId()));
-        assertThat(beneficiaryInfoCaptor.getValue().getBeneficiaryId(), is(beneficiary.getCaseId()));
+    private void assertCaseOwnershipInfo(Beneficiary beneficiary, Caregiver caregiver, ArgumentCaptor<CaseOwnershipInformation> beneficiaryInfoCaptor) {
+        assertThat(beneficiaryInfoCaptor.getValue().getUserName(), is(caregiver.getFirstName()));
+        assertThat(beneficiaryInfoCaptor.getValue().getUserId(), is(caregiver.getCgId()));
+        assertThat(beneficiaryInfoCaptor.getValue().getId(), is(beneficiary.getCaseId()));
         assertThat(beneficiaryInfoCaptor.getValue().getOwnerId(), is(caregiver.getCgId()));
     }
 

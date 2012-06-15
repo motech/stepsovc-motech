@@ -1,6 +1,7 @@
 package org.wv.stepsovc.core.mapper;
 
 import org.wv.stepsovc.commcare.vo.BeneficiaryInformation;
+import org.wv.stepsovc.commcare.vo.CaseOwnershipInformation;
 import org.wv.stepsovc.core.domain.Beneficiary;
 import org.wv.stepsovc.core.request.StepsovcCase;
 
@@ -31,5 +32,15 @@ public class BeneficiaryMapper {
         beneficiaryInformation.setOwnerId(stepsovcCase.getOwner_id());
 
         return beneficiaryInformation;
+    }
+
+    public CaseOwnershipInformation createOwnershipInfo(StepsovcCase stepsovcCase) {
+        CaseOwnershipInformation caseOwnershipInformation = new CaseOwnershipInformation();
+        caseOwnershipInformation.setId(stepsovcCase.getCase_id());
+        caseOwnershipInformation.setOwnerId(stepsovcCase.getOwner_id());
+        caseOwnershipInformation.setUserId(stepsovcCase.getUser_id());
+        caseOwnershipInformation.setUserName(stepsovcCase.getCaregiver_name());
+
+        return caseOwnershipInformation;
     }
 }

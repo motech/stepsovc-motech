@@ -1,5 +1,6 @@
 package org.wv.stepsovc.commcare.gateway;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.velocity.app.VelocityEngine;
 import org.junit.Before;
 import org.junit.Test;
@@ -7,18 +8,19 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.http.client.service.HttpClientService;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.wv.stepsovc.commcare.domain.CaseType;
 import org.wv.stepsovc.commcare.domain.Group;
 import org.wv.stepsovc.commcare.repository.AllGroups;
 import org.wv.stepsovc.commcare.repository.AllUsers;
 import org.wv.stepsovc.commcare.vo.BeneficiaryInformation;
 import org.wv.stepsovc.commcare.vo.CaregiverInformation;
+import org.wv.stepsovc.commcare.vo.CaseOwnershipInformation;
 import org.wv.stepsovc.commcare.vo.FacilityInformation;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import static fixture.TestFixture.*;
 import static fixture.XmlFixture.*;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -29,8 +31,6 @@ import static org.wv.stepsovc.commcare.gateway.CommcareGateway.*;
 
 
 public class CommcareGatewayTest {
-
-    CommcareGateway commcareGateway;
 
     @Mock
     HttpClientService mockHttpClientService;
@@ -55,8 +55,7 @@ public class CommcareGatewayTest {
     public void setup() {
         initMocks(this);
         someUrl = "http://localhost:8000";
-        commcareGateway = new CommcareGateway();
-        spyCommcareGateway = spy(commcareGateway);
+        spyCommcareGateway = spy(new CommcareGateway());
         ReflectionTestUtils.setField(spyCommcareGateway, "httpClientService", mockHttpClientService);
         ReflectionTestUtils.setField(spyCommcareGateway, "velocityEngine", mockVelocityEngine);
         ReflectionTestUtils.setField(spyCommcareGateway, "allGroups", allGroups);
@@ -90,82 +89,96 @@ public class CommcareGatewayTest {
 
     @Test
     public void shouldSubmitUpdateOwnerFormForGroupOwnershipRequest() {
-        BeneficiaryInformation beneficiaryInformation = getBeneficiaryInformation("f98589102c60fcc2e0f3c422bb361ebd", "cg1", UUID.randomUUID().toString(), "Albie-case", "ABC", "cg1", "null");
-        String currentOwnerId = beneficiaryInformation.getCareGiverId();
-        model.put(CommcareGateway.BENEFICIARY_FORM_KEY, beneficiaryInformation);
+        CaseOwnershipInformation caseOwnershipInformation = getCaseOwnershipInformation(UUID.randomUUID().toString(), null, "f98589102c60fcc2e0f3c422bb361ebd", "cg1", null);
+        String currentOwnerId = caseOwnershipInformation.getUserId();
+        model.put(CommcareGateway.CASE_OWNERSHIP_FORM_KEY, caseOwnershipInformation);
         doReturn(getExpectedBeneficiaryCaseXml()).when(spyCommcareGateway).getXmlFromObject(eq(OWNER_UPDATE_FORM_TEMPLATE_PATH), eq(model));
         String someGroup = "someGroup";
         Group group = new Group();
         group.setId("somegroupId");
         doReturn(group).when(allGroups).getGroupByName(someGroup);
-        ArgumentCaptor<BeneficiaryInformation> beneficiaryInfoCaptor = ArgumentCaptor.forClass(BeneficiaryInformation.class);
+        ArgumentCaptor<CaseOwnershipInformation> captor = ArgumentCaptor.forClass(CaseOwnershipInformation.class);
 
-        spyCommcareGateway.addGroupOwnership(beneficiaryInformation, someGroup);
+        spyCommcareGateway.addGroupOwnership(caseOwnershipInformation, someGroup);
 
-        verify(spyCommcareGateway).postOwnerUpdate(beneficiaryInfoCaptor.capture());
+        verify(spyCommcareGateway).postOwnerUpdate(captor.capture());
         verify(mockHttpClientService).post(someUrl, getExpectedBeneficiaryCaseXml());
 
-        assertThat(beneficiaryInfoCaptor.getValue().getOwnerId(), is(currentOwnerId + "," + group.getId()));
+        assertThat(captor.getValue().getOwnerId(), is(currentOwnerId + "," + group.getId()));
     }
 
     @Test
     public void shouldSendOwnershipUpdateXmlForAddUserOwnershipRequest() throws Exception {
-        BeneficiaryInformation beneficiaryInformation = getBeneficiaryInformation("f98589102c60fcc2e0f3c422bb361ebd", "cg1", UUID.randomUUID().toString(), "Albie-case", "ABC", "cg1", "null");
-        String currentOwnerId = beneficiaryInformation.getCareGiverId();
-        model.put(CommcareGateway.BENEFICIARY_FORM_KEY, beneficiaryInformation);
+        CaseOwnershipInformation caseOwnershipInformation = getCaseOwnershipInformation(UUID.randomUUID().toString(), null, "f98589102c60fcc2e0f3c422bb361ebd", "cg1", null);
+        String currentOwnerId = caseOwnershipInformation.getUserId();
+        model.put(CommcareGateway.CASE_OWNERSHIP_FORM_KEY, caseOwnershipInformation);
         doReturn(getExpectedBeneficiaryCaseXml()).when(spyCommcareGateway).getXmlFromObject(eq(OWNER_UPDATE_FORM_TEMPLATE_PATH), eq(model));
         String userId = "userId";
-        ArgumentCaptor<BeneficiaryInformation> beneficiaryInfoCaptor = ArgumentCaptor.forClass(BeneficiaryInformation.class);
 
-        spyCommcareGateway.addUserOwnership(beneficiaryInformation, userId);
+        ArgumentCaptor<CaseOwnershipInformation> captor = ArgumentCaptor.forClass(CaseOwnershipInformation.class);
+        spyCommcareGateway.addUserOwnership(caseOwnershipInformation, userId);
 
-        verify(spyCommcareGateway).postOwnerUpdate(beneficiaryInfoCaptor.capture());
+        verify(spyCommcareGateway).postOwnerUpdate(captor.capture());
         verify(mockHttpClientService).post(spyCommcareGateway.getCOMMCARE_RECIEVER_URL(), getExpectedBeneficiaryCaseXml());
 
-        assertThat(beneficiaryInfoCaptor.getValue().getOwnerId(), is(currentOwnerId + "," + userId));
+        assertThat(captor.getValue().getOwnerId(), is(currentOwnerId + "," + userId));
 
     }
 
     @Test
     public void shouldRegisterFacility() {
-        FacilityInformation facilityInformation = new FacilityInformation();
+        FacilityInformation facilityInformation = spy(new FacilityInformation());
         model.put(FACILITY_FORM_KEY, facilityInformation);
         doReturn(getExpectedFacilityXml()).when(spyCommcareGateway).getXmlFromObject(FACILITY_REGISTRATION_FORM_TEMPLATE_PATH, model);
-        spyCommcareGateway.registerFacility(facilityInformation);
+        spyCommcareGateway.registerFacilityUser(facilityInformation);
         verify(mockHttpClientService).post(spyCommcareGateway.getCOMMCARE_RECIEVER_URL(), getExpectedFacilityXml());
 
     }
 
 
-    private CaregiverInformation getCareGiverInformation(String cgId, String cgCode, String phoneNumber) {
-        CaregiverInformation caregiverInfo = new CaregiverInformation();
-        caregiverInfo.setCaregiverId(cgId);
-        caregiverInfo.setCaregiverCode(cgCode);
-        caregiverInfo.setFirstName("fName");
-        caregiverInfo.setMiddleName("mName");
-        caregiverInfo.setLastName("lName");
-        caregiverInfo.setGender("male");
-        caregiverInfo.setPhoneNumber(phoneNumber);
-        return caregiverInfo;
+    @Test
+    public void shouldCreateFacilityCase() {
+        FacilityInformation facilityInformation = spy(new FacilityInformation());
+        model.put(FACILITY_FORM_KEY, facilityInformation);
+        doReturn(getExpectedFacilityCaseXml()).when(spyCommcareGateway).getXmlFromObject(FACILITY_CASE_FORM_TEMPLATE_PATH, model);
+        spyCommcareGateway.createFacilityCase(facilityInformation);
+        verify(mockHttpClientService).post(spyCommcareGateway.getCOMMCARE_RECIEVER_URL(), getExpectedFacilityCaseXml());
+
     }
 
-    private BeneficiaryInformation getBeneficiaryInformation(String caregiverId, String caregiverCode, String caseId, String caseName, String beneficiaryCode, String caregiverName, String ownerId) {
-        BeneficiaryInformation beneficiaryInformation = new BeneficiaryInformation();
-        beneficiaryInformation.setBeneficiaryId(caseId);
-        beneficiaryInformation.setBeneficiaryCode(beneficiaryCode);
-        beneficiaryInformation.setBeneficiaryName(caseName);
-        beneficiaryInformation.setBeneficiaryDob("12-12-1988");
-        beneficiaryInformation.setBeneficiarySex("male");
-        beneficiaryInformation.setBeneficiaryTitle("MR");
-        beneficiaryInformation.setReceivingOrganization("XAQ");
-        beneficiaryInformation.setCareGiverCode(caregiverCode);
-        beneficiaryInformation.setCareGiverId(caregiverId);
-        beneficiaryInformation.setCareGiverName(caregiverName);
-        beneficiaryInformation.setCaseType(CaseType.BENEFICIARY_CASE.getType());
-        beneficiaryInformation.setDateModified("2012-05-02T22:18:45.071+05:30");
-        beneficiaryInformation.setOwnerId(ownerId);
-        return beneficiaryInformation;
+    @Test
+    public void shouldCreateGroupIfNotExists() throws Exception {
+
+        String[] newUsers = {"1", "2", "3"};
+        String groupName = "All_Users";
+        doReturn(null).when(allGroups).getGroupByName(groupName);
+        spyCommcareGateway.createOrUpdateGroup(groupName, newUsers);
+        ArgumentCaptor<Group> groupCaptor = ArgumentCaptor.forClass(Group.class);
+        verify(allGroups).add(groupCaptor.capture());
+
+        assertThat(groupCaptor.getValue().getUsers(), is(newUsers));
+        assertThat(groupCaptor.getValue().getName(), is(groupName));
+
+
     }
 
+    @Test
+    public void shouldUpdateGroupIfExists() throws Exception {
 
+        String[] newUsers = {"1", "2", "3"};
+        String groupName = "All_Users";
+        Group group = new Group();
+        String[] existingUsers = {"4", "5"};
+        group.setUsers(existingUsers);
+        group.setName(groupName);
+        doReturn(group).when(allGroups).getGroupByName(groupName);
+        spyCommcareGateway.createOrUpdateGroup(groupName, newUsers);
+        ArgumentCaptor<Group> groupCaptor = ArgumentCaptor.forClass(Group.class);
+        verify(allGroups).update(groupCaptor.capture());
+
+        assertThat(groupCaptor.getValue().getUsers(), is(ArrayUtils.addAll(existingUsers, newUsers)));
+        assertThat(groupCaptor.getValue().getName(), is(groupName));
+
+
+    }
 }

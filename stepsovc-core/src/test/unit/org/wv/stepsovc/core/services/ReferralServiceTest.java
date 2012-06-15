@@ -7,7 +7,7 @@ import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.wv.stepsovc.commcare.gateway.CommcareGateway;
-import org.wv.stepsovc.commcare.vo.BeneficiaryInformation;
+import org.wv.stepsovc.commcare.vo.CaseOwnershipInformation;
 import org.wv.stepsovc.core.domain.Referral;
 import org.wv.stepsovc.core.fixtures.StepsovcCaseFixture;
 import org.wv.stepsovc.core.mapper.ReferralMapper;
@@ -53,7 +53,7 @@ public class ReferralServiceTest {
     public void shouldSendSMSToFacility_CreateSchedulesAndUpdateReferralOwnerWhileCreatingNewReferral() {
 
         ArgumentCaptor<Referral> referralArgumentCaptor = ArgumentCaptor.forClass(Referral.class);
-        ArgumentCaptor<BeneficiaryInformation> updatedBeneficiary = ArgumentCaptor.forClass(BeneficiaryInformation.class);
+        ArgumentCaptor<CaseOwnershipInformation> caseOwnershipInformationArgumentCaptor = ArgumentCaptor.forClass(CaseOwnershipInformation.class);
 
         String code = "ben001";
         String facilityCode = "FAC001";
@@ -71,10 +71,10 @@ public class ReferralServiceTest {
         doNothing().when(mockAllReferrals).add(referralArgumentCaptor.getValue());
 
         ArgumentCaptor<String> facilityCodeCaptor = ArgumentCaptor.forClass(String.class);
-        verify(mockCommcareGateway).addGroupOwnership(updatedBeneficiary.capture(), facilityCodeCaptor.capture());
+        verify(mockCommcareGateway).addGroupOwnership(caseOwnershipInformationArgumentCaptor.capture(), facilityCodeCaptor.capture());
 
         assertThat(facilityCodeCaptor.getValue(), is(facilityCode));
-        assertThat(updatedBeneficiary.getValue().getCareGiverId(), is(stepsovcCase.getUser_id()));
+        assertThat(caseOwnershipInformationArgumentCaptor.getValue().getUserId(), is(stepsovcCase.getUser_id()));
 
     }
 
@@ -167,7 +167,7 @@ public class ReferralServiceTest {
     public void shouldAssignToNewFacilityAndRescheduleAppointmentWhileUpdatingReferralServicesWithServiceProvider() {
 
         ArgumentCaptor<Referral> referralArgumentCaptor = ArgumentCaptor.forClass(Referral.class);
-        ArgumentCaptor<BeneficiaryInformation> updatedBeneficiary = ArgumentCaptor.forClass(BeneficiaryInformation.class);
+        ArgumentCaptor<CaseOwnershipInformation> caseOwnershipInformationArgumentCaptor = ArgumentCaptor.forClass(CaseOwnershipInformation.class);
 
         String code = "ben001";
         String groupId1 = "group001";
@@ -192,10 +192,10 @@ public class ReferralServiceTest {
         doNothing().when(mockAllReferrals).update(referralArgumentCaptor.getValue());
 
         ArgumentCaptor<String> facilityCodeCaptor = ArgumentCaptor.forClass(String.class);
-        verify(mockCommcareGateway).addGroupOwnership(updatedBeneficiary.capture(), facilityCodeCaptor.capture());
+        verify(mockCommcareGateway).addGroupOwnership(caseOwnershipInformationArgumentCaptor.capture(), facilityCodeCaptor.capture());
 
         assertThat(facilityCodeCaptor.getValue(), is(groupName));
-        assertThat(updatedBeneficiary.getValue().getCareGiverId(), is(stepsovcCase.getUser_id()));
+        assertThat(caseOwnershipInformationArgumentCaptor.getValue().getUserId(), is(stepsovcCase.getUser_id()));
     }
 
     @Test

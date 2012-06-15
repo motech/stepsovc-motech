@@ -3,6 +3,7 @@ package fixture;
 import org.wv.stepsovc.commcare.domain.CaseType;
 import org.wv.stepsovc.commcare.vo.BeneficiaryInformation;
 import org.wv.stepsovc.commcare.vo.CaregiverInformation;
+import org.wv.stepsovc.commcare.vo.CaseOwnershipInformation;
 import org.wv.stepsovc.commcare.vo.FacilityInformation;
 
 public class TestFixture {
@@ -38,6 +39,7 @@ public class TestFixture {
     public static FacilityInformation createFacilityInformation() {
         FacilityInformation facilityInformation = new FacilityInformation();
         facilityInformation.setId("FAC1");
+        facilityInformation.setFacilityName("FAC01-Name");
         facilityInformation.setFacilityCode("someFacilityCode");
         facilityInformation.setConstituency("someFacilityConstituency");
         facilityInformation.setDistrict("someFacilityDistrict");
@@ -67,6 +69,29 @@ public class TestFixture {
         beneficiaryInformation.setDateModified("2012-05-02T22:18:45.071+05:30");
         beneficiaryInformation.setOwnerId(ownerId);
         return beneficiaryInformation;
+    }
+
+
+    public static CaseOwnershipInformation getCaseOwnershipInformation(String id, String ownerId, String userId, String userName, String dateModified) {
+        CaseOwnershipInformation caseOwnershipInformation = new CaseOwnershipInformation();
+        caseOwnershipInformation.setId(id);
+        caseOwnershipInformation.setOwnerId(ownerId);
+        caseOwnershipInformation.setUserId(userId);
+        caseOwnershipInformation.setUserName(userName);
+        caseOwnershipInformation.setDateModified(dateModified);
+        return caseOwnershipInformation;
+    }
+
+    public static CaregiverInformation getCareGiverInformation(String cgId, String cgCode, String phoneNumber) {
+        CaregiverInformation caregiverInfo = new CaregiverInformation();
+        caregiverInfo.setCaregiverId(cgId);
+        caregiverInfo.setCaregiverCode(cgCode);
+        caregiverInfo.setFirstName("fName");
+        caregiverInfo.setMiddleName("mName");
+        caregiverInfo.setLastName("lName");
+        caregiverInfo.setGender("male");
+        caregiverInfo.setPhoneNumber(phoneNumber);
+        return caregiverInfo;
     }
 }
 

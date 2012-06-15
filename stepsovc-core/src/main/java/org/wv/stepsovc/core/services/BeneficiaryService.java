@@ -4,7 +4,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.wv.stepsovc.commcare.gateway.CommcareGateway;
-import org.wv.stepsovc.commcare.vo.BeneficiaryInformation;
+import org.wv.stepsovc.commcare.vo.CaseOwnershipInformation;
 import org.wv.stepsovc.core.domain.Beneficiary;
 import org.wv.stepsovc.core.domain.Caregiver;
 import org.wv.stepsovc.core.mapper.BeneficiaryMapper;
@@ -53,7 +53,7 @@ public class BeneficiaryService {
         }
     }
 
-    private BeneficiaryInformation populateBeneficiaryCase(StepsovcCase stepsovcCase, Beneficiary beneficiary) {
+    private CaseOwnershipInformation populateBeneficiaryCase(StepsovcCase stepsovcCase, Beneficiary beneficiary) {
         stepsovcCase.setCaregiver_code(beneficiary.getCaregiverCode());
         stepsovcCase.setCase_id(beneficiary.getCaseId());
 
@@ -62,10 +62,10 @@ public class BeneficiaryService {
         stepsovcCase.setUser_id(caregiver.getCgId());
         stepsovcCase.setOwner_id(caregiver.getCgId());
 
-        return new BeneficiaryMapper().createFormRequest(stepsovcCase);
+        return new BeneficiaryMapper().createOwnershipInfo(stepsovcCase);
     }
 
-    public void createDummyOwnershipCase(StepsovcCase stepsovcCase) {
-        commcareGateway.addGroupOwnership(new BeneficiaryMapper().createFormRequest(stepsovcCase), CommcareGateway.ALL_USERS_GROUP);
+    public void changeOwnershipForRequestOwnershipCase(StepsovcCase stepsovcCase) {
+        commcareGateway.addGroupOwnership(new BeneficiaryMapper().createOwnershipInfo(stepsovcCase), CommcareGateway.ALL_USERS_GROUP);
     }
 }

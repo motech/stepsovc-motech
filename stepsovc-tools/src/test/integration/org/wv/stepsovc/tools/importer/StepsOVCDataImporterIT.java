@@ -11,12 +11,16 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.wv.stepsovc.commcare.gateway.CommcareGateway;
+import org.wv.stepsovc.commcare.repository.AllGroups;
 import org.wv.stepsovc.commcare.repository.AllUsers;
 import org.wv.stepsovc.core.repository.AllBeneficiaries;
 import org.wv.stepsovc.core.repository.AllCaregivers;
 import org.wv.stepsovc.core.repository.AllFacilities;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -38,13 +42,24 @@ public class StepsOVCDataImporterIT {
     private String beneficiaryId1 = "00146713-7772-43e0-9d47-3a7200953cea";
 
     private String beneficiaryId2 = "001723a8-1b83-47f3-a7a1-0d2907f00d49";
+
     String commcareHqUrl = "http://localhost:5984/commcarehq/";
+    @Autowired
+    private AllGroups allGroups;
 
     @Test
     public void shouldImportCareGivers() throws InterruptedException {
         createAndAssertCaregiver();
         deleteCareGiverCreated();
+        assertAllCaregiversAreAddedToAllUserGroup();
 
+    }
+
+    private void assertAllCaregiversAreAddedToAllUserGroup() {
+        List<String> userList = Arrays.asList(allGroups.getGroupByName(CommcareGateway.ALL_USERS_GROUP).getUsers());
+        for (int i = 100; i <= 102; i++) {
+            userList.contains(String.valueOf(i));
+        }
     }
 
     @Test
@@ -83,6 +98,8 @@ public class StepsOVCDataImporterIT {
     }
 
     @Test
+    //When you  run this  test  remember to  delete the  facility  case  manually  created in commcarehq-couchdb,The test  does note
+    // takecare of  deleting the facility case
     public void shouldImportFacilities() {
         assertFacilitiesNotPresent();
         String filePath = this.getClass().getResource("/facility.csv").getPath();
@@ -90,6 +107,21 @@ public class StepsOVCDataImporterIT {
         StepsOVCDataImporter.main(newArgs);
         assertFacilitiesPresent();
         deleteFacilityCreated();
+        assertNewFacilitiesHaveNewGroupsCreatedAndAllFacilityGroupsAreAddedToAllUsersGroup();
+    }
+
+    private void assertNewFacilitiesHaveNewGroupsCreatedAndAllFacilityGroupsAreAddedToAllUsersGroup() {
+        List<String> userList = Arrays.asList(allGroups.getGroupByName(CommcareGateway.ALL_USERS_GROUP).getUsers());
+        for (int i = 1; i <= 3; i++) {
+            assertNotNull(allGroups.getGroupByName(String.valueOf(i)));
+            userList.contains(String.valueOf(i));
+        }
+    }
+
+    @Test
+    public void shouldImportBeneficiaries() throws InterruptedException {
+        createAndAssertBeneficiary();
+        deleteBeneficiariesCreated();
     }
 
     private void deleteFacilityCreated() {
@@ -113,11 +145,6 @@ public class StepsOVCDataImporterIT {
         }
     }
 
-    @Ignore
-    public void shouldImportBeneficiaries() throws InterruptedException {
-        createAndAssertBeneficiary();
-        deleteBeneficiariesCreated();
-    }
 
     private void deleteCareGiverCreated() {
         for (int i = 100; i <= 102; i++) {
@@ -127,6 +154,7 @@ public class StepsOVCDataImporterIT {
     }
 
     private void assertCareGiversCreated() {
+        safeSleep();
         for (int i = 100; i <= 102; i++) {
             assertTrue(allUsers.contains(String.valueOf(i)));
             assertNotNull(allCaregivers.findCaregiverById(String.valueOf(i)));
@@ -134,12 +162,14 @@ public class StepsOVCDataImporterIT {
     }
 
     private void assertCaregiverPhoneNumber() {
+        safeSleep();
         for (int i = 100; i <= 102; i++) {
             assertNotNull(allCaregivers.findCaregiverById(String.valueOf(i)).getPhoneNumber());
         }
     }
 
     private void assertCaregiverFacilityCode() {
+        safeSleep();
         for (int i = 100; i <= 102; i++) {
             assertNotNull(allCaregivers.findCaregiverById(String.valueOf(i)).getFacilityCode());
         }
@@ -149,6 +179,14 @@ public class StepsOVCDataImporterIT {
         for (int i = 100; i <= 102; i++) {
             assertFalse(allUsers.contains(String.valueOf(i)));
             assertNull(allCaregivers.findCaregiverById(String.valueOf(i)));
+        }
+    }
+
+    private void safeSleep() {
+        try {
+            Thread.sleep(30000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
     }
 
@@ -166,13 +204,13 @@ public class StepsOVCDataImporterIT {
         StepsOVCDataImporter.main(newArgs);
     }
 
-
-    private void deleteBeneficiariesCreated() {
+    public void deleteBeneficiariesCreated() {
         for (int i = 1; i <= 2; i++) {
-            allBeneficiaries.remove(allBeneficiaries.findBeneficiaryByCode(String.valueOf(i)));
+            if (allBeneficiaries.findBeneficiaryByCode(String.valueOf(i)) != null)
+                allBeneficiaries.remove(allBeneficiaries.findBeneficiaryByCode(String.valueOf(i)));
         }
-        deleteBeneficiariesCreatedInCommcareHq(beneficiaryId1);
-        deleteBeneficiariesCreatedInCommcareHq(beneficiaryId2);
+        deleteCasesCreatedInCommcareHq(beneficiaryId1);
+        deleteCasesCreatedInCommcareHq(beneficiaryId2);
     }
 
 
@@ -186,25 +224,27 @@ public class StepsOVCDataImporterIT {
     }
 
     private void assertBeneficiariesCreated() throws InterruptedException {
-        Thread.sleep(60000l);
+        safeSleep();
         for (int i = 1; i <= 2; i++) {
             assertNotNull(allBeneficiaries.findBeneficiaryByCode(String.valueOf(i)));
         }
     }
 
-    private int deleteBeneficiariesCreatedInCommcareHq(String id) {
-        GetMethod getMethod = new GetMethod(commcareHqUrl + id + "?revs_info=true");
+    private int deleteCasesCreatedInCommcareHq(String documentId) {
+        GetMethod getMethod = new GetMethod(commcareHqUrl + documentId + "?revs_info=true");
         int status = 0;
         String rev_Id = "0";
         HttpClient httpClient = new HttpClient();
         try {
             int getStatus = httpClient.executeMethod(getMethod);
+            assertEquals(200, getStatus);
             String responseBodyAsString = getMethod.getResponseBodyAsString();
             ObjectMapper mapper = new ObjectMapper();
             JsonNode jsonNode = mapper.readTree(responseBodyAsString);
             rev_Id = jsonNode.get("_rev").getValueAsText();
-            DeleteMethod deleteMethod = new DeleteMethod(commcareHqUrl + id + "?rev=" + rev_Id);
+            DeleteMethod deleteMethod = new DeleteMethod(commcareHqUrl + documentId + "?rev=" + rev_Id);
             status = httpClient.executeMethod(deleteMethod);
+            assertEquals(200, status);
         } catch (IOException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }

@@ -36,7 +36,7 @@ public class ReferralService {
 
         Referral newReferral = new ReferralMapper().map(stepsovcCase);
         checkForAvailableDate(newReferral);
-        commcareGateway.addGroupOwnership(new BeneficiaryMapper().createFormRequest(stepsovcCase), stepsovcCase.getFacility_code());
+        commcareGateway.addGroupOwnership(new BeneficiaryMapper().createOwnershipInfo(stepsovcCase), stepsovcCase.getFacility_code());
 
         stepsovcScheduleService.scheduleNewReferral(newReferral);
         allReferrals.add(newReferral);
@@ -83,7 +83,7 @@ public class ReferralService {
         if (StringUtils.isNotEmpty(stepsovcCase.getFacility_code())) {
             stepsovcScheduleService.unscheduleDefaultment(referral.getOvcId());
             checkForAvailableDate(referral);
-            commcareGateway.addGroupOwnership(new BeneficiaryMapper().createFormRequest(stepsovcCase), stepsovcCase.getFacility_code());
+            commcareGateway.addGroupOwnership(new BeneficiaryMapper().createOwnershipInfo(stepsovcCase), stepsovcCase.getFacility_code());
             stepsovcScheduleService.scheduleNewReferral(referral);
         } else {
             if (referral.fullfilled()) {

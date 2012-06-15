@@ -14,12 +14,14 @@ import org.wv.stepsovc.commcare.repository.AllGroups;
 import org.wv.stepsovc.commcare.repository.AllUsers;
 import org.wv.stepsovc.commcare.vo.BeneficiaryInformation;
 import org.wv.stepsovc.commcare.vo.CaregiverInformation;
+import org.wv.stepsovc.commcare.vo.CaseOwnershipInformation;
 import org.wv.stepsovc.commcare.vo.FacilityInformation;
 
 import java.util.HashMap;
 import java.util.UUID;
 
 import static fixture.TestFixture.getBeneficiaryInformation;
+import static fixture.TestFixture.getCaseOwnershipInformation;
 import static fixture.XmlFixture.*;
 import static junit.framework.Assert.assertEquals;
 import static org.wv.stepsovc.commcare.gateway.CommcareGateway.*;
@@ -50,14 +52,16 @@ public class CommcareGatewayIT {
     @Test
     public void shouldConvertObjectToXml() {
         BeneficiaryInformation beneficiaryInformation = getBeneficiaryInformation("f98589102c60fcc2e0f3c422bb361ebd", "cg1", "c7264b49-4e3d-4659-8df3-7316539829cb", "test-case", "XYZ/123", "cg1", "hw1");
+        CaseOwnershipInformation caseOwnershipInformation = getCaseOwnershipInformation("c7264b49-4e3d-4659-8df3-7316539829cb", "hw1", "f98589102c60fcc2e0f3c422bb361ebd", "cg1", "2012-05-02T22:18:45.071+05:30");
         assertConversion(CommcareGateway.BENEFICIARY_FORM_KEY, beneficiaryInformation, BENEFICIARY_CASE_FORM_TEMPLATE_PATH, getExpectedBeneficiaryCaseXml());
-        assertConversion(CommcareGateway.BENEFICIARY_FORM_KEY, beneficiaryInformation, OWNER_UPDATE_FORM_TEMPLATE_PATH, getExpectedUpdateOwnerXml());
+        assertConversion(CommcareGateway.CASE_OWNERSHIP_FORM_KEY, caseOwnershipInformation, OWNER_UPDATE_FORM_TEMPLATE_PATH, getExpectedUpdateOwnerXml());
 
         CaregiverInformation careGiverInformation = TestFixture.createCareGiverInformation();
         assertConversion(CommcareGateway.CARE_GIVER_FORM_KEY, careGiverInformation, USER_REGISTRATION_FORM_TEMPLATE_PATH, getExpectedUserFormXml());
 
         FacilityInformation facilityInformation = TestFixture.createFacilityInformation();
         assertConversion(CommcareGateway.FACILITY_FORM_KEY, facilityInformation, FACILITY_REGISTRATION_FORM_TEMPLATE_PATH, getExpectedFacilityXml());
+        assertConversion(CommcareGateway.FACILITY_FORM_KEY, facilityInformation, FACILITY_CASE_FORM_TEMPLATE_PATH, getExpectedFacilityCaseXml());
 
     }
 
@@ -73,9 +77,7 @@ public class CommcareGatewayIT {
         userId1 = allUsers.getUserByName(newUser1.getUsername()).getId();
         userId2 = allUsers.getUserByName(newUser2.getUsername()).getId();
 
-        String domainName = "stepsovc";
-
-        allGroups.add(GroupFactory.createGroup(groupName, new String[]{userId1, userId2}, domainName));
+        allGroups.add(GroupFactory.createGroup(groupName, new String[]{userId1, userId2}));
         Assert.assertNotNull(allGroups.getGroupByName(groupName));
         allGroups.removeByName(groupName);
         allUsers.removeByName(newUser1.getUsername());

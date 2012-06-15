@@ -70,7 +70,7 @@ public class CareGiverImporterTest {
         ArgumentCaptor<String> captor2 = ArgumentCaptor.forClass(String.class);
 
         verify(mockDMISDataProcessor, times(6)).decrypt(captor2.capture());
-
+        verify(mockCommcareGateway).createOrUpdateGroup(CommcareGateway.ALL_USERS_GROUP, new String[]{id1, id2});
         assertThat(captor1.getAllValues().get(0).getCgId(), is(id1));
         assertThat(captor1.getAllValues().get(1).getCgId(), is(id2));
         assertThat(captor2.getAllValues().get(0), is(fname1));

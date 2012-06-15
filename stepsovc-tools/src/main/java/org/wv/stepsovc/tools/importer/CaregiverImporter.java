@@ -1,5 +1,6 @@
 package org.wv.stepsovc.tools.importer;
 
+import ch.lambdaj.Lambda;
 import org.joda.time.DateTime;
 import org.motechproject.importer.annotation.CSVImporter;
 import org.motechproject.importer.annotation.Post;
@@ -12,6 +13,8 @@ import org.wv.stepsovc.tools.dmis.DMISDataProcessor;
 import org.wv.stepsovc.tools.mapper.CaregiverMapper;
 
 import java.util.List;
+
+import static ch.lambdaj.Lambda.on;
 
 @CSVImporter(entity = "caregiver", bean = CaregiverInformation.class)
 @Component
@@ -34,5 +37,7 @@ public class CaregiverImporter {
             commcareGateway.registerCaregiver(entity);
             caregiverService.addCareGiver(caregiverMapper.map(entity));
         }
+        List<String> caregiverIds = Lambda.extract(entities, on(CaregiverInformation.class).getCaregiverId());
+        commcareGateway.createOrUpdateGroup(CommcareGateway.ALL_USERS_GROUP, caregiverIds.toArray(new String[]{}));
     }
 }

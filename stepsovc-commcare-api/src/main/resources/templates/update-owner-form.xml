@@ -1,18 +1,18 @@
 <?xml version='1.0' ?>
 <data uiVersion="1" version="89" name="update"
       xmlns="http://openrosa.org/formdesigner/E45F3EFD-A7BE-42A6-97C2-5133E766A2AA">
-    <owner_id>$beneficiary.ownerId</owner_id>
+    <owner_id>$!caseOwnershipRequest.ownerId</owner_id>
     <form_type>custom_update</form_type>
     <case>
-        <case_id>$beneficiary.beneficiaryId</case_id>
-        <date_modified>$beneficiary.dateModified</date_modified>
+        <case_id>$!caseOwnershipRequest.id</case_id>
+        <date_modified>$!caseOwnershipRequest.dateModified</date_modified>
         <update>
             <form_type>custom_update</form_type>
-            <owner_id>$beneficiary.ownerId</owner_id>
+            <owner_id>$!caseOwnershipRequest.ownerId</owner_id>
         </update>
     </case>
     <meta>
-        <username>$beneficiary.careGiverCode</username>
-        <userID>$beneficiary.careGiverId</userID>
+        <username>$!caseOwnershipRequest.userName</username>
+        <userID>$!caseOwnershipRequest.userId</userID>
     </meta>
 </data>

@@ -76,17 +76,17 @@ public class StepsovcCaseController extends CaseService<StepsovcCase> {
             else if (UPDATE_SERVICE.getType().equals(stepsovcCase.getForm_type()))
                 referralService.updateAvailedServices(stepsovcCase);
         } else if (FACILITY_CASE.getType().equals(stepsovcCase.getCase_type())) {
-            if(FACILITY_UNAVAILABILITY.getType().equals(stepsovcCase.getForm_type()))
+            if (FACILITY_UNAVAILABILITY.getType().equals(stepsovcCase.getForm_type()))
                 facilityService.makeFacilityUnavailable(stepsovcCase);
-            else if(FACILITY_REGISTRATION.getType().equals(stepsovcCase.getForm_type()))
+            else if (FACILITY_REGISTRATION.getType().equals(stepsovcCase.getForm_type()))
                 facilityService.registerFacility(stepsovcCase);
-        } else if(BENEFICIARY_OWNERSHIP_CASE.getType().equals(stepsovcCase.getCase_type())) {
-            if(USER_OWNERSHIP_REQUEST.getType().equals(stepsovcCase.getForm_type())) {
+        } else if (BENEFICIARY_OWNERSHIP_CASE.getType().equals(stepsovcCase.getCase_type())) {
+            if (USER_OWNERSHIP_REQUEST.getType().equals(stepsovcCase.getForm_type())) {
                 beneficiaryService.addUserOwnership(stepsovcCase);
-            } else if(FACILITY_OWNERSHIP_REQUEST.getType().equals(stepsovcCase.getForm_type())) {
+            } else if (FACILITY_OWNERSHIP_REQUEST.getType().equals(stepsovcCase.getForm_type())) {
                 beneficiaryService.addGroupOwnership(stepsovcCase);
-            } else if(OWNERSHIP_REGISTRATION.getType().equals(stepsovcCase.getForm_type())) {
-                    beneficiaryService.createDummyOwnershipCase(stepsovcCase);
+            } else if (OWNERSHIP_REGISTRATION.getType().equals(stepsovcCase.getForm_type())) {
+                beneficiaryService.changeOwnershipForRequestOwnershipCase(stepsovcCase);
             }
         }
     }
