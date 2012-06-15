@@ -108,7 +108,8 @@ public class XmlFixture {
 
     public static String getExpectedFacilityCaseXml() {
         return "<?xml version='1.0' ?>\n" +
-                "<data uiVersion=\"1\" version=\"40\" name=\"Facility Registration\" xmlns:jrm=\"http://dev.commcarehq.org/jr/xforms\" xmlns=\"http://openrosa.org/formdesigner/8F9255C2-3A1D-4B82-8346-561264CEBEA0\">\n" +
+                "<data uiVersion=\"1\" version=\"40\" name=\"Facility Registration\"\n" +
+                "      xmlns=\"http://openrosa.org/formdesigner/8F9255C2-3A1D-4B82-8346-561264CEBEA0\">\n" +
                 "    <facility_code>someFacilityCode</facility_code>\n" +
                 "    <facility_name>FAC01-Name</facility_name>\n" +
                 "    <case>\n" +
