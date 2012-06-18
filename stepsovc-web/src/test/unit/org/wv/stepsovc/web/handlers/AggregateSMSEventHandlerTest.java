@@ -7,7 +7,7 @@ import org.mockito.Mock;
 import org.motechproject.aggregator.aggregation.AggregateMotechEvent;
 import org.motechproject.cmslite.api.model.StringContent;
 import org.motechproject.cmslite.api.service.CMSLiteService;
-import org.motechproject.model.MotechEvent;
+import org.motechproject.scheduler.domain.MotechEvent;
 import org.motechproject.sms.api.service.SmsService;
 import org.springframework.integration.message.GenericMessage;
 import org.springframework.test.util.ReflectionTestUtils;
