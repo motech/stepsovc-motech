@@ -5,15 +5,18 @@ import org.joda.time.DateTime;
 import org.junit.After;
 import org.motechproject.appointments.api.model.jobs.AppointmentReminderJob;
 import org.motechproject.scheduler.MotechSchedulerServiceImpl;
+import org.quartz.JobKey;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
+import org.quartz.impl.matchers.GroupMatcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import static ch.lambdaj.Lambda.on;
 import static java.lang.String.format;
@@ -31,11 +34,7 @@ public abstract class BaseScheduleTest {
     public final void deleteAllJobs() throws SchedulerException {
 
         Scheduler scheduler = schedulerFactoryBean.getScheduler();
-        for (String jobGroup : scheduler.getJobGroupNames()) {
-            for (String jobName : scheduler.getJobNames(jobGroup)) {
-                scheduler.deleteJob(jobName, jobGroup);
-            }
-        }
+        scheduler.clear();
     }
 
     protected void assertAlerts(List<org.wv.stepsovc.core.TestJobDetail> actualJobDetails, List<org.wv.stepsovc.core.TestAlert> expectedAlerts) {
@@ -57,14 +56,14 @@ public abstract class BaseScheduleTest {
         List<org.wv.stepsovc.core.TestJobDetail> alertTriggers = new ArrayList<org.wv.stepsovc.core.TestJobDetail>();
 
         try {
-            String[] jobNames = scheduler.getJobNames(jobGroupName);
-            for (String jobName : jobNames) {
+            Set<JobKey> jobKeys = scheduler.getJobKeys(GroupMatcher.jobGroupEquals(jobGroupName));
+            for (JobKey jobKey : jobKeys) {
                 for (int i = 0; i < count; i++) {
                     String jobId = AppointmentReminderJob.getJobIdUsing(enrollmentId, visitName, i);
-                    if (jobName.contains(format("%s-%s", AppointmentReminderJob.SUBJECT, jobId))) {
-                        Trigger[] triggersOfJob = scheduler.getTriggersOfJob(jobName, jobGroupName);
-                        assertEquals(1, triggersOfJob.length);
-                        alertTriggers.add(new org.wv.stepsovc.core.TestJobDetail(triggersOfJob[0], scheduler.getJobDetail(jobName, jobGroupName)));
+                    if (jobKey.getName().contains(format("%s-%s", AppointmentReminderJob.SUBJECT, jobId))) {
+                        List<Trigger> triggersOfJob = (List<Trigger>) scheduler.getTriggersOfJob(jobKey);
+                        assertEquals(1, triggersOfJob.size());
+                        alertTriggers.add(new org.wv.stepsovc.core.TestJobDetail(triggersOfJob.get(0), scheduler.getJobDetail(jobKey)));
                     }
                 }
             }

@@ -29,6 +29,11 @@
         </dependency>
         <dependency>
             <groupId>org.motechproject</groupId>
+            <artifactId>case-common</artifactId>
+            <version>${motech-contrib.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.motechproject</groupId>
             <artifactId>commcare-case-gateway</artifactId>
             <version>${motech-contrib.version}</version>
         </dependency>
