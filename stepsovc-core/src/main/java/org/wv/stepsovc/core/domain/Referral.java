@@ -2,6 +2,7 @@ package org.wv.stepsovc.core.domain;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.ektorp.support.TypeDiscriminator;
+import org.joda.time.LocalDate;
 import org.motechproject.model.MotechBaseDataObject;
 import org.motechproject.util.DateUtil;
 import org.wv.stepsovc.core.utils.DateUtils;
@@ -37,6 +38,8 @@ public class Referral extends MotechBaseDataObject {
     private String serviceDetails;
     @JsonProperty
     private boolean active;
+    @JsonProperty
+    private LocalDate lastModified;
 
     public String getCgId() {
         return cgId;
@@ -142,6 +145,14 @@ public class Referral extends MotechBaseDataObject {
         this.serviceDetails = serviceDetails;
     }
 
+    public LocalDate getLastModified() {
+        return lastModified;
+    }
+
+    public void setLastModified(LocalDate lastModified) {
+        this.lastModified = lastModified;
+    }
+
     public List<String> referredServiceCodes() {
         List<String> serviceCodes = new ArrayList<String>();
 
@@ -168,5 +179,13 @@ public class Referral extends MotechBaseDataObject {
             if (service.isReferred() && !service.isProvided())
                 return false;
         return true;
+    }
+
+    public boolean anyServiceReceived() {
+        for (Service service : referredServices.values()) {
+            if (service.isProvided())
+                return true;
+        }
+        return false;
     }
 }

@@ -4,6 +4,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.wv.stepsovc.commcare.gateway.CommcareGateway;
 import org.wv.stepsovc.core.domain.Referral;
 import org.wv.stepsovc.core.mapper.BeneficiaryMapper;
@@ -15,6 +16,8 @@ import org.wv.stepsovc.core.vo.FacilityAvailability;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.motechproject.util.DateUtil.today;
 
 public class ReferralService {
 
@@ -29,6 +32,8 @@ public class ReferralService {
     private StepsovcScheduleService stepsovcScheduleService;
     @Autowired
     private StepsovcAlertService stepsovcAlertService;
+    @Value("#{stepovcProperties['export.window']}")
+    private Integer exportWindowInWeeks;
 
     public void addNewReferral(StepsovcCase stepsovcCase) {
         logger.info("Handling new referral for " + stepsovcCase.getBeneficiary_code());
@@ -114,5 +119,10 @@ public class ReferralService {
             allReferrals.update(referral.setServiceDate(nextAvailableDate));
             stepsovcScheduleService.scheduleNewReferral(referral);
         }
+    }
+
+    public List<Referral> getReferralDataForExport() {
+        LocalDate localDate = today().minusWeeks(exportWindowInWeeks);
+        return allReferrals.getAllModifiedBetween(localDate, today());
     }
 }

@@ -1,4 +1,4 @@
-package org.wv.stepsovc.web.controllers;
+package fixtures;
 
 import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
@@ -27,7 +27,7 @@ public class StepsovcCaseFixture {
         assertThat(referredServices.get(END_OF_LIFE_HOSPICE.getCode()).isReferred(), is(ReferralMapper.REFERRED.equals(stepsovcCase.getEnd_of_life_hospice())));
         assertThat(newReferral.getFacilityCode(), is(stepsovcCase.getFacility_code()));
         assertThat(referredServices.get(FAMILY_PLANNING.getCode()).isReferred(), is(ReferralMapper.REFERRED.equals(stepsovcCase.getFamily_planning())));
-        assertThat(referredServices.get(HIVE_COUNSELING.getCode()).isReferred(), is(ReferralMapper.REFERRED.equals(stepsovcCase.getHiv_counseling())));
+        assertThat(referredServices.get(HIV_COUNSELING.getCode()).isReferred(), is(ReferralMapper.REFERRED.equals(stepsovcCase.getHiv_counseling())));
         assertThat(referredServices.get(NEW_DIAGNOSIS.getCode()).isReferred(), is(ReferralMapper.REFERRED.equals(stepsovcCase.getNew_diagnosis())));
         assertThat(referredServices.get(OTHER_HEALTH_SERVICES.getCode()).isReferred(), is(ReferralMapper.REFERRED.equals(stepsovcCase.getOther_health_services())));
         assertThat(referredServices.get(PAIN_MANAGEMENT.getCode()).isReferred(), is(ReferralMapper.REFERRED.equals(stepsovcCase.getPain_management())));
@@ -39,8 +39,8 @@ public class StepsovcCaseFixture {
         assertThat(newReferral.getFollowupDate(), is(stepsovcCase.getFollowup_date()));
     }
 
-    public static StepsovcCase createCaseForReferral(String code, String serviceDate, String facilityId) {
-        StepsovcCase stepsovcCase = createNewCase(code);
+    public static StepsovcCase createCaseForReferral(String beneficiaryCode, String serviceDate, String facilityId) {
+        StepsovcCase stepsovcCase = createNewBeneficiaryCase(beneficiaryCode);
         stepsovcCase.setCondoms("Referred");
         stepsovcCase.setArt_adherence_counseling("Referred");
         stepsovcCase.setEnd_of_life_hospice("Not Referred");
@@ -62,15 +62,16 @@ public class StepsovcCaseFixture {
         return stepsovcCase;
     }
 
-    public static StepsovcCase createNewCase(String code) {
+    public static StepsovcCase createNewBeneficiaryCase(String beneficiaryCode) {
         StepsovcCase stepsovcCase = new StepsovcCase();
 
         stepsovcCase.setCase_type(CaseType.BENEFICIARY_CASE.getType());
-        stepsovcCase.setBeneficiary_code(code);
+        stepsovcCase.setBeneficiary_code(beneficiaryCode);
         stepsovcCase.setBeneficiary_dob("10-10-1967");
         stepsovcCase.setBeneficiary_name("Ben_Name");
         stepsovcCase.setCaregiver_code("CareGiverID");
         stepsovcCase.setCaregiver_name("CareGiverName");
+        stepsovcCase.setCase_id("BenId");
         return stepsovcCase;
     }
 
@@ -92,7 +93,7 @@ public class StepsovcCaseFixture {
         assertThat(referredServices.get(CONDOMS.getCode()).isProvided(), is(ReferralMapper.SERVICE_RECEIVED.equals(stepsovcCase.getCondoms())));
         assertThat(referredServices.get(END_OF_LIFE_HOSPICE.getCode()).isProvided(), is(ReferralMapper.SERVICE_RECEIVED.equals(stepsovcCase.getEnd_of_life_hospice())));
         assertThat(referredServices.get(FAMILY_PLANNING.getCode()).isProvided(), is(ReferralMapper.SERVICE_RECEIVED.equals(stepsovcCase.getFamily_planning())));
-        assertThat(referredServices.get(HIVE_COUNSELING.getCode()).isProvided(), is(ReferralMapper.SERVICE_RECEIVED.equals(stepsovcCase.getHiv_counseling())));
+        assertThat(referredServices.get(HIV_COUNSELING.getCode()).isProvided(), is(ReferralMapper.SERVICE_RECEIVED.equals(stepsovcCase.getHiv_counseling())));
         assertThat(referredServices.get(NEW_DIAGNOSIS.getCode()).isProvided(), is(ReferralMapper.SERVICE_RECEIVED.equals(stepsovcCase.getNew_diagnosis())));
         assertThat(referredServices.get(OTHER_HEALTH_SERVICES.getCode()).isProvided(), is(ReferralMapper.SERVICE_RECEIVED.equals(stepsovcCase.getOther_health_services())));
         assertThat(referredServices.get(PAIN_MANAGEMENT.getCode()).isProvided(), is(ReferralMapper.SERVICE_RECEIVED.equals(stepsovcCase.getPain_management())));
@@ -120,7 +121,7 @@ public class StepsovcCaseFixture {
         assertThat(referredServices.get(ART_ADHERENCE.getCode()).getReason(), is(serviceUnavailedReason(stepsovcCase.getArt_adherence_na_reason())));
         assertThat(referredServices.get(CONDOMS.getCode()).getReason(), is(serviceUnavailedReason(stepsovcCase.getCondoms_na_reason())));
         assertThat(referredServices.get(FAMILY_PLANNING.getCode()).getReason(), is(serviceUnavailedReason(stepsovcCase.getFamily_planning_na_reason())));
-        assertThat(referredServices.get(HIVE_COUNSELING.getCode()).getReason(), is(serviceUnavailedReason(stepsovcCase.getHiv_counseling_na_reason())));
+        assertThat(referredServices.get(HIV_COUNSELING.getCode()).getReason(), is(serviceUnavailedReason(stepsovcCase.getHiv_counseling_na_reason())));
         assertThat(referredServices.get(NEW_DIAGNOSIS.getCode()).getReason(), is(serviceUnavailedReason(stepsovcCase.getNew_diagnosis_na_reason())));
         assertThat(referredServices.get(OTHER_HEALTH_SERVICES.getCode()).getReason(), is(serviceUnavailedReason(stepsovcCase.getOther_health_service_na_reason())));
         assertThat(referredServices.get(PAIN_MANAGEMENT.getCode()).getReason(), is(serviceUnavailedReason(stepsovcCase.getPain_management_na_reason())));
@@ -130,7 +131,7 @@ public class StepsovcCaseFixture {
     }
 
     public static StepsovcCase createCaseForUpdateReferral(String beneficiaryCode) {
-        StepsovcCase stepsovcCase = createNewCase(beneficiaryCode);
+        StepsovcCase stepsovcCase = createNewBeneficiaryCase(beneficiaryCode);
         stepsovcCase.setArt_adherence_na_reason("SERVICE_UNAVAILABLE");
         stepsovcCase.setCondoms_na_reason("FACILITY_CLOSED");
         stepsovcCase.setEnd_of_life_hospice_na_reason("BEN_UNABLE_TO_TRAVEL");

@@ -7,6 +7,7 @@ import org.wv.stepsovc.commcare.gateway.CommcareGateway;
 import org.wv.stepsovc.commcare.vo.CaseOwnershipInformation;
 import org.wv.stepsovc.core.domain.Beneficiary;
 import org.wv.stepsovc.core.domain.Caregiver;
+import org.wv.stepsovc.core.exception.BeneficiaryNotFoundException;
 import org.wv.stepsovc.core.mapper.BeneficiaryMapper;
 import org.wv.stepsovc.core.repository.AllBeneficiaries;
 import org.wv.stepsovc.core.repository.AllCaregivers;
@@ -67,5 +68,13 @@ public class BeneficiaryService {
 
     public void changeOwnershipForRequestOwnershipCase(StepsovcCase stepsovcCase) {
         commcareGateway.addGroupOwnership(new BeneficiaryMapper().createOwnershipInfo(stepsovcCase), CommcareGateway.ALL_USERS_GROUP);
+    }
+
+    public String getBeneficiaryId(String beneficiaryCode) {
+        Beneficiary beneficiary = allBeneficiaries.findBeneficiaryByCode(beneficiaryCode);
+        if (beneficiary == null) {
+            throw new BeneficiaryNotFoundException(beneficiaryCode);
+        }
+        return beneficiary.getCaseId();
     }
 }

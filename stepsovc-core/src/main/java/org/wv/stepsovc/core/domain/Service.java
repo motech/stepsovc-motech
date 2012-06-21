@@ -28,7 +28,8 @@ public class Service {
 
     }
 
-    public Service(boolean referred, ServiceType serviceType) {
+    public Service(boolean referred, boolean provided, ServiceType serviceType) {
+        this.provided = provided;
         this.referred = referred;
         this.serviceType = serviceType;
     }

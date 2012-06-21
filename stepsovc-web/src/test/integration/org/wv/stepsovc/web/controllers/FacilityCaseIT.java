@@ -13,9 +13,9 @@ import org.wv.stepsovc.core.repository.AllReferrals;
 import org.wv.stepsovc.core.request.CaseUpdateType;
 import org.wv.stepsovc.core.request.StepsovcCase;
 
+import static fixtures.StepsovcCaseFixture.createCaseForReferral;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
-import static org.wv.stepsovc.web.controllers.StepsovcCaseFixture.createCaseForReferral;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath*:testWebApplicationContext.xml")

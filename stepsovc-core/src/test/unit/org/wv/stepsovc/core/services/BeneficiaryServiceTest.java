@@ -16,6 +16,7 @@ import org.wv.stepsovc.core.repository.AllCaregivers;
 import org.wv.stepsovc.core.request.StepsovcCase;
 
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -171,6 +172,18 @@ public class BeneficiaryServiceTest {
         assertCaseOwnershipInfo(beneficiary, caregiver, beneficiaryInfoCaptor);
     }
 
+    @Test
+    public void shouldGetBeneficiaryIdForBeneficiaryCode() {
+        String benId = "benId";
+        String benCode = "BenCode";
+        Beneficiary beneficiary = new Beneficiary();
+        beneficiary.setCaseId(benId);
+
+        doReturn(beneficiary).when(allBeneficiaries).findBeneficiaryByCode(benCode);
+        String beneficiaryId = beneficiaryService.getBeneficiaryId(benCode);
+        assertEquals(benId, beneficiaryId);
+    }
+
     private void assertCaseOwnershipInfo(Beneficiary beneficiary, Caregiver caregiver, ArgumentCaptor<CaseOwnershipInformation> beneficiaryInfoCaptor) {
         assertThat(beneficiaryInfoCaptor.getValue().getUserName(), is(caregiver.getFirstName()));
         assertThat(beneficiaryInfoCaptor.getValue().getUserId(), is(caregiver.getCgId()));
@@ -189,4 +202,6 @@ public class BeneficiaryServiceTest {
         assertThat(actual.getSex(), is(expected.getSex()));
         assertThat(actual.getTitle(), is(expected.getTitle()));
     }
+
+
 }

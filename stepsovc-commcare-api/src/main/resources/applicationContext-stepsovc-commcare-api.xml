@@ -7,7 +7,7 @@
 
     <context:spring-configured/>
     <context:annotation-config/>
-    <util:properties id="stepovcProperties" location="classpath:/stepsovc.properties"/>
+    <util:properties id="stepovcProperties" location="classpath:stepsovc.properties"/>
     <import resource="classpath:applicationContextHttpClient.xml"/>
     <context:component-scan base-package="org.wv.stepsovc.commcare"/>
 

@@ -1,5 +1,6 @@
 package org.wv.stepsovc.core.services;
 
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -20,10 +21,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static org.motechproject.util.DateUtil.today;
 
 public class ReferralServiceTest {
     @Mock
@@ -37,6 +38,7 @@ public class ReferralServiceTest {
     @Mock
     private StepsovcAlertService mockStepsovcAlertService;
     private ReferralService spyReferralService;
+    private Integer exportWindowInWeeks = 3;
 
     @Before
     public void setup() {
@@ -47,6 +49,7 @@ public class ReferralServiceTest {
         ReflectionTestUtils.setField(spyReferralService, "facilityService", mockFacilityService);
         ReflectionTestUtils.setField(spyReferralService, "stepsovcScheduleService", mockStepsovcScheduleService);
         ReflectionTestUtils.setField(spyReferralService, "stepsovcAlertService", mockStepsovcAlertService);
+        ReflectionTestUtils.setField(spyReferralService, "exportWindowInWeeks", exportWindowInWeeks);
     }
 
     @Test
@@ -258,7 +261,14 @@ public class ReferralServiceTest {
         spyReferralService.updateNotAvailedReasons(stepsovcCase);
         verify(mockStepsovcScheduleService).unscheduleReferral(toBeReturned.getOvcId());
         verify(mockAllReferrals).update(toBeReturned);
-
     }
 
+    @Test
+    public void shouldGetReferralsForExport() {
+        List<Referral> expectedReferrals = Arrays.asList(new Referral());
+        LocalDate onOrAfterDate = today().minusWeeks(exportWindowInWeeks);
+        doReturn(expectedReferrals).when(mockAllReferrals).getAllModifiedBetween(onOrAfterDate, today());
+        List<Referral> actualReferrals = spyReferralService.getReferralDataForExport();
+        assertEquals(expectedReferrals, actualReferrals);
+    }
 }

@@ -6,6 +6,7 @@
 
     <util:properties id="textMessage" location="classpath:/textMessage.properties"/>
     <import resource="classpath*:applicationBulkImportContext.xml"/>
+    <import resource="classpath*:applicationBulkExportContext.xml"/>
     <import resource="classpath*:applicationContext-Core.xml"/>
 
     <context:annotation-config/>

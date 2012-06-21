@@ -1,4 +1,4 @@
-package unit.org.wv.stepsovc.core.repository;
+package org.wv.stepsovc.core.repository;
 
 import org.junit.After;
 import org.junit.Test;
@@ -9,15 +9,16 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.wv.stepsovc.core.domain.Referral;
 import org.wv.stepsovc.core.domain.Service;
-import org.wv.stepsovc.core.repository.AllReferrals;
+
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
+import static org.motechproject.util.DateUtil.today;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath*:testCoreApplicationContext.xml")
-public class AllReferralsTest {
+public class AllReferralsIT {
 
     @Autowired
     AllReferrals allReferrals;
@@ -41,6 +42,32 @@ public class AllReferralsTest {
         actualReferral = allReferrals.findActiveByOvcId(ovcId2);
 
         assertNull(allReferrals.findActiveByOvcId(inactiveOvcId));
+    }
+
+    @Test
+    public void shouldReturnOnlyReferralsWhichAreToBeExported() {
+        Referral referralToBeExported = new Referral();
+        String ovcId1 = "ref123";
+        referralToBeExported.setOvcId(ovcId1);
+        referralToBeExported.setLastModified(today());
+        allReferrals.add(referralToBeExported);
+
+        Referral referral1 = new Referral();
+        String ovcId2 = "ref123";
+        referral1.setOvcId(ovcId2);
+        referral1.setLastModified(today().minusDays(1));
+        allReferrals.add(referral1);
+
+        Referral referral2 = new Referral();
+        referral2.setOvcId("ref456");
+        referral2.setLastModified(today().minusDays(2));
+        allReferrals.add(referral2);
+
+        List<Referral> allToBeExported = allReferrals.getAllModifiedBetween(today().minusDays(1), today());
+        assertEquals(2, allToBeExported.size());
+        assertEquals(ovcId1, allToBeExported.get(0).getOvcId());
+        assertEquals(ovcId2, allToBeExported.get(1).getOvcId());
+
     }
 
     @After

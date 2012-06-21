@@ -23,6 +23,7 @@ import org.wv.stepsovc.core.repository.AllFacilities;
 import org.wv.stepsovc.core.repository.AllReferrals;
 import org.wv.stepsovc.core.request.StepsovcCase;
 
+import static fixtures.StepsovcCaseFixture.*;
 import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertNotNull;
 import static org.hamcrest.Matchers.is;
@@ -30,7 +31,6 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.wv.stepsovc.core.mapper.ReferralMapper.SERVICE_RECEIVED;
 import static org.wv.stepsovc.core.request.CaseUpdateType.*;
-import static org.wv.stepsovc.web.controllers.StepsovcCaseFixture.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath*:testWebApplicationContext.xml")
@@ -58,7 +58,7 @@ public class BeneficiaryCaseIT {
 
     @Before
     public void setUp() throws Exception {
-        stepsovcCase = createNewCase(beneficiaryCode);
+        stepsovcCase = createNewBeneficiaryCase(beneficiaryCode);
         stepsovcCase.setForm_type(BENEFICIARY_REGISTRATION.getType());
         stepsovcCaseController.createCase(stepsovcCase);
         beneficiary = allBeneficiaries.findBeneficiaryByCode(beneficiaryCode);
