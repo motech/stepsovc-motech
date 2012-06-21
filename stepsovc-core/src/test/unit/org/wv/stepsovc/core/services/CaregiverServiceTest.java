@@ -8,8 +8,8 @@ import org.wv.stepsovc.core.domain.Caregiver;
 import org.wv.stepsovc.core.repository.AllCaregivers;
 
 import static junit.framework.Assert.assertEquals;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static junit.framework.Assert.assertFalse;
+import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class CaregiverServiceTest {
@@ -27,10 +27,24 @@ public class CaregiverServiceTest {
     }
 
     @Test
-    public void shouldAddCareGivers() {
+    public void shouldAddNewCareGivers() {
         Caregiver caregiver = new Caregiver();
         caregiverService.addCareGiver(caregiver);
         verify(mockAllCaregivers).add(caregiver);
+        verify(mockAllCaregivers, never()).update(caregiver);
+    }
+
+
+    @Test
+    public void shouldUpdateCaregiversIfCareGiverCodeIsAlreadyPresent() {
+        String careGiverCode = "someCode";
+        Caregiver caregiver = new Caregiver();
+        caregiver.setCode(careGiverCode);
+        Caregiver existingCareGiver = new Caregiver();
+        when(mockAllCaregivers.findCaregiverByCode(careGiverCode)).thenReturn(existingCareGiver);
+        caregiverService.addCareGiver(caregiver);
+        verify(mockAllCaregivers).update(caregiver);
+        verify(mockAllCaregivers, never()).add(caregiver);
     }
 
     @Test
@@ -47,5 +61,11 @@ public class CaregiverServiceTest {
         verify(mockAllCaregivers).update(caregiver);
     }
 
+    @Test
+    public void shouldReturnFalseWhenInvalidCaregiverIsGivenForUpdation() {
+        String invalidCode = "invalidCode";
+        when(mockAllCaregivers.findCaregiverByCode(invalidCode)).thenReturn(null);
+        assertFalse(caregiverService.updateCaregiverPhoneNumberAndFacilityCode(invalidCode, "someNumber", "saomeFacility"));
+    }
 
 }

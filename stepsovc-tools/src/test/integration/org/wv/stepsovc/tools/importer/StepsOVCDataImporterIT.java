@@ -47,7 +47,7 @@ public class StepsOVCDataImporterIT {
     @Test
     public void shouldUpdateCaregiverWithPhoneNumberAndFaciltyCode() {
         createAndAssertCaregiver();
-        updateCaregiverWithPhoneNumberAndFacilityCode();
+        updateCaregiverWithPhoneNumberAndFacilityCode("/caregiver-phonenumber-facilitycode-FAC001.csv");
         assertCaregiverPhoneNumber();
         assertCaregiverFacilityCode();
         deleteCareGiverCreated();
@@ -55,9 +55,22 @@ public class StepsOVCDataImporterIT {
     }
 
     @Test
+    public void shouldNotUpdatePhoneNumberForInvalidCaregiver() {
+        createAndAssertCaregiver();
+        updateCaregiverWithPhoneNumberAndFacilityCode("/caregiver-phonenumber-update-with-invalid-code.csv");
+        assertNotNull(allCaregivers.findCaregiverById(String.valueOf(100)).getPhoneNumber());
+        assertNull(allCaregivers.findCaregiverById(String.valueOf(101)).getPhoneNumber());
+        assertNotNull(allCaregivers.findCaregiverById(String.valueOf(102)).getPhoneNumber());
+        assertNotNull(allCaregivers.findCaregiverById(String.valueOf(100)).getFacilityCode());
+        assertNull(allCaregivers.findCaregiverById(String.valueOf(101)).getFacilityCode());
+        assertNotNull(allCaregivers.findCaregiverById(String.valueOf(102)).getFacilityCode());
+        deleteCareGiverCreated();
+    }
+
+    @Test
     public void shouldUpdateExistingCaregiverWithNewFacilityCode() {
         createAndAssertCaregiver();
-        updateCaregiverWithPhoneNumberAndFacilityCode();
+        updateCaregiverWithPhoneNumberAndFacilityCode("/caregiver-phonenumber-facilitycode-FAC001.csv");
         String filePath = this.getClass().getResource("/caregiver-phonenumber-facilitycode-FAC002.csv").getPath();
         String[] newArgs = {"caregiver-phonenumber-facilitycode", filePath};
         StepsOVCDataImporter.main(newArgs);
@@ -113,8 +126,8 @@ public class StepsOVCDataImporterIT {
         assertCareGiversCreated();
     }
 
-    private void updateCaregiverWithPhoneNumberAndFacilityCode() {
-        String filePath = this.getClass().getResource("/caregiver-phonenumber-facilitycode-FAC001.csv").getPath();
+    private void updateCaregiverWithPhoneNumberAndFacilityCode(String csvFileName) {
+        String filePath = this.getClass().getResource(csvFileName).getPath();
         String[] newArgs = {"caregiver-phonenumber-facilitycode", filePath};
         StepsOVCDataImporter.main(newArgs);
     }

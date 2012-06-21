@@ -12,13 +12,24 @@ public class CaregiverService {
     AllCaregivers allCaregivers;
 
     public void addCareGiver(Caregiver caregiver) {
-        allCaregivers.add(caregiver);
+        Caregiver existingCaregiver = allCaregivers.findCaregiverByCode(caregiver.getCode());
+        if (existingCaregiver != null) {
+            allCaregivers.update(caregiver);
+        } else {
+            allCaregivers.add(caregiver);
+        }
     }
 
-    public void updateCaregiverPhoneNumberAndFacilityCode(String caregiverCode, String phoneNumber, String facilityCode) {
+    public boolean updateCaregiverPhoneNumberAndFacilityCode(String caregiverCode, String phoneNumber, String facilityCode) {
         Caregiver caregiver = allCaregivers.findCaregiverByCode(caregiverCode);
-        caregiver.setPhoneNumber(phoneNumber);
-        caregiver.setFacilityCode(facilityCode);
-        allCaregivers.update(caregiver);
+        if (caregiver != null) {
+            caregiver.setPhoneNumber(phoneNumber);
+            caregiver.setFacilityCode(facilityCode);
+            allCaregivers.update(caregiver);
+            return true;
+        } else {
+            return false;
+        }
+
     }
 }

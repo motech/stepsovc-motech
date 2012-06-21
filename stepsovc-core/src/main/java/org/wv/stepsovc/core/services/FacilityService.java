@@ -86,4 +86,6 @@ public class FacilityService {
         allFacilities.add(new Facility(stepsovcCase.getFacility_code(), stepsovcCase.getFacility_name(), new ArrayList<ServiceUnavailability>(), new ArrayList<String>()));
         commcareGateway.addGroupOwnership(new BeneficiaryMapper().createFormRequest(stepsovcCase), CommcareGateway.ALL_USERS_GROUP);
     }
+
+
 }
