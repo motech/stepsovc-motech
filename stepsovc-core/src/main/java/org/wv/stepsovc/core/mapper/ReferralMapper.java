@@ -20,18 +20,19 @@ public class ReferralMapper {
     public static final String SERVICE_RECEIVED = "Received";
     public static final String SERVICE_NOT_AVAILED = "Not Availed";
     public static final String REF_ID_PREFIX = "OVC-REF-";
+    public static final String YES = "yes";
 
     public Referral map(StepsovcCase stepsovcCase) {
         Referral newReferral = new Referral();
         newReferral.setLastModified(today());
-        ;
         newReferral.setBeneficiaryCode(stepsovcCase.getBeneficiary_code());
         newReferral.setFacilityCode(stepsovcCase.getFacility_code());
         newReferral.setCgId(stepsovcCase.getUser_id());
         newReferral.setServiceDate(stepsovcCase.getService_date());
-        newReferral.setFollowupDate(stepsovcCase.getFollowup_date());
         newReferral.setVisitDate(stepsovcCase.getVisit_date());
         newReferral.setFollowupRequired(stepsovcCase.getFollowup_required());
+        if (YES.equalsIgnoreCase(stepsovcCase.getFollowup_required()))
+            newReferral.setFollowupDate(stepsovcCase.getFollowup_date());
 
         Map<String, Service> referredServices = new HashMap<String, Service>();
         referredServices.put(ART_ADHERENCE.getCode(), new Service(REFERRED.equals(stepsovcCase.getArt_adherence_counseling()), false, ART_ADHERENCE));

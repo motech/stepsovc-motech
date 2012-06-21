@@ -3,8 +3,6 @@ package org.wv.stepsovc.tools.mapper;
 import fixture.ReferralFixture;
 import org.junit.Test;
 import org.wv.stepsovc.core.domain.Referral;
-import org.wv.stepsovc.core.domain.Service;
-import org.wv.stepsovc.core.domain.ServiceType;
 import org.wv.stepsovc.tools.domain.ReferralData;
 
 import static junit.framework.Assert.assertEquals;
@@ -20,25 +18,34 @@ public class ReferralDataMapperTest {
         assertEquals(referral.getOvcId(), referralData.getReferralId());
         assertEquals(referral.getCgId(), referralData.getCaregiverId());
         assertEquals(referral.getFacilityCode(), referralData.getFacilityCode());
-        assertEquals(ReferralDataMapper.FOLLOW_UP_REQUIRED.equals(referral.getFollowupRequired()), referralData.getFollowupRequired());
         assertEquals(referral.getServiceDetails(), referralData.getServiceDetails());
         assertEquals(referral.getServiceDate(), referralData.getServiceDate());
 
-        assertValues(referral.getReferredServices().get(ServiceType.ART_ADHERENCE.getCode()), referralData.getArtReferred(), referralData.getArtReceived());
-        assertValues(referral.getReferredServices().get(ServiceType.CONDOMS.getCode()), referralData.getCondomsReferred(), referralData.getCondomsReceived());
-        assertValues(referral.getReferredServices().get(ServiceType.END_OF_LIFE_HOSPICE.getCode()), referralData.getHospitalAdmissionReferred(), referralData.getHospitalAdmissionReceived());
-        assertValues(referral.getReferredServices().get(ServiceType.FAMILY_PLANNING.getCode()), referralData.getFamilyPlanningReferred(), referralData.getFamilyPlanningReceived());
-        assertValues(referral.getReferredServices().get(ServiceType.HIV_COUNSELING.getCode()), referralData.getCounsellingTestingReferred(), referralData.getCounsellingTestingReceived());
-        assertValues(referral.getReferredServices().get(ServiceType.NEW_DIAGNOSIS.getCode()), referralData.getDiagnosisReferred(), referralData.getDiagnosisReceived());
-        assertValues(referral.getReferredServices().get(ServiceType.OTHER_HEALTH_SERVICES.getCode()), referralData.getOtherServiceReferred(), referralData.getOtherServiceReceived());
-        assertValues(referral.getReferredServices().get(ServiceType.PAIN_MANAGEMENT.getCode()), referralData.getPainManagementReferred(), referralData.getPainManagementReceived());
-        assertValues(referral.getReferredServices().get(ServiceType.PMTCT.getCode()), referralData.getPmtctReferred(), referralData.getPmtctReceived());
-        assertValues(referral.getReferredServices().get(ServiceType.SEXUALLY_TRANSMITTED_INFEC.getCode()), referralData.getSexTransInfectionReferred(), referralData.getSexTransInfectionReceived());
-    }
+        assertEquals(0, referralData.getFollowupRequired());
+        assertEquals(1, referralData.getArtReferred());
+        assertEquals(1, referralData.getArtReceived());
+        assertEquals(1, referralData.getCondomsReferred());
+        assertEquals(1, referralData.getCondomsReceived());
 
-    private void assertValues(Service service, boolean referred, boolean received) {
-        assertEquals(service.isReferred(), referred);
-        assertEquals(service.isProvided(), received);
+        assertEquals(1, referralData.getHospitalAdmissionReferred());
+        assertEquals(0, referralData.getHospitalAdmissionReceived());
+        assertEquals(1, referralData.getFamilyPlanningReferred());
+        assertEquals(0, referralData.getFamilyPlanningReceived());
+
+        assertEquals(0, referralData.getCounsellingTestingReferred());
+        assertEquals(1, referralData.getCounsellingTestingReceived());
+        assertEquals(0, referralData.getDiagnosisReferred());
+        assertEquals(1, referralData.getDiagnosisReceived());
+
+        assertEquals(0, referralData.getOtherServiceReferred());
+        assertEquals(0, referralData.getOtherServiceReceived());
+        assertEquals(0, referralData.getPainManagementReferred());
+        assertEquals(0, referralData.getPainManagementReceived());
+
+        assertEquals(1, referralData.getPmtctReferred());
+        assertEquals(1, referralData.getPmtctReceived());
+        assertEquals(1, referralData.getSexTransInfectionReferred());
+        assertEquals(1, referralData.getSexTransInfectionReceived());
     }
 
 }

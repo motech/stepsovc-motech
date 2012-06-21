@@ -65,8 +65,8 @@ public class ReferralExportControllerIT {
 
     private String expectedCSVContent(String benCode) {
         Referral activeReferral = allReferrals.findActiveReferral(benCode);
-        return "Referral Id,Beneficiary Id,Caregiver Id,Followup Required,Service Details,Service Date,Facility Code,Signed,Signed Date,Art Received,Art Referred,Condoms Received,Condoms Referred,Counselling Testing Received,Counselling Testing Referred,Diagnosis Received,Diagnosis Referred,Family Planning Received,Family Planning Referred,Hospital Admission Received,Hospital Admission Referred,Other Service Referred,Other Service Received,Pain Management Received,Pain Management Referred,Pmtct Received,Pmtct Referred,Sex Trans Infection Referred,Sex Trans Infection Received\n" +
-                activeReferral.getOvcId() + ",BenId,Userid001,true,new service details,2012-06-19,testFAC1,false,,false,true,false,true,false,true,false,true,false,true,false,false,true,false,false,true,false,true,false,false\n";
+        return "rr_id,rr_referrer_name,rr_referral_date,rr_follow_up,rr_signed,rr_signed_date,rr_hlt_art_rec,rr_hlt_art_ref,rr_hlt_condoms_rec,rr_hlt_condoms_ref,rr_hlt_ct_rec,rr_hlt_ct_ref,rr_hlt_diag_rec,rr_hlt_diag_ref,rr_hlt_fp_rec,rr_hlt_fp_ref,rr_hlt_hosp_rec,rr_hlt_hosp_ref,rr_hlt_other_hlt,rr_hlt_other_hlt_rec,rr_hlt_other_hlt_ref,rr_hlt_pain_rec,rr_hlt_pain_ref,rr_hlt_pmtct_rec,rr_hlt_pmtct_ref,rr_hlt_sex_trans_rec,rr_hlt_sex_trans_ref,ben_id,cg_id\n" +
+                activeReferral.getOvcId() + ",testFAC1,2012-06-19,1,0,,0,1,0,1,0,1,0,1,0,1,0,0,new service details,0,1,0,1,0,1,0,0,BenId,Userid001\n";
     }
 
     @After
