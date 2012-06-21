@@ -1,12 +1,12 @@
 package org.wv.stepsovc.core.services;
 
 import org.apache.log4j.Logger;
-import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.motechproject.aggregator.inbound.EventAggregationGateway;
 import org.motechproject.cmslite.api.model.ContentNotFoundException;
 import org.motechproject.cmslite.api.model.StringContent;
 import org.motechproject.cmslite.api.service.CMSLiteService;
+import org.motechproject.model.Time;
 import org.motechproject.sms.api.service.SmsService;
 import org.motechproject.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +28,7 @@ import static java.lang.String.format;
 import static org.apache.commons.lang.StringUtils.join;
 import static org.motechproject.util.DateUtil.newDateTime;
 import static org.springframework.util.CollectionUtils.isEmpty;
+import static org.wv.stepsovc.core.aggregator.RecipientType.CAREGIVER;
 import static org.wv.stepsovc.core.aggregator.RecipientType.FACILITY;
 import static org.wv.stepsovc.core.aggregator.SMSGroupFactory.group;
 
@@ -49,7 +50,7 @@ public class StepsovcAlertService {
     @Autowired
     private AllReferrals allReferrals;
 
-    private DateTime preferredAggregateTime = newDateTime(new LocalDate(), 7, 30, 0);
+    private Time preferredAggregateTime = new Time(7, 30);
     private Logger logger = Logger.getLogger(this.getClass());
 
     public void sendInstantReferralAlertToFacility(Referral referral) {
@@ -76,12 +77,12 @@ public class StepsovcAlertService {
         if (isEmpty(phoneNumbers)) {
             logger.error("Facility - No Phone Numbers to send SMS.");
         } else {
-            StringContent smsTemplate = cmsLiteService.getStringContent(Locale.ENGLISH.getLanguage(), SmsTemplateKeys.REFERRAL_ALERT_WITH_SERVICE);
+            StringContent smsTemplate = cmsLiteService.getStringContent(Locale.ENGLISH.getLanguage(), SmsTemplateKeys.BENEFICIARY_WITH_SERVICES);
             String smsContent = format(smsTemplate.getValue(), beneficiary.getName(), beneficiary.getCode(), join(referral.referredServiceCodes(), ","));
             logger.info("Sms Content : " + smsContent + "dateTime :" + preferredAggregateTime);
             String patientDueDate = new SimpleDateFormat("dd-MMM-yyyy").format(DateUtils.getDate(referral.getServiceDate()));
             for (String phoneNumber : phoneNumbers) {
-                eventAggregationGateway.dispatch(new SMSMessage(preferredAggregateTime, phoneNumber, smsContent, group(VisitNames.REFERRAL, window, FACILITY).key(), patientDueDate));
+                eventAggregationGateway.dispatch(new SMSMessage(newDateTime(new LocalDate(), preferredAggregateTime), phoneNumber, smsContent, group(VisitNames.REFERRAL, window, FACILITY).key(), patientDueDate));
             }
         }
     }
@@ -99,5 +100,17 @@ public class StepsovcAlertService {
             logger.info("Sms Content : " + smsContent);
             smsService.sendSMS(phoneNumber, smsContent);
         }
+    }
+
+    public void sendFollowUpAlertToCaregiver(String ovcId) throws ContentNotFoundException {
+        Referral referral = allReferrals.findActiveByOvcId(ovcId);
+        Beneficiary beneficiary = allBeneficiaries.findBeneficiaryByCode(referral.getBeneficiaryCode());
+        Caregiver caregiver = allCaregivers.findCaregiverById(referral.getCgId());
+        String phoneNumber = caregiver.getPhoneNumber();
+        StringContent smsTemplate = cmsLiteService.getStringContent(Locale.ENGLISH.getLanguage(), SmsTemplateKeys.BENEFICIARY_WITHOUT_SERVICES);
+        String smsContent = format(smsTemplate.getValue(), beneficiary.getName(), beneficiary.getCode());
+        logger.info("Sms Content : " + smsContent);
+
+        eventAggregationGateway.dispatch(new SMSMessage(newDateTime(new LocalDate(), preferredAggregateTime), phoneNumber, smsContent, group(VisitNames.FOLLOW_UP, "", CAREGIVER).key(), null));
     }
 }

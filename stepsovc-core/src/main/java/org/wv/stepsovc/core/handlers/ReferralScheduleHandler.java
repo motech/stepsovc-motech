@@ -23,11 +23,11 @@ public class ReferralScheduleHandler {
     @MotechListener(subjects = {EventSubjects.MILESTONE_ALERT})
     public void handleAlert(MotechEvent motechEvent) {
         MilestoneEvent milestoneEvent = new MilestoneEvent(motechEvent);
-        logger.debug(milestoneEvent.getWindowName() + " - External Id:" + milestoneEvent.getExternalId());
+        logger.info("Handling Milestone alert " + milestoneEvent.getWindowName() + " - for External Id:" + milestoneEvent.getExternalId());
         try {
             stepsovcAlertService.sendAggregatedReferralAlertToFacility(milestoneEvent.getExternalId(), milestoneEvent.getWindowName());
         } catch (Exception e) {
-            logger.debug("<Milestone Alert Exception>: Encountered error while sending alert: ", e);
+            logger.error("<Milestone Alert Exception>: Encountered error while sending alert: ", e);
             throw new EventHandlerException(motechEvent, e);
         }
 
@@ -36,12 +36,12 @@ public class ReferralScheduleHandler {
     @MotechListener(subjects = {EventSubjects.DEFAULTMENT_CAPTURE})
     public void handleDefaultmentAlert(MotechEvent motechEvent) {
         MilestoneEvent milestoneEvent = new MilestoneEvent(motechEvent);
-        logger.debug("Default - External Id:" + milestoneEvent.getExternalId());
+        logger.info("Handling Defaulted Schedule - for External Id:" + milestoneEvent.getExternalId());
 
         try {
             stepsovcAlertService.sendInstantDefaultedAlertToCaregiver(milestoneEvent.getExternalId());
         } catch (Exception e) {
-            logger.debug("<Milestone Alert Exception>: Encountered error while sending alert: ", e);
+            logger.error("<Milestone Alert Exception>: Encountered error while sending alert: ", e);
             throw new EventHandlerException(motechEvent, e);
         }
     }

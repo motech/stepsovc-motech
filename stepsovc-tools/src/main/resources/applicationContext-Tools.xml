@@ -22,5 +22,4 @@
             </list>
         </constructor-arg>
     </bean>
-    <bean id="smsServiceImpl" class="org.wv.stepsovc.core.stub.MockSmsService"/>
 </beans>

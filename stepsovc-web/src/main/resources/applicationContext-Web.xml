@@ -5,11 +5,12 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
+    <import resource="classpath:applicationContext-Tools.xml"/>
     <import resource="classpath:applicationContext-Core.xml"/>
     <import resource="classpath:applicationSmsSmpp.xml"/>
 
     <context:annotation-config/>
     <context:spring-configured/>
-    <context:component-scan base-package="org.wv.stepsovc.web" />
+    <context:component-scan base-package="org.wv.stepsovc.web"/>
 
 </beans>

@@ -1,5 +1,6 @@
 package unit.org.wv.stepsovc.core.services;
 
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -30,7 +31,8 @@ import static org.hamcrest.Matchers.isIn;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.wv.stepsovc.core.domain.SmsTemplateKeys.REFERRAL_ALERT_WITH_SERVICE;
+import static org.motechproject.util.DateUtil.newDateTime;
+import static org.wv.stepsovc.core.domain.SmsTemplateKeys.BENEFICIARY_WITH_SERVICES;
 import static org.wv.stepsovc.core.fixtures.StepsovcCaseFixture.createCaseForReferral;
 
 public class StepsovcAlertServiceTest {
@@ -91,7 +93,7 @@ public class StepsovcAlertServiceTest {
         when(allBeneficiaries.findBeneficiaryByCode(bencode)).thenReturn(beneficiary);
 
         StringContent templateString = new StringContent(null, null, "%s (%s) Services (%s)");
-        when(cmsLiteService.getStringContent(Locale.ENGLISH.getLanguage(), REFERRAL_ALERT_WITH_SERVICE)).thenReturn(templateString);
+        when(cmsLiteService.getStringContent(Locale.ENGLISH.getLanguage(), BENEFICIARY_WITH_SERVICES)).thenReturn(templateString);
 
         stepsovcAlertService.sendAggregatedReferralAlertToFacility(externalId, "due");
         ArgumentCaptor<SMSMessage> smsCaptor = ArgumentCaptor.forClass(SMSMessage.class);
@@ -154,4 +156,32 @@ public class StepsovcAlertServiceTest {
 
     }
 
+    @Test
+    public void shouldSendFollowUpAlertToCaregiver() throws Exception {
+        String externalId = "someOvcId";
+        String benCode = "someBenCode";
+        String cgId = "someCgId";
+        Referral toBeReturned = new Referral();
+        toBeReturned.setCgId(cgId);
+        toBeReturned.setBeneficiaryCode(benCode);
+        Caregiver caregiver = new Caregiver();
+        caregiver.setPhoneNumber("somePhoneNumber");
+        Beneficiary beneficiary1 = new Beneficiary();
+        beneficiary1.setCode("someCode");
+        beneficiary1.setName("someName");
+
+        doReturn(toBeReturned).when(allReferrals).findActiveByOvcId(externalId);
+        doReturn(caregiver).when(allCaregivers).findCaregiverById(cgId);
+        doReturn(beneficiary1).when(allBeneficiaries).findBeneficiaryByCode(benCode);
+        doReturn(new StringContent("", "", "%s (%s)")).when(cmsLiteService).getStringContent("en", SmsTemplateKeys.BENEFICIARY_WITHOUT_SERVICES);
+
+        ArgumentCaptor<SMSMessage> smsMessageCaptor = ArgumentCaptor.forClass(SMSMessage.class);
+        stepsovcAlertService.sendFollowUpAlertToCaregiver(externalId);
+        verify(eventAggregationGateway).dispatch(smsMessageCaptor.capture());
+
+        assertThat(smsMessageCaptor.getValue().phoneNumber(), is(caregiver.getPhoneNumber()));
+        assertThat(smsMessageCaptor.getValue().content(), is("someName (someCode)"));
+        assertThat(smsMessageCaptor.getValue().group(), is("G-CAREGIVER-FollowUp-"));
+        assertThat(smsMessageCaptor.getValue().deliveryTime(), is(newDateTime(new LocalDate(), 7, 30, 0)));
+    }
 }

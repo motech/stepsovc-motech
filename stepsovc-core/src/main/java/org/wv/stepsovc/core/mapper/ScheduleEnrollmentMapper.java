@@ -18,9 +18,9 @@ public class ScheduleEnrollmentMapper {
         try {
             LocalDate previousDate = DateUtils.prevLocalDate(referral.getServiceDate());
             return new EnrollmentRequest(referral.getOvcId(), ScheduleNames.REFERRAL.getName(), new Time(0, 0),
-                    previousDate, null, previousDate, null, null, referral.appointmentDataMap());
+                    previousDate, null, previousDate, null, null, referral.scheduleDataMap());
         } catch (ParseException e) {
-            logger.error("ParseException while creating EnrollmentRequest , "+referral.getServiceDate());
+            logger.error("ParseException while creating EnrollmentRequest , " + referral.getServiceDate());
         }
         return null;
     }

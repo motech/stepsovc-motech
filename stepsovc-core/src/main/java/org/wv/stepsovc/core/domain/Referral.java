@@ -38,8 +38,6 @@ public class Referral extends MotechBaseDataObject {
     @JsonProperty
     private boolean active;
 
-    public static final String META_FACILITY_ID = "facilityId";
-
     public String getCgId() {
         return cgId;
     }
@@ -124,9 +122,15 @@ public class Referral extends MotechBaseDataObject {
         return this;
     }
 
-    public Map<String, String> appointmentDataMap() {
+    public Map<String, String> scheduleDataMap() {
         Map<String, String> params = new HashMap<String, String>();
-        params.put(META_FACILITY_ID, facilityCode);
+        //Add data that are required
+        return params;
+    }
+
+    public Map<String, Object> appointmentDataMap() {
+        Map<String, Object> params = new HashMap<String, Object>();
+        //Add data that are required
         return params;
     }
 
