@@ -31,7 +31,7 @@ public class CaregiverImporter {
             entity.setMiddleName(dmisDataProcessor.decrypt(entity.getMiddleName()));
             entity.setLastName(dmisDataProcessor.decrypt(entity.getLastName()));
             entity.setCreationDate(DateTime.now().toString());
-            commcareGateway.registerUser(entity);
+            commcareGateway.registerCaregiver(entity);
             caregiverService.addCareGiver(caregiverMapper.map(entity));
         }
     }

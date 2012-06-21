@@ -61,8 +61,8 @@ public class CareGiverImporterTest {
 
         careGiverImporter.post(Arrays.asList(careGiverInfo1, careGiverInfo2));
 
-        verify(mockCommcareGateway).registerUser(careGiverInfo1);
-        verify(mockCommcareGateway).registerUser(careGiverInfo2);
+        verify(mockCommcareGateway).registerCaregiver(careGiverInfo1);
+        verify(mockCommcareGateway).registerCaregiver(careGiverInfo2);
 
         ArgumentCaptor<Caregiver> captor1 = ArgumentCaptor.forClass(Caregiver.class);
 

@@ -1,0 +1,16 @@
+<Registration xmlns="http://openrosa.org/user/registration">
+    <username>$!facility.facilityCode</username>
+    <password>1234</password>
+    <uuid>$!facility.facilityId</uuid>
+    <date>$!facility.creationDate</date>
+    <registering_phone_id>$!facility.mandatoryPhoneNumber</registering_phone_id>
+    <user_data>
+        <data key="district">$!facility.district</data>
+        <data key="village">$!facility.village</data>
+        <data key="ward">$!facility.ward</data>
+        <data key="constituency">$!facility.constituency</data>
+        <data key="optionalPhoneNumber1">$!facility.optionalPhoneNumber1</data>
+        <data key="optionalPhoneNumber2">$!facility.optionalPhoneNumber2</data>
+        <data key="optionalPhoneNumber3">$!facility.optionalPhoneNumber3</data>
+    </user_data>
+</Registration>
