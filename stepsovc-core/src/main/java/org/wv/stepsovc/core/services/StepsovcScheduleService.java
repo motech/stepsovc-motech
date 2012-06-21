@@ -21,7 +21,7 @@ public class StepsovcScheduleService {
     @Autowired
     private StepsovcAlertService stepsovcAlertService;
     @Autowired
-    AllAppointments allAppointments;
+    private AllAppointments allAppointments;
     @Autowired
     private FollowUpVisitFactory followUpVisitFactory;
 
@@ -40,4 +40,7 @@ public class StepsovcScheduleService {
         scheduleTrackingService.unenroll(referral.getOvcId(), Arrays.asList(ScheduleNames.REFERRAL.getName()));
     }
 
+    public void unscheduleFollowUpVisit(String ovcId) {
+        allAppointments.remove(ovcId);
+    }
 }

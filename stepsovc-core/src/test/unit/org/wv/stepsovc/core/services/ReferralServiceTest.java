@@ -166,7 +166,7 @@ public class ReferralServiceTest {
     }
 
     @Test
-    public void shouldDeactivatePreviousReferralWhileCreatingNew() {
+    public void shouldDeactivatePreviousReferralWhileCreatingNewAndRemoveOldSchedules() {
         ArgumentCaptor<Referral> referralArgumentCaptor = ArgumentCaptor.forClass(Referral.class);
 
         String code = "ben001";
@@ -182,6 +182,7 @@ public class ReferralServiceTest {
 
         verify(mockAllReferrals).update(referralArgumentCaptor.capture());
         verify(mockStepsovcScheduleService).unscheduleReferral(referralArgumentCaptor.getValue());
+        verify(mockStepsovcScheduleService).unscheduleFollowUpVisit(referralArgumentCaptor.getValue().getOvcId());
 
         assertFalse(referralArgumentCaptor.getValue().isActive());
     }

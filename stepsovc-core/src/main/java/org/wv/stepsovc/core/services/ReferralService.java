@@ -49,6 +49,7 @@ public class ReferralService {
         Referral oldActiveReferral = allReferrals.findActiveReferral(stepsovcCase.getBeneficiary_code());
         if (oldActiveReferral != null) {
             stepsovcScheduleService.unscheduleReferral(oldActiveReferral);
+            stepsovcScheduleService.unscheduleFollowUpVisit(oldActiveReferral.getOvcId());
             oldActiveReferral.setActive(false);
             allReferrals.update(oldActiveReferral);
         }
