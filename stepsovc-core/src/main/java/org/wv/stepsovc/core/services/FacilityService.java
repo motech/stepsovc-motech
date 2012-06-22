@@ -110,4 +110,15 @@ public class FacilityService {
             allFacilities.update(facilityMapper.map(existingFacility, facility));
         }
     }
+
+
+    public boolean updateFacilityPhoneNumber(String code, List<String> phoneNumbers) {
+        Facility existingFacility = allFacilities.findFacilityByCode(code);
+        if (existingFacility != null) {
+            existingFacility.setPhoneNumber(phoneNumbers);
+            allFacilities.update(existingFacility);
+            return true;
+        }
+        return false;
+    }
 }

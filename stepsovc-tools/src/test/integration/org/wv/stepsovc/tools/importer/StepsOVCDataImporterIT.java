@@ -98,16 +98,47 @@ public class StepsOVCDataImporterIT {
     }
 
     @Test
-    //When you  run this  test  remember to  delete the  facility  case  manually  created in commcarehq-couchdb,The test  does note
+    //When you  run this  test  remember to  delete the  facility  case  manually  created in commcarehq-couchdb,The test  does not
     // takecare of  deleting the facility case
     public void shouldImportFacilities() {
+        createFacility();
+        deleteFacilityCreated();
+        assertNewFacilitiesHaveNewGroupsCreatedAndAllFacilityGroupsAreAddedToAllUsersGroup();
+    }
+
+    private void createFacility() {
         assertFacilitiesNotPresent();
         String filePath = this.getClass().getResource("/facility.csv").getPath();
         String[] newArgs = {"facility", filePath};
         StepsOVCDataImporter.main(newArgs);
         assertFacilitiesPresent();
+    }
+
+    @Test
+    public void shouldUpdateFacilityPhoneNumbers() {
+        createFacility();
+        String filePath = this.getClass().getResource("/facility-phonenumber.csv").getPath();
+        String[] newArgs = {"facility-phonenumber", filePath};
+        StepsOVCDataImporter.main(newArgs);
+        assertFacilitiesPhoneNumbers();
         deleteFacilityCreated();
-        assertNewFacilitiesHaveNewGroupsCreatedAndAllFacilityGroupsAreAddedToAllUsersGroup();
+    }
+
+    @Test
+    public void shouldNotUpdatePhoneNumberForInvalidFacility() {
+        createFacility();
+        String filePath = this.getClass().getResource("/facility-phonenumber-with-invalid-facility-code.csv").getPath();
+        String[] newArgs = {"facility-phonenumber", filePath};
+        StepsOVCDataImporter.main(newArgs);
+        assertTrue(allFacilities.findFacilityByCode("1").getPhoneNumbers().contains("99"));
+        assertTrue(allFacilities.findFacilityByCode("2").getPhoneNumbers().contains("2"));
+        assertTrue(allFacilities.findFacilityByCode("3").getPhoneNumbers().contains("77"));
+        deleteFacilityCreated();
+    }
+
+    private void assertFacilitiesPhoneNumbers() {
+        List<String> phoneNumbers = allFacilities.findFacilityByCode("1").getPhoneNumbers();
+        assertTrue(phoneNumbers.contains("99"));
     }
 
     private void assertNewFacilitiesHaveNewGroupsCreatedAndAllFacilityGroupsAreAddedToAllUsersGroup() {
@@ -123,6 +154,7 @@ public class StepsOVCDataImporterIT {
         createAndAssertBeneficiary();
         deleteBeneficiariesCreated();
     }
+
 
     private void deleteFacilityCreated() {
         for (int i = 1; i <= 3; i++) {
