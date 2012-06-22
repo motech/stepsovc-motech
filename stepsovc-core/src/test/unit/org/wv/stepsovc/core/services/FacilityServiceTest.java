@@ -2,6 +2,7 @@ package org.wv.stepsovc.core.services;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.wv.stepsovc.core.domain.Facility;
@@ -126,6 +127,31 @@ public class FacilityServiceTest {
 
         verify(mockAlertService).sendInstantServiceUnavailabilityMsgToCareGivers(updatedReferrals, facilityCode, unavailableDate, unavailableDate, nextAvailableDate);
 
+    }
+
+    @Test
+    public void shouldUpdateFacilityPhoneNumbersWhenFacilityExists() {
+        String code = "FAC001";
+        List<String> phoneNumbers = Arrays.asList("1", "2", "3", "4");
+        Facility facility = new Facility();
+        facility.setFacilityCode(code);
+        when(mockAllFacilities.findFacilityByCode(code)).thenReturn(facility);
+        facilityService.updateFacilityPhoneNumber(code, phoneNumbers);
+        ArgumentCaptor<Facility> argumentCaptor = ArgumentCaptor.forClass(Facility.class);
+        verify(mockAllFacilities).update(argumentCaptor.capture());
+        assertEquals(code, argumentCaptor.getValue().getFacilityCode());
+        assertEquals(phoneNumbers, argumentCaptor.getValue().getPhoneNumbers());
+
+    }
+
+    @Test
+    public void shouldReturnFalseWhenInvalidFacilityCodeIsUpdatedWithPhoneNumber() {
+        String code = "FAC001";
+        List<String> phoneNumbers = Arrays.asList("1", "2", "3", "4");
+        when(mockAllFacilities.findFacilityByCode(code)).thenReturn(null);
+        boolean returnValue = facilityService.updateFacilityPhoneNumber(code, phoneNumbers);
+        verify(mockAllFacilities, never()).update((Facility) anyObject());
+        assertFalse(returnValue);
     }
 
 
