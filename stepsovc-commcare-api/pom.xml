@@ -68,6 +68,7 @@
                         <exclude>**/integration/**/*IT.java</exclude>
                     </excludes>
                     <testSourceDirectory>src/test/unit</testSourceDirectory>
+                    <argLine>-XX:-UseSplitVerifier</argLine>
                 </configuration>
             </plugin>
             <plugin>

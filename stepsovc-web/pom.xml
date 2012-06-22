@@ -104,6 +104,7 @@
                     <excludes>
                         <exclude>**/integration/**/*IT.java</exclude>
                     </excludes>
+                    <argLine>-XX:-UseSplitVerifier</argLine>
                 </configuration>
             </plugin>
             <plugin>
