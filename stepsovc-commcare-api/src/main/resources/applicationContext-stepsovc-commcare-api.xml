@@ -8,6 +8,8 @@
     <context:spring-configured/>
     <context:annotation-config/>
     <util:properties id="stepovcProperties" location="classpath:stepsovc.properties"/>
+    <util:properties id="couchdbProperties" location="classpath:couchdb.properties"/>
+
     <import resource="classpath:applicationContextHttpClient.xml"/>
     <context:component-scan base-package="org.wv.stepsovc.commcare"/>
 
@@ -23,7 +25,9 @@
 
     <bean id="commcareDbInstance" class="org.ektorp.impl.StdCouchDbInstance">
         <constructor-arg>
-            <bean id="commcareHttpClient" class="org.ektorp.spring.HttpClientFactoryBean"/>
+            <bean id="commcareHttpClient" class="org.ektorp.spring.HttpClientFactoryBean">
+                <property name="properties" ref="couchdbProperties"/>
+            </bean>
         </constructor-arg>
     </bean>
 
