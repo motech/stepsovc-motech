@@ -29,16 +29,18 @@ public class CommcareGateway {
     public static final String USER_REGISTRATION_FORM_TEMPLATE_PATH = "/templates/user-registration-form.xml";
     public static final String FACILITY_REGISTRATION_FORM_TEMPLATE_PATH = "/templates/facility-registration-form.xml";
     public static final String FACILITY_CASE_FORM_TEMPLATE_PATH = "/templates/facility-case-form.xml";
+    public static final String OWNERSHIP_CASE_REGISTER_FORM_TEMPLATE_PATH = "/templates/ownership-case-register-form.xml";
     public static final String BENEFICIARY_FORM_KEY = "beneficiary";
     public static final String CASE_OWNERSHIP_FORM_KEY = "caseOwnershipRequest";
     public static final String CARE_GIVER_FORM_KEY = "caregiver";
     public static final String FACILITY_FORM_KEY = "facility";
+    public static final String OWNER_ID_KEY = "ownerId";
     public static final String ALL_USERS_GROUP = "ALL_USERS";
+
     public static final String STEPSOVC = "stepsovc";
 
     @Value("#{stepovcProperties['commcare.receiver']}")
     private String COMMCARE_RECIEVER_URL;
-
     @Autowired
     private VelocityEngine velocityEngine;
     @Autowired
@@ -91,19 +93,19 @@ public class CommcareGateway {
     }
 
     public void createCase(BeneficiaryInformation beneficiaryInformation) {
-        Map<String, Object> model = new HashMap<String, Object>();
+        Map<String, Object> model = new HashMap<>();
         model.put(BENEFICIARY_FORM_KEY, beneficiaryInformation);
         httpClientService.post(COMMCARE_RECIEVER_URL, getXmlFromObject(BENEFICIARY_CASE_FORM_TEMPLATE_PATH, model));
     }
 
     public void registerCaregiver(CaregiverInformation careGiverInformation) {
-        Map<String, Object> model = new HashMap<String, Object>();
+        Map<String, Object> model = new HashMap<>();
         model.put(CARE_GIVER_FORM_KEY, careGiverInformation);
         httpClientService.post(COMMCARE_RECIEVER_URL, getXmlFromObject(USER_REGISTRATION_FORM_TEMPLATE_PATH, model));
     }
 
     void postOwnerUpdate(CaseOwnershipInformation caseOwnershipInformation) {
-        Map<String, Object> model = new HashMap<String, Object>();
+        Map<String, Object> model = new HashMap<>();
         model.put(CASE_OWNERSHIP_FORM_KEY, caseOwnershipInformation);
         httpClientService.post(COMMCARE_RECIEVER_URL, getXmlFromObject(OWNER_UPDATE_FORM_TEMPLATE_PATH, model));
     }
@@ -117,7 +119,7 @@ public class CommcareGateway {
     }
 
     public void registerFacilityUser(FacilityInformation facilityInformation) {
-        Map<String, Object> model = new HashMap<String, Object>();
+        Map<String, Object> model = new HashMap<>();
         model.put(FACILITY_FORM_KEY, facilityInformation);
         httpClientService.post(COMMCARE_RECIEVER_URL, getXmlFromObject(FACILITY_REGISTRATION_FORM_TEMPLATE_PATH, model));
     }
@@ -128,5 +130,12 @@ public class CommcareGateway {
         Map<String, Object> model = new HashMap<String, Object>();
         model.put(FACILITY_FORM_KEY, facilityInformation);
         httpClientService.post(COMMCARE_RECIEVER_URL, getXmlFromObject(FACILITY_CASE_FORM_TEMPLATE_PATH, model));
+    }
+
+    public void createOwnershipCase() {
+        Group allUsersGroup = allGroups.getGroupByName(CommcareGateway.ALL_USERS_GROUP);
+        Map<String, Object> model = new HashMap<>();
+        model.put(OWNER_ID_KEY, allUsersGroup.getId());
+        httpClientService.post(COMMCARE_RECIEVER_URL, getXmlFromObject(OWNERSHIP_CASE_REGISTER_FORM_TEMPLATE_PATH, model));
     }
 }

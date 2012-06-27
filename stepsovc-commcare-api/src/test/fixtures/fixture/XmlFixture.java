@@ -132,4 +132,31 @@ public class XmlFixture {
                 "</data>\n" +
                 "\n";
     }
+
+    public static String getExpectedOwnershipCaseXml() {
+        return "<?xml version='1.0' ?>\n" +
+                "<data uiVersion=\"1\" version=\"40\" name=\"Facility Registration\"\n" +
+                "      xmlns=\"http://openrosa.org/formdesigner/8F9255C2-3A1D-4B82-8346-561264CEBEA0\">\n" +
+                "    <facility_code>someFacilityCode</facility_code>\n" +
+                "    <facility_name>FAC01-Name</facility_name>\n" +
+                "    <case>\n" +
+                "        <case_id>FAC1</case_id>\n" +
+                "        <create>\n" +
+                "            <case_type_id>facility</case_type_id>\n" +
+                "            <case_name>someFacilityCode</case_name>\n" +
+                "            <user_id>FAC1</user_id>\n" +
+                "            <external_id>someFacilityCode</external_id>\n" +
+                "        </create>\n" +
+                "        <update>\n" +
+                "            <facility_name>FAC01-Name</facility_name>\n" +
+                "            <facility_code>someFacilityCode</facility_code>\n" +
+                "        </update>\n" +
+                "    </case>\n" +
+                "    <meta>\n" +
+                "        <username>allUsers</username>\n" +
+                "        <userID>FAC1</userID>\n" +
+                "    </meta>\n" +
+                "</data>\n" +
+                "\n";
+    }
 }

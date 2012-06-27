@@ -39,7 +39,7 @@ public class CommcareGatewayTest {
     VelocityEngine mockVelocityEngine;
 
     @Mock
-    AllGroups allGroups;
+    AllGroups mockAllGroups;
 
     @Mock
     private AllUsers allUsers;
@@ -58,7 +58,7 @@ public class CommcareGatewayTest {
         spyCommcareGateway = spy(new CommcareGateway());
         ReflectionTestUtils.setField(spyCommcareGateway, "httpClientService", mockHttpClientService);
         ReflectionTestUtils.setField(spyCommcareGateway, "velocityEngine", mockVelocityEngine);
-        ReflectionTestUtils.setField(spyCommcareGateway, "allGroups", allGroups);
+        ReflectionTestUtils.setField(spyCommcareGateway, "allGroups", mockAllGroups);
         ReflectionTestUtils.setField(spyCommcareGateway, "allUsers", allUsers);
         ReflectionTestUtils.setField(spyCommcareGateway, "COMMCARE_RECIEVER_URL", someUrl);
         model = new HashMap<String, Object>();
@@ -96,7 +96,7 @@ public class CommcareGatewayTest {
         String someGroup = "someGroup";
         Group group = new Group();
         group.setId("somegroupId");
-        doReturn(group).when(allGroups).getGroupByName(someGroup);
+        doReturn(group).when(mockAllGroups).getGroupByName(someGroup);
         ArgumentCaptor<CaseOwnershipInformation> captor = ArgumentCaptor.forClass(CaseOwnershipInformation.class);
 
         spyCommcareGateway.addGroupOwnership(caseOwnershipInformation, someGroup);
@@ -151,10 +151,10 @@ public class CommcareGatewayTest {
 
         String[] newUsers = {"1", "2", "3"};
         String groupName = "All_Users";
-        doReturn(null).when(allGroups).getGroupByName(groupName);
+        doReturn(null).when(mockAllGroups).getGroupByName(groupName);
         spyCommcareGateway.createOrUpdateGroup(groupName, newUsers);
         ArgumentCaptor<Group> groupCaptor = ArgumentCaptor.forClass(Group.class);
-        verify(allGroups).add(groupCaptor.capture());
+        verify(mockAllGroups).add(groupCaptor.capture());
 
         assertThat(groupCaptor.getValue().getUsers(), is(newUsers));
         assertThat(groupCaptor.getValue().getName(), is(groupName));
@@ -171,14 +171,27 @@ public class CommcareGatewayTest {
         String[] existingUsers = {"4", "5"};
         group.setUsers(existingUsers);
         group.setName(groupName);
-        doReturn(group).when(allGroups).getGroupByName(groupName);
+        doReturn(group).when(mockAllGroups).getGroupByName(groupName);
         spyCommcareGateway.createOrUpdateGroup(groupName, newUsers);
         ArgumentCaptor<Group> groupCaptor = ArgumentCaptor.forClass(Group.class);
-        verify(allGroups).update(groupCaptor.capture());
+        verify(mockAllGroups).update(groupCaptor.capture());
 
         assertThat(groupCaptor.getValue().getUsers(), is(ArrayUtils.addAll(existingUsers, newUsers)));
         assertThat(groupCaptor.getValue().getName(), is(groupName));
+    }
 
+    @Test
+    public void shouldCreateOwnershipCase() {
+        String ownerId = "ownerId";
+        model.put(CommcareGateway.OWNER_ID_KEY, ownerId);
+        String allUsersGrpId = "grp1";
+        Group allUsersGroup = new Group();
+        allUsersGroup.setId(allUsersGrpId);
 
+        doReturn(allUsersGroup).when(mockAllGroups).getGroupByName(CommcareGateway.ALL_USERS_GROUP);
+        doReturn(getExpectedOwnershipCaseXml()).when(spyCommcareGateway).getXmlFromObject(OWNERSHIP_CASE_REGISTER_FORM_TEMPLATE_PATH, model);
+
+        spyCommcareGateway.createOwnershipCase();
+        verify(mockHttpClientService).post(someUrl, getExpectedOwnershipCaseXml());
     }
 }
