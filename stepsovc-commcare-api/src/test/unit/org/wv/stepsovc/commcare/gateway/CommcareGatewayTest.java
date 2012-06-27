@@ -182,11 +182,10 @@ public class CommcareGatewayTest {
 
     @Test
     public void shouldCreateOwnershipCase() {
-        String ownerId = "ownerId";
-        model.put(CommcareGateway.OWNER_ID_KEY, ownerId);
         String allUsersGrpId = "grp1";
         Group allUsersGroup = new Group();
         allUsersGroup.setId(allUsersGrpId);
+        model.put(CommcareGateway.OWNER_ID_KEY, allUsersGrpId);
 
         doReturn(allUsersGroup).when(mockAllGroups).getGroupByName(CommcareGateway.ALL_USERS_GROUP);
         doReturn(getExpectedOwnershipCaseXml()).when(spyCommcareGateway).getXmlFromObject(OWNERSHIP_CASE_REGISTER_FORM_TEMPLATE_PATH, model);
