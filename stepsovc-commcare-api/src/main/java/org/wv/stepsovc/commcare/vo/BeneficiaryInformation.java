@@ -134,8 +134,4 @@ public class BeneficiaryInformation {
     public void setCaseType(String caseType) {
         this.caseType = caseType;
     }
-
-    public String getCurrentOwnerId() {
-        return ownerId == null ? careGiverId : ownerId;
-    }
 }
