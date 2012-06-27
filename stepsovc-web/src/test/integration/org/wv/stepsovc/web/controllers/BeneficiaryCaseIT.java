@@ -4,7 +4,6 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.motechproject.appointments.api.repository.AllAppointmentCalendars;
 import org.motechproject.scheduletracking.api.repository.AllEnrollments;
 import org.motechproject.scheduletracking.api.service.ScheduleTrackingService;
 import org.quartz.SchedulerException;
@@ -37,8 +36,6 @@ public class BeneficiaryCaseIT {
     AllBeneficiaries allBeneficiaries;
     @Autowired
     AllReferrals allReferrals;
-    @Autowired
-    private AllAppointmentCalendars allAppointmentCalendars;
     @Autowired
     private AllFacilities allFacilities;
     @Autowired
