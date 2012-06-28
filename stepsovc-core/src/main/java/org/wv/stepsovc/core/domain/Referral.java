@@ -40,8 +40,6 @@ public class Referral extends MotechBaseDataObject {
 
     public static final String META_FACILITY_ID = "facilityId";
 
-    public static final String VISIT_NAME = "Referral";
-
     public String getCgId() {
         return cgId;
     }
