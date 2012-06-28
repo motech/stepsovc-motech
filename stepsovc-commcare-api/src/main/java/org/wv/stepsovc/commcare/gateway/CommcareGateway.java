@@ -93,19 +93,19 @@ public class CommcareGateway {
     }
 
     public void createCase(BeneficiaryInformation beneficiaryInformation) {
-        Map<String, Object> model = new HashMap<>();
+        Map<String, Object> model = new HashMap<String, Object>();
         model.put(BENEFICIARY_FORM_KEY, beneficiaryInformation);
         httpClientService.post(COMMCARE_RECIEVER_URL, getXmlFromObject(BENEFICIARY_CASE_FORM_TEMPLATE_PATH, model));
     }
 
     public void registerCaregiver(CaregiverInformation careGiverInformation) {
-        Map<String, Object> model = new HashMap<>();
+        Map<String, Object> model = new HashMap<String, Object>();
         model.put(CARE_GIVER_FORM_KEY, careGiverInformation);
         httpClientService.post(COMMCARE_RECIEVER_URL, getXmlFromObject(USER_REGISTRATION_FORM_TEMPLATE_PATH, model));
     }
 
     void postOwnerUpdate(CaseOwnershipInformation caseOwnershipInformation) {
-        Map<String, Object> model = new HashMap<>();
+        Map<String, Object> model = new HashMap<String, Object>();
         model.put(CASE_OWNERSHIP_FORM_KEY, caseOwnershipInformation);
         httpClientService.post(COMMCARE_RECIEVER_URL, getXmlFromObject(OWNER_UPDATE_FORM_TEMPLATE_PATH, model));
     }
@@ -119,7 +119,7 @@ public class CommcareGateway {
     }
 
     public void registerFacilityUser(FacilityInformation facilityInformation) {
-        Map<String, Object> model = new HashMap<>();
+        Map<String, Object> model = new HashMap<String, Object>();
         model.put(FACILITY_FORM_KEY, facilityInformation);
         httpClientService.post(COMMCARE_RECIEVER_URL, getXmlFromObject(FACILITY_REGISTRATION_FORM_TEMPLATE_PATH, model));
     }
@@ -134,7 +134,7 @@ public class CommcareGateway {
 
     public void createOwnershipCase() {
         Group allUsersGroup = allGroups.getGroupByName(CommcareGateway.ALL_USERS_GROUP);
-        Map<String, Object> model = new HashMap<>();
+        Map<String, Object> model = new HashMap<String, Object>();
         model.put(OWNER_ID_KEY, allUsersGroup.getId());
         httpClientService.post(COMMCARE_RECIEVER_URL, getXmlFromObject(OWNERSHIP_CASE_REGISTER_FORM_TEMPLATE_PATH, model));
     }
