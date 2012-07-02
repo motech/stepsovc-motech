@@ -21,7 +21,7 @@ public class ReferralDataMapperTest {
         assertEquals(referral.getServiceDetails(), referralData.getServiceDetails());
         assertEquals(referral.getServiceDate(), referralData.getServiceDate());
 
-        assertEquals(0, referralData.getFollowupRequired());
+        assertEquals("No", referralData.getFollowupRequired());
         assertEquals(1, referralData.getArtReferred());
         assertEquals(1, referralData.getArtReceived());
         assertEquals(1, referralData.getCondomsReferred());

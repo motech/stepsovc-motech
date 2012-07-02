@@ -12,14 +12,12 @@ import static org.wv.stepsovc.core.domain.ServiceType.*;
 @Component
 public class ReferralDataMapper {
 
-    public static final String FOLLOW_UP_REQUIRED = "yes";
-
     public ReferralData map(Referral referral) {
         ReferralData referralData = new ReferralData();
         referralData.setCaregiverId(referral.getCgId());
         referralData.setFacilityCode(referral.getFacilityCode());
         referralData.setReferralId(referral.getOvcId());
-        referralData.setFollowupRequired(byteValue(FOLLOW_UP_REQUIRED.equals(referral.getFollowupRequired())));
+        referralData.setFollowupRequired(referral.getFollowupRequired());
         referralData.setServiceDetails(referral.getServiceDetails());
         referralData.setServiceDate(referral.getServiceDate());
 

@@ -7,7 +7,7 @@ public class ReferralData {
     private String referralId;
     private String facilityCode;
     private String serviceDate;
-    private byte followupRequired;
+    private String followupRequired;
     private byte signed;
     private String signedDate;
     private byte artReceived;
@@ -50,7 +50,7 @@ public class ReferralData {
     }
 
     @ExportValue(column = "rr_follow_up", index = 3)
-    public byte getFollowupRequired() {
+    public String getFollowupRequired() {
         return this.followupRequired;
     }
 
@@ -191,7 +191,7 @@ public class ReferralData {
         this.serviceDate = serviceDate;
     }
 
-    public void setFollowupRequired(byte followupRequired) {
+    public void setFollowupRequired(String followupRequired) {
         this.followupRequired = followupRequired;
     }
 

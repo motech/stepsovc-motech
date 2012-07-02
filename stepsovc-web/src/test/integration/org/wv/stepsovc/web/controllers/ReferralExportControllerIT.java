@@ -68,7 +68,7 @@ public class ReferralExportControllerIT {
     private String expectedCSVContent(String benCode, String date) {
         Referral activeReferral = allReferrals.findActiveReferral(benCode);
         return "rr_id,rr_referrer_name,rr_referral_date,rr_follow_up,rr_signed,rr_signed_date,rr_hlt_art_rec,rr_hlt_art_ref,rr_hlt_condoms_rec,rr_hlt_condoms_ref,rr_hlt_ct_rec,rr_hlt_ct_ref,rr_hlt_diag_rec,rr_hlt_diag_ref,rr_hlt_fp_rec,rr_hlt_fp_ref,rr_hlt_hosp_rec,rr_hlt_hosp_ref,rr_hlt_other_hlt,rr_hlt_other_hlt_rec,rr_hlt_other_hlt_ref,rr_hlt_pain_rec,rr_hlt_pain_ref,rr_hlt_pmtct_rec,rr_hlt_pmtct_ref,rr_hlt_sex_trans_rec,rr_hlt_sex_trans_ref,ben_id,cg_id\n" +
-                activeReferral.getOvcId() + ",testFAC1," + date + ",1,0,,0,1,0,1,0,1,0,1,0,1,0,0,new service details,0,1,0,1,0,1,0,0,BenId,Userid001\n";
+                activeReferral.getOvcId() + ",testFAC1," + date + ",yes,0,,0,1,0,1,0,1,0,1,0,1,0,0,new service details,0,1,0,1,0,1,0,0,BenId,Userid001\n";
     }
 
     @After
