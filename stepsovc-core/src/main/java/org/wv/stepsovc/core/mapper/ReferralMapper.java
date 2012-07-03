@@ -68,7 +68,7 @@ public class ReferralMapper {
         referredServices.get(PMTCT.getCode()).setProvided(SERVICE_RECEIVED.equals(stepsovcCase.getPmtct()));
         referredServices.get(SEXUALLY_TRANSMITTED_INFEC.getCode()).setProvided(SERVICE_RECEIVED.equals(stepsovcCase.getSexually_transmitted_infection()));
 
-        referral.setVisitDate(stepsovcCase.getVisit_date());
+        referral.setSignedDate(stepsovcCase.getVisit_date());
         referral.setServiceDetails(stepsovcCase.getService_details());
 
         referral.setFacilityCode(stepsovcCase.getFacility_code());

@@ -68,7 +68,7 @@ public class BeneficiaryCaseIT {
                 ),
                 asList("9999999999", "88888888"));
         allFacilities.add(facility);
-        stepsovcCase = createCaseForReferral(beneficiaryCode, "2013-4-12", "FAC001");
+        stepsovcCase = createCaseForReferral(beneficiaryCode, "2013-4-12", "FAC001", "1988-12-23");
         stepsovcCase.setForm_type(NEW_REFERRAL.getType());
     }
 

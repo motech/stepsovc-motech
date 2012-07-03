@@ -82,6 +82,7 @@ public class ReferralMapperTest {
         assertThat(newReferral.getServiceDetails(), is(stepsovcCase.getService_details()));
         assertThat(newReferral.getFacilityCode(), is(stepsovcCase.getFacility_code()));
         assertThat(newReferral.getServiceDate(), is(stepsovcCase.getService_date()));
+        assertThat(newReferral.getSignedDate(), is(stepsovcCase.getVisit_date()));
     }
 
     @Test

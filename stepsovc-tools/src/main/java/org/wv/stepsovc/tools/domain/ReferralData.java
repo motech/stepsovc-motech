@@ -6,7 +6,7 @@ public class ReferralData {
 
     private String referralId;
     private String facilityCode;
-    private String serviceDate;
+    private String visitDate;
     private String followupRequired;
     private byte signed;
     private String signedDate;
@@ -45,8 +45,8 @@ public class ReferralData {
     }
 
     @ExportValue(column = "rr_referral_date", index = 2)
-    public String getServiceDate() {
-        return this.serviceDate;
+    public String getVisitDate() {
+        return this.visitDate;
     }
 
     @ExportValue(column = "rr_follow_up", index = 3)
@@ -187,8 +187,8 @@ public class ReferralData {
         this.facilityCode = facilityCode;
     }
 
-    public void setServiceDate(String serviceDate) {
-        this.serviceDate = serviceDate;
+    public void setVisitDate(String visitDate) {
+        this.visitDate = visitDate;
     }
 
     public void setFollowupRequired(String followupRequired) {

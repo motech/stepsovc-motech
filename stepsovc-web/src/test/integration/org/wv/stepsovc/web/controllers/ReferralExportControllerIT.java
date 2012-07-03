@@ -15,7 +15,6 @@ import org.wv.stepsovc.core.repository.AllReferrals;
 import org.wv.stepsovc.core.request.StepsovcCase;
 import org.wv.stepsovc.core.services.BeneficiaryService;
 import org.wv.stepsovc.core.services.ReferralService;
-import org.wv.stepsovc.core.utils.DateUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
@@ -23,6 +22,7 @@ import java.lang.reflect.Method;
 
 import static junit.framework.Assert.assertEquals;
 import static org.motechproject.util.DateUtil.today;
+import static org.wv.stepsovc.core.utils.DateUtils.getFormattedDate;
 import static org.wv.stepsovc.web.controllers.ReferralExportController.CONTENT_DISPOSITION;
 import static org.wv.stepsovc.web.controllers.ReferralExportController.TEXT_CSV;
 
@@ -49,9 +49,10 @@ public class ReferralExportControllerIT {
         StepsovcCase beneficiaryCase = StepsovcCaseFixture.createNewBeneficiaryCase(benCode);
         beneficiaryService.createBeneficiary(beneficiaryCase);
 
-        String twoDaysBefore = DateUtils.getFormattedDate(today().minusDays(2).toDate());
+        String twoDaysBefore = getFormattedDate(today().minusDays(2).toDate());
 
-        StepsovcCase referralCase = StepsovcCaseFixture.createCaseForReferral(benCode, twoDaysBefore, "testFAC1");
+        String visitDate = getFormattedDate(today().toDate());
+        StepsovcCase referralCase = StepsovcCaseFixture.createCaseForReferral(benCode, twoDaysBefore, "testFAC1", visitDate);
         referralService.addNewReferral(referralCase);
 
         Method exportMethod = getMethodForRequestMapping("/{groupName}/{reportName}.csv", RequestMethod.GET);
@@ -62,7 +63,7 @@ public class ReferralExportControllerIT {
 
         assertEquals("inline; filename=" + fileName + ".csv", mockHttpResponse.getHeaderValue(CONTENT_DISPOSITION));
         assertEquals(TEXT_CSV, mockHttpResponse.getContentType());
-        assertEquals(expectedCSVContent(benCode, twoDaysBefore), mockHttpResponse.getContentAsString());
+        assertEquals(expectedCSVContent(benCode, visitDate), mockHttpResponse.getContentAsString());
     }
 
     private String expectedCSVContent(String benCode, String date) {

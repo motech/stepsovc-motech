@@ -16,20 +16,20 @@
     <properties>
         <spring.version>3.1.0.RELEASE</spring.version>
         <spring.integration.version>2.1.1.RELEASE</spring.integration.version>
-        <motech-platform.version>0.11-SNAPSHOT</motech-platform.version>
+        <motech-platform.version>0.11</motech-platform.version>
         <motech-contrib.version>0.11-SNAPSHOT</motech-contrib.version>
         <exec-maven-plugin.version>1.1.1</exec-maven-plugin.version>
     </properties>
 
     <distributionManagement>
         <repository>
-            <id>motech.nexus</id>
+            <id>motech.nexus.releases</id>
             <name>Motech Releases Repository</name>
             <url>http://nexus.motechproject.org/content/repositories/releases</url>
             <uniqueVersion>false</uniqueVersion>
         </repository>
         <snapshotRepository>
-            <id>motech.nexus</id>
+            <id>motech.nexus.snapshots</id>
             <name>Motech Snapshots Repository</name>
             <url>http://nexus.motechproject.org/content/repositories/snapshots</url>
             <uniqueVersion>false</uniqueVersion>
@@ -56,9 +56,14 @@
             <url>http://maven.springframework.org/milestone</url>
         </repository>
         <repository>
-            <id>motech.nexus</id>
+            <id>motech.nexus.snapshots</id>
             <name>Motech Snapshots Repository</name>
             <url>http://nexus.motechproject.org/content/repositories/snapshots</url>
+        </repository>
+        <repository>
+            <id>motech.nexus.releases</id>
+            <name>Motech Snapshots Repository</name>
+            <url>http://nexus.motechproject.org/content/repositories/releases</url>
         </repository>
     </repositories>
 

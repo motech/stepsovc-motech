@@ -39,7 +39,7 @@ public class StepsovcCaseFixture {
         assertThat(newReferral.getFollowupDate(), is(stepsovcCase.getFollowup_date()));
     }
 
-    public static StepsovcCase createCaseForReferral(String beneficiaryCode, String serviceDate, String facilityId) {
+    public static StepsovcCase createCaseForReferral(String beneficiaryCode, String serviceDate, String facilityId, String visitDate) {
         StepsovcCase stepsovcCase = createNewBeneficiaryCase(beneficiaryCode);
         stepsovcCase.setCondoms("Referred");
         stepsovcCase.setArt_adherence_counseling("Referred");
@@ -53,7 +53,7 @@ public class StepsovcCaseFixture {
         stepsovcCase.setSexually_transmitted_infection("Not Referred");
         stepsovcCase.setPain_management("Referred");
         stepsovcCase.setOther_health_services("Referred");
-        stepsovcCase.setVisit_date("1988-12-23");
+        stepsovcCase.setVisit_date(visitDate);
         stepsovcCase.setService_date(serviceDate);
         stepsovcCase.setService_details("new service details");
         stepsovcCase.setFacility_code(facilityId);
@@ -147,7 +147,7 @@ public class StepsovcCaseFixture {
     }
 
     public static StepsovcCase createCaseForUpdateService(String code, String serviceDate, String facility_code) {
-        StepsovcCase stepsovcCase = createCaseForReferral(code, null, facility_code);
+        StepsovcCase stepsovcCase = createCaseForReferral(code, null, facility_code, "1988-12-23");
         stepsovcCase.setCondoms("Not Availed");
         stepsovcCase.setEnd_of_life_hospice("Not Availed");
         stepsovcCase.setFamily_planning("Not Availed");
@@ -168,7 +168,7 @@ public class StepsovcCaseFixture {
     }
 
     public static StepsovcCase createCaseForUpdateServiceWithServicesFullfilled(String code, String serviceDate, String facilityId) {
-        StepsovcCase stepsovcCase = createCaseForReferral(code, null, facilityId);
+        StepsovcCase stepsovcCase = createCaseForReferral(code, null, facilityId, "1988-12-23");
         stepsovcCase.setCondoms(SERVICE_RECEIVED);
         stepsovcCase.setEnd_of_life_hospice(SERVICE_RECEIVED);
         stepsovcCase.setFamily_planning(SERVICE_RECEIVED);

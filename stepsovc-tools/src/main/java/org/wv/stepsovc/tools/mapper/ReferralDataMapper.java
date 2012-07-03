@@ -19,12 +19,12 @@ public class ReferralDataMapper {
         referralData.setReferralId(referral.getOvcId());
         referralData.setFollowupRequired(referral.getFollowupRequired());
         referralData.setServiceDetails(referral.getServiceDetails());
-        referralData.setServiceDate(referral.getServiceDate());
+        referralData.setVisitDate(referral.getVisitDate());
 
         boolean isAnyServiceReceived = referral.anyServiceReceived();
         referralData.setSigned(byteValue(isAnyServiceReceived));
         if (isAnyServiceReceived)
-            referralData.setSignedDate(referral.getVisitDate());
+            referralData.setSignedDate(referral.getSignedDate());
 
         Map<String, Service> referredServices = referral.getReferredServices();
         referralData.setArtReceived(byteValue(referredServices.get(ART_ADHERENCE.getCode()).isProvided()));

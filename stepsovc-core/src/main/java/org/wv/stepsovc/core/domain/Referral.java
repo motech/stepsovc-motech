@@ -29,6 +29,8 @@ public class Referral extends MotechBaseDataObject {
     @JsonProperty
     private String serviceDate;
     @JsonProperty
+    private String signedDate;
+    @JsonProperty
     private String followupRequired;
     @JsonProperty
     private String followupDate;
@@ -151,6 +153,14 @@ public class Referral extends MotechBaseDataObject {
 
     public void setLastModified(LocalDate lastModified) {
         this.lastModified = lastModified;
+    }
+
+    public String getSignedDate() {
+        return signedDate;
+    }
+
+    public void setSignedDate(String signedDate) {
+        this.signedDate = signedDate;
     }
 
     public List<String> referredServiceCodes() {
