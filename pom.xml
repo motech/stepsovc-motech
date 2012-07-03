@@ -17,7 +17,7 @@
         <spring.version>3.1.0.RELEASE</spring.version>
         <spring.integration.version>2.1.1.RELEASE</spring.integration.version>
         <motech-platform.version>0.11</motech-platform.version>
-        <motech-contrib.version>0.11-SNAPSHOT</motech-contrib.version>
+        <motech-contrib.version>0.11</motech-contrib.version>
         <exec-maven-plugin.version>1.1.1</exec-maven-plugin.version>
     </properties>
 
