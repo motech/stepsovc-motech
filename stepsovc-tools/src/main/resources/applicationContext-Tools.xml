@@ -17,9 +17,6 @@
         <constructor-arg>
             <list>
                 <ref bean="smsMessageContentSeed"/>
-                <ref bean="facilityTemporarySeed"/>
-                <ref bean="caregiverTemporarySeed"/>
-                <!--<ref bean="beneficiaryTemporarySeed"/>-->
             </list>
         </constructor-arg>
     </bean>
