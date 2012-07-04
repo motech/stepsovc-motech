@@ -4,6 +4,7 @@
     <action>REQUEST OWNERSHIP</action>
     <form_type>ownership_registration</form_type>
     <case>
+        <case_id>ownership-case-for-$!ownerId</case_id>
         <create>
             <case_type_id>beneficiary_ownership</case_type_id>
             <case_name>REQUEST OWNERSHIP</case_name>

@@ -123,6 +123,7 @@ public class XmlFixture {
                 "        <update>\n" +
                 "            <facility_name>FAC01-Name</facility_name>\n" +
                 "            <facility_code>someFacilityCode</facility_code>\n" +
+                "            <form_type>facility_registration</form_type>\n" +
                 "        </update>\n" +
                 "    </case>\n" +
                 "    <meta>\n" +

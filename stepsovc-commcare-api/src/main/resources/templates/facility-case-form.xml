@@ -14,6 +14,7 @@
         <update>
             <facility_name>$!facility.facilityName</facility_name>
             <facility_code>$!facility.facilityCode</facility_code>
+            <form_type>facility_registration</form_type>
         </update>
     </case>
     <meta>
