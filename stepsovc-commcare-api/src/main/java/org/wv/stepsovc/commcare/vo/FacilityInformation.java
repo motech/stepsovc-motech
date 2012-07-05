@@ -1,6 +1,8 @@
 package org.wv.stepsovc.commcare.vo;
 
-import java.util.Arrays;
+import org.apache.commons.lang.StringUtils;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class FacilityInformation {
@@ -52,7 +54,17 @@ public class FacilityInformation {
     }
 
     public List<String> getPhoneNumbers() {
-        return Arrays.asList(getMandatoryPhoneNumber(), getOptionalPhoneNumber1(), getOptionalPhoneNumber2(), getOptionalPhoneNumber3());
+        ArrayList<String> phoneNumberList = new ArrayList<>();
+        if (StringUtils.isNotEmpty(getMandatoryPhoneNumber()))
+            phoneNumberList.add(getMandatoryPhoneNumber());
+        if (StringUtils.isNotEmpty(getOptionalPhoneNumber1()))
+            phoneNumberList.add(getOptionalPhoneNumber1());
+        if (StringUtils.isNotEmpty(getOptionalPhoneNumber2()))
+            phoneNumberList.add(getOptionalPhoneNumber2());
+        if (StringUtils.isNotEmpty(getOptionalPhoneNumber3()))
+            phoneNumberList.add(getOptionalPhoneNumber3());
+
+        return phoneNumberList;
     }
 
     public void setPhoneNumbers(List<String> phoneNumbers) {
