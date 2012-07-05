@@ -226,6 +226,46 @@ public class StepsovcAlertServiceTest {
     }
 
     @Test
+    public void shouldHandleNilCaregiverAssociationToFacilityWhileServiceUnavailability() throws ContentNotFoundException {
+        String facilityCode = "FAC001";
+
+        String cg1 = "CG1";
+        String cg2 = "CG2";
+        String cg3 = "CG3";
+        String cg4 = "CG4";
+        String cg5 = "CG5";
+
+        String phoneNumber1 = "111111";
+        String phoneNumber2 = "222222";
+        String phoneNumber3 = "333333";
+        String phoneNumber4 = "444444";
+        String phoneNumber5 = "555555";
+
+        List<Caregiver> caregiversForFacility = Arrays.asList(getCaregiver(cg3, phoneNumber3), getCaregiver(cg4, phoneNumber4), getCaregiver(cg5, phoneNumber5));
+        doReturn(null).when(mockAllCaregivers).findCaregiverByFacilityCode(facilityCode);
+
+        doReturn(getCaregiver(cg1, phoneNumber1)).when(mockAllCaregivers).findCaregiverById(cg1);
+        doReturn(getCaregiver(cg2, phoneNumber2)).when(mockAllCaregivers).findCaregiverById(cg2);
+        doReturn(getCaregiver(cg3, phoneNumber3)).when(mockAllCaregivers).findCaregiverById(cg3);
+
+        doReturn(new StringContent("", "", "%s will be closed from %s to %s. Referral moved to %s.")).when(mockCmsLiteService)
+                .getStringContent(Locale.ENGLISH.getLanguage(), FACILITY_SERVICE_UNAVAILABLE);
+
+        List<Referral> referrals = Arrays.asList(getReferral(cg1), getReferral(cg2), getReferral(cg3));
+        stepsovcAlertService.sendInstantServiceUnavailabilityMsgToCareGivers(referrals,
+                facilityCode, "2012-12-12", "2012-12-12", "2012-12-13");
+
+        ArgumentCaptor<ArrayList> phoneNumberCaptor = ArgumentCaptor.forClass(ArrayList.class);
+        verify(mockSmsService).sendSMS(phoneNumberCaptor.capture(), eq(facilityCode + " will be closed from 2012-12-12 to 2012-12-12. Referral moved to 2012-12-13."));
+        List phoneNumbers = phoneNumberCaptor.getAllValues().get(0);
+        assertThat(phoneNumbers.size(), is(3));
+        assertThat(phoneNumber1, isIn(phoneNumbers));
+        assertThat(phoneNumber2, isIn(phoneNumbers));
+        assertThat(phoneNumber3, isIn(phoneNumbers));
+
+    }
+
+    @Test
     public void shouldSendInstantServiceUnavailableMsgToGivenCaregiver() throws ContentNotFoundException {
         String caregiverId = "CG1";
         String facilityCode = "FAC001";

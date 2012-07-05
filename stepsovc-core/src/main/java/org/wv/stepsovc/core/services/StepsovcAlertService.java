@@ -1,5 +1,6 @@
 package org.wv.stepsovc.core.services;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.joda.time.LocalDate;
 import org.motechproject.aggregator.inbound.EventAggregationGateway;
@@ -137,11 +138,14 @@ public class StepsovcAlertService {
             }
         }
         List<Caregiver> caregiversForFacility = allCaregivers.findCaregiverByFacilityCode(facilityCode);
-        for (Caregiver caregiver : caregiversForFacility) {
-            phoneNumbers.add(caregiver.getPhoneNumber());
-        }
+
+        if (CollectionUtils.isNotEmpty(caregiversForFacility))
+            for (Caregiver caregiver : caregiversForFacility) {
+                phoneNumbers.add(caregiver.getPhoneNumber());
+            }
         String smsContent = getServiceUnavailableAlertMsg(facilityCode, unavailableFromDate, unavailableToDate, nextAvailableDate);
-        smsService.sendSMS(new ArrayList<String>(phoneNumbers), smsContent);
+        if (CollectionUtils.isNotEmpty(phoneNumbers))
+            smsService.sendSMS(new ArrayList<String>(phoneNumbers), smsContent);
     }
 
     public void sendInstantServiceUnavailabilityMsgToCareGiverOfReferral(String caregiverId, String facilityCode, String unavailableFromDate,
