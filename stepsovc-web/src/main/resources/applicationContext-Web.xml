@@ -8,6 +8,7 @@
     <import resource="classpath:applicationContext-case.xml"/>
     <import resource="classpath:applicationContext-Tools.xml"/>
     <import resource="classpath:applicationSmsSmpp.xml"/>
+    <import resource="classpath:applicationPlatformServerAPI.xml"/>
 
     <context:annotation-config/>
     <context:spring-configured/>
