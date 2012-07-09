@@ -1,7 +1,7 @@
 {
     "outgoing":{
         "request":{
-            "urlPath":"http://196.12.12.185/zorilla2.0/modules/wv/wv.hei",
+            "urlPath":"https://196.12.12.185/zorilla2.0/modules/wv/wv.hei",
             "type":"GET",
             "queryParameters":{
                 "to":"$recipients",

@@ -280,7 +280,7 @@
                             <includeGroupIds>org.wv.stepsovc</includeGroupIds>
                             <excludeTransitive>true</excludeTransitive>
                             <includes>
-                                schedules/**,*.properties,log4j.xml
+                                schedules/**,*.properties,log4j.xml,*.json
                             </includes>
                             <excludes>
                                 activemq.properties,httpclient.properties
