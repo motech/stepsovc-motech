@@ -5,7 +5,7 @@
     <parent>
         <artifactId>stepsovc</artifactId>
         <groupId>org.wv.stepsovc</groupId>
-        <version>1.0</version>
+        <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -38,7 +38,7 @@
         </dependency>
         <dependency>
             <groupId>org.motechproject</groupId>
-            <artifactId>motech-sms-smpp</artifactId>
+            <artifactId>motech-sms-http</artifactId>
             <version>${motech-platform.version}</version>
             <exclusions>
                 <exclusion>
