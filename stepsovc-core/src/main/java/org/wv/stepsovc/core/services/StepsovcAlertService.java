@@ -62,7 +62,7 @@ public class StepsovcAlertService {
                 StringContent stringContent = cmsLiteService.getStringContent(Locale.ENGLISH.getLanguage(), SmsTemplateKeys.IMPENDING_REFERRAL);
                 Beneficiary beneficiary = allBeneficiaries.findBeneficiaryByCode(referral.getBeneficiaryCode());
                 message = String.format(stringContent.getValue(), beneficiary.getName(), beneficiary.getCode(), facility.getFacilityName(), referral.getServiceDate());
-                smsService.sendSMS(phoneNumbers, message);
+                sendSMSToAll(phoneNumbers, message);
             } catch (ContentNotFoundException e) {
                 logger.error("Content for SMS not found - " + SmsTemplateKeys.IMPENDING_REFERRAL, e);
             }
@@ -145,7 +145,13 @@ public class StepsovcAlertService {
             }
         String smsContent = getServiceUnavailableAlertMsg(facilityCode, unavailableFromDate, unavailableToDate, nextAvailableDate);
         if (CollectionUtils.isNotEmpty(phoneNumbers))
-            smsService.sendSMS(new ArrayList<String>(phoneNumbers), smsContent);
+            sendSMSToAll(new ArrayList<>(phoneNumbers), smsContent);
+    }
+
+    private void sendSMSToAll(List<String> recipients, String smsContent) {
+        for (String recipient : recipients) {
+            smsService.sendSMS(recipient, smsContent);
+        }
     }
 
     public void sendInstantServiceUnavailabilityMsgToCareGiverOfReferral(String caregiverId, String facilityCode, String unavailableFromDate,
