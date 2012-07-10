@@ -20,7 +20,6 @@ import org.wv.stepsovc.core.repository.AllFacilities;
 import org.wv.stepsovc.core.repository.AllReferrals;
 import org.wv.stepsovc.core.request.StepsovcCase;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -152,7 +151,8 @@ public class StepsovcAlertServiceTest {
 
         stepsovcAlertService.sendInstantReferralAlertToFacility(referral);
 
-        verify(mockSmsService).sendSMS(phoneNumbers, "Ben Name (BEN001) will be coming to your facility FAC001 on 2012-05-30. Please make the necessary arrangements.");
+        for (String phoneNumber : phoneNumbers)
+            verify(mockSmsService).sendSMS(phoneNumber, "Ben Name (BEN001) will be coming to your facility FAC001 on 2012-05-30. Please make the necessary arrangements.");
 
     }
 
@@ -214,9 +214,9 @@ public class StepsovcAlertServiceTest {
         stepsovcAlertService.sendInstantServiceUnavailabilityMsgToCareGivers(referrals,
                 facilityCode, "2012-12-12", "2012-12-12", "2012-12-13");
 
-        ArgumentCaptor<ArrayList> phoneNumberCaptor = ArgumentCaptor.forClass(ArrayList.class);
-        verify(mockSmsService).sendSMS(phoneNumberCaptor.capture(), eq(facilityCode + " will be closed from 2012-12-12 to 2012-12-12. Referral moved to 2012-12-13."));
-        List phoneNumbers = phoneNumberCaptor.getAllValues().get(0);
+        ArgumentCaptor<String> phoneNumberCaptor = ArgumentCaptor.forClass(String.class);
+        verify(mockSmsService, times(5)).sendSMS(phoneNumberCaptor.capture(), eq(facilityCode + " will be closed from 2012-12-12 to 2012-12-12. Referral moved to 2012-12-13."));
+        List phoneNumbers = phoneNumberCaptor.getAllValues();
         assertThat(phoneNumbers.size(), is(5));
         assertThat(phoneNumber1, isIn(phoneNumbers));
         assertThat(phoneNumber2, isIn(phoneNumbers));
@@ -255,9 +255,9 @@ public class StepsovcAlertServiceTest {
         stepsovcAlertService.sendInstantServiceUnavailabilityMsgToCareGivers(referrals,
                 facilityCode, "2012-12-12", "2012-12-12", "2012-12-13");
 
-        ArgumentCaptor<ArrayList> phoneNumberCaptor = ArgumentCaptor.forClass(ArrayList.class);
-        verify(mockSmsService).sendSMS(phoneNumberCaptor.capture(), eq(facilityCode + " will be closed from 2012-12-12 to 2012-12-12. Referral moved to 2012-12-13."));
-        List phoneNumbers = phoneNumberCaptor.getAllValues().get(0);
+        ArgumentCaptor<String> phoneNumberCaptor = ArgumentCaptor.forClass(String.class);
+        verify(mockSmsService, times(3)).sendSMS(phoneNumberCaptor.capture(), eq(facilityCode + " will be closed from 2012-12-12 to 2012-12-12. Referral moved to 2012-12-13."));
+        List phoneNumbers = phoneNumberCaptor.getAllValues();
         assertThat(phoneNumbers.size(), is(3));
         assertThat(phoneNumber1, isIn(phoneNumbers));
         assertThat(phoneNumber2, isIn(phoneNumbers));
