@@ -27,7 +27,7 @@ public class AggregateSMSEventHandler {
 
     @Autowired
     CMSLiteService cmsLiteService;
-    @Qualifier("smsServiceImpl")
+    @Qualifier("stepsovcSmsServiceImpl")
     @Autowired
     SmsService smsService;
 
