@@ -29,7 +29,12 @@ public class BeneficiaryImporter {
         for (BeneficiaryInformation entity : entities) {
             entity.setBeneficiaryName(dmisDataProcessor.decrypt(entity.getBeneficiaryName()));
             entity.setCareGiverName(dmisDataProcessor.decrypt(entity.getCareGiverName()));
-            commcareGateway.createCase(entity);
+
+            try {
+                commcareGateway.createCase(entity);
+            } catch (Exception e) {
+                logger.error(entity.getBeneficiaryCode() + ", " + entity.getBeneficiaryId() + e);
+            }
         }
     }
 }
