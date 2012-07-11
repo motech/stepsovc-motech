@@ -33,7 +33,7 @@ public class BeneficiaryImporter {
             try {
                 commcareGateway.createCase(entity);
             } catch (Exception e) {
-                logger.error(entity.getBeneficiaryCode() + ", " + entity.getBeneficiaryId() + e);
+                System.err.println(entity.getBeneficiaryCode() + ", " + entity.getBeneficiaryId() + e);
             }
         }
     }
