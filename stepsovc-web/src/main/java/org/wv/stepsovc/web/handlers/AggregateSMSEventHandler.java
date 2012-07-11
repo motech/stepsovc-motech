@@ -9,6 +9,7 @@ import org.motechproject.scheduler.domain.MotechEvent;
 import org.motechproject.server.event.annotations.MotechListener;
 import org.motechproject.sms.api.service.SmsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.integration.message.GenericMessage;
 import org.springframework.stereotype.Component;
 import org.wv.stepsovc.core.aggregator.SMSMessage;
@@ -26,6 +27,7 @@ public class AggregateSMSEventHandler {
 
     @Autowired
     CMSLiteService cmsLiteService;
+    @Qualifier("stepsovcSmsServiceImpl")
     @Autowired
     SmsService smsService;
 

@@ -11,6 +11,7 @@ import org.motechproject.model.Time;
 import org.motechproject.sms.api.service.SmsService;
 import org.motechproject.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.wv.stepsovc.core.aggregator.SMSMessage;
 import org.wv.stepsovc.core.configuration.VisitNames;
@@ -39,6 +40,7 @@ public class StepsovcAlertService {
     private CMSLiteService cmsLiteService;
     @Autowired
     private AllBeneficiaries allBeneficiaries;
+    @Qualifier("stepsovcSmsServiceImpl")
     @Autowired
     private SmsService smsService;
     @Autowired

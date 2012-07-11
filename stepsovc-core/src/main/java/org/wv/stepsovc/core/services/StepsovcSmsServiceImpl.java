@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-@Service(value = "smsService")
+@Service
 //Temporarily added the class in this app. Should be moved to motech with logic to skip splitting of messages
 public class StepsovcSmsServiceImpl implements SmsService {
     private EventRelay eventRelay;
