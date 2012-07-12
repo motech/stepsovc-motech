@@ -18,8 +18,6 @@ public class TestController {
     @ResponseBody
     public String loadHelloWorld() {
         logger.info("***********Test PAGE- Log  configured in Info  Mode*************** ");
-        logger.debug("***********Test PAGE- Log  configured in DEBUG  Mode*************** ");
-        logger.error("***********Test PAGE- Log  configured in Error  Mode*************** ");
         return " Testing - StepOVC Running @" + new Date();
     }
 }

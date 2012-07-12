@@ -1,16 +1,17 @@
 {
     "outgoing":{
         "request":{
-            "urlPath":"https://196.12.12.185/zorilla2.0/modules/wv/wv.hei",
-            "type":"POST",
+            "urlPath":"http://localhost:8080/motech-delivery-tools-web-0.3-SNAPSHOT/motech-delivery-tools/outbound/receive",
+            "type":"GET",
             "recipientsSeparator":"-",
-            "bodyParameters":{
+            "queryParameters":{
                 "to":"$recipients",
                 "msg":"$message"
             }
         },
         "response":{
-            "success":"success"
+            "success":"Received"
         }
     }
 }
+
