@@ -106,6 +106,7 @@ public class StepsovcSmsServiceImpl implements SmsService {
         parameters.put(EventDataKeys.RECIPIENTS, recipients);
         parameters.put(EventDataKeys.MESSAGE, message);
         parameters.put(EventDataKeys.DELIVERY_TIME, deliveryTime);
+        parameters.put(MotechSchedulerService.JOB_ID_KEY, UUID.randomUUID());
         return new MotechEvent(EventSubjects.SEND_SMS, parameters);
     }
 }
