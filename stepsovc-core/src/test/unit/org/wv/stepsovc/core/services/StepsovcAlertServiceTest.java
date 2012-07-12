@@ -30,6 +30,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.motechproject.util.DateUtil.newDateTime;
+import static org.motechproject.util.DateUtil.today;
 import static org.wv.stepsovc.core.domain.SmsTemplateKeys.BENEFICIARY_WITH_SERVICES;
 import static org.wv.stepsovc.core.domain.SmsTemplateKeys.FACILITY_SERVICE_UNAVAILABLE;
 import static org.wv.stepsovc.core.fixtures.StepsovcCaseFixture.createCaseForReferral;
@@ -66,6 +67,7 @@ public class StepsovcAlertServiceTest {
         ReflectionTestUtils.setField(stepsovcAlertService, "cmsLiteService", mockCmsLiteService);
         ReflectionTestUtils.setField(stepsovcAlertService, "eventAggregationGateway", mockEventAggregationGateway);
         ReflectionTestUtils.setField(stepsovcAlertService, "smsService", mockSmsService);
+        ReflectionTestUtils.setField(stepsovcAlertService, "preferredDefaultedSmsSendTimeInHrs", 8);
         referral = new Referral();
         facility = new Facility();
         beneficiary = new Beneficiary();
@@ -120,8 +122,7 @@ public class StepsovcAlertServiceTest {
         doReturn(caregiver).when(mockAllCaregivers).findCaregiverById(caregiverId);
         doReturn(template).when(mockCmsLiteService).getStringContent("en", SmsTemplateKeys.DEFAULTED_REFERRAL);
         stepsovcAlertService.sendInstantDefaultedAlertToCaregiver(externalId);
-        verify(mockSmsService).sendSMS(phoneNumber, msg);
-
+        verify(mockSmsService).sendSMS(phoneNumber, msg, newDateTime(today(), 8, 0, 0));
     }
 
     @Test

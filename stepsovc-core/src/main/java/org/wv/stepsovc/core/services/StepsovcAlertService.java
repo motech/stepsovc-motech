@@ -12,6 +12,7 @@ import org.motechproject.sms.api.service.SmsService;
 import org.motechproject.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.wv.stepsovc.core.aggregator.SMSMessage;
 import org.wv.stepsovc.core.configuration.VisitNames;
@@ -28,6 +29,7 @@ import java.util.*;
 import static java.lang.String.format;
 import static org.apache.commons.lang.StringUtils.join;
 import static org.motechproject.util.DateUtil.newDateTime;
+import static org.motechproject.util.DateUtil.today;
 import static org.springframework.util.CollectionUtils.isEmpty;
 import static org.wv.stepsovc.core.aggregator.RecipientType.CAREGIVER;
 import static org.wv.stepsovc.core.aggregator.RecipientType.FACILITY;
@@ -35,7 +37,8 @@ import static org.wv.stepsovc.core.aggregator.SMSGroupFactory.group;
 
 @Service
 public class StepsovcAlertService {
-
+    @Value("#{stepovcProperties['preferred.time.for.defaulted.sms.in.hrs']}")
+    private int preferredDefaultedSmsSendTimeInHrs;
     @Autowired
     private CMSLiteService cmsLiteService;
     @Autowired
@@ -107,7 +110,7 @@ public class StepsovcAlertService {
                 String smsContent = format(stringContent.getValue(), beneficiary.getName(), beneficiary.getCode(),
                         referral.getFacilityCode(), referral.getServiceDate());
                 logger.info("Sms Content : " + smsContent);
-                smsService.sendSMS(phoneNumber, smsContent);
+                smsService.sendSMS(phoneNumber, smsContent, newDateTime(today(), preferredDefaultedSmsSendTimeInHrs, 0, 0));
             } catch (ContentNotFoundException e) {
                 logger.error("Content for SMS not found - " + SmsTemplateKeys.DEFAULTED_REFERRAL, e);
             }
@@ -150,7 +153,7 @@ public class StepsovcAlertService {
             sendSMSToAll(new ArrayList<>(phoneNumbers), smsContent);
     }
 
-    private void sendSMSToAll(List<String> recipients, String smsContent) {
+    public void sendSMSToAll(List<String> recipients, String smsContent) {
         for (String recipient : recipients) {
             smsService.sendSMS(recipient, smsContent);
         }
