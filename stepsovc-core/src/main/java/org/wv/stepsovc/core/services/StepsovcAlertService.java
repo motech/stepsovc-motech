@@ -1,6 +1,7 @@
 package org.wv.stepsovc.core.services;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.joda.time.LocalDate;
 import org.motechproject.aggregator.inbound.EventAggregationGateway;
@@ -9,7 +10,6 @@ import org.motechproject.cmslite.api.model.StringContent;
 import org.motechproject.cmslite.api.service.CMSLiteService;
 import org.motechproject.model.Time;
 import org.motechproject.sms.api.service.SmsService;
-import org.motechproject.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,9 +27,11 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static java.lang.String.format;
+import static org.apache.commons.lang.StringUtils.isNotEmpty;
 import static org.apache.commons.lang.StringUtils.join;
 import static org.motechproject.util.DateUtil.newDateTime;
 import static org.motechproject.util.DateUtil.today;
+import static org.motechproject.util.StringUtil.isNullOrEmpty;
 import static org.springframework.util.CollectionUtils.isEmpty;
 import static org.wv.stepsovc.core.aggregator.RecipientType.CAREGIVER;
 import static org.wv.stepsovc.core.aggregator.RecipientType.FACILITY;
@@ -89,7 +91,8 @@ public class StepsovcAlertService {
                 logger.info("Sms Content : " + smsContent + "dateTime :" + preferredAggregateTime);
                 String patientDueDate = new SimpleDateFormat("dd-MMM-yyyy").format(DateUtils.getDate(referral.getServiceDate()));
                 for (String phoneNumber : phoneNumbers) {
-                    eventAggregationGateway.dispatch(new SMSMessage(newDateTime(new LocalDate(), preferredAggregateTime), phoneNumber, smsContent, group(VisitNames.REFERRAL, window, FACILITY).key(), patientDueDate));
+                    if (isNotEmpty(phoneNumber))
+                        eventAggregationGateway.dispatch(new SMSMessage(newDateTime(new LocalDate(), preferredAggregateTime), phoneNumber, smsContent, group(VisitNames.REFERRAL, window, FACILITY).key(), patientDueDate));
                 }
             } catch (ContentNotFoundException e) {
                 logger.error("Content for SMS not found - " + SmsTemplateKeys.BENEFICIARY_WITH_SERVICES, e);
@@ -102,7 +105,7 @@ public class StepsovcAlertService {
         Beneficiary beneficiary = allBeneficiaries.findBeneficiaryByCode(referral.getBeneficiaryCode());
         Caregiver caregiver = allCaregivers.findCaregiverById(referral.getCgId());
         String phoneNumber = caregiver.getPhoneNumber();
-        if (StringUtil.isNullOrEmpty(phoneNumber)) {
+        if (isNullOrEmpty(phoneNumber)) {
             logger.error("Caregiver - No Phone Numbers to send SMS.");
         } else {
             try {
@@ -126,8 +129,9 @@ public class StepsovcAlertService {
             StringContent stringContent = cmsLiteService.getStringContent(Locale.ENGLISH.getLanguage(), SmsTemplateKeys.BENEFICIARY_WITHOUT_SERVICES);
             String smsContent = format(stringContent.getValue(), beneficiary.getName(), beneficiary.getCode());
             logger.info("Sms Content : " + smsContent);
-            eventAggregationGateway.dispatch(new SMSMessage(newDateTime(new LocalDate(), preferredAggregateTime), phoneNumber,
-                    smsContent, group(VisitNames.FOLLOW_UP, "", CAREGIVER).key(), null));
+            if (isNotEmpty(phoneNumber))
+                eventAggregationGateway.dispatch(new SMSMessage(newDateTime(new LocalDate(), preferredAggregateTime), phoneNumber,
+                        smsContent, group(VisitNames.FOLLOW_UP, "", CAREGIVER).key(), null));
         } catch (ContentNotFoundException e) {
             logger.error("Content for SMS not found - " + SmsTemplateKeys.BENEFICIARY_WITHOUT_SERVICES, e);
         }
@@ -155,7 +159,8 @@ public class StepsovcAlertService {
 
     public void sendSMSToAll(List<String> recipients, String smsContent) {
         for (String recipient : recipients) {
-            smsService.sendSMS(recipient, smsContent);
+            if (StringUtils.isNotEmpty(recipient))
+                smsService.sendSMS(recipient, smsContent);
         }
     }
 
@@ -163,7 +168,7 @@ public class StepsovcAlertService {
                                                                          String unavailableToDate, String nextAvailableDate) {
         Caregiver caregiver = allCaregivers.findCaregiverById(caregiverId);
         String smsContent = getServiceUnavailableAlertMsg(facilityCode, unavailableFromDate, unavailableToDate, nextAvailableDate);
-        if (caregiver != null && smsContent != null) {
+        if (caregiver != null && smsContent != null && isNotEmpty(caregiver.getPhoneNumber())) {
             smsService.sendSMS(caregiver.getPhoneNumber(), smsContent);
         }
     }
