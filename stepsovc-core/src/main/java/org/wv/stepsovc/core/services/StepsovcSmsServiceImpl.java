@@ -98,7 +98,7 @@ public class StepsovcSmsServiceImpl implements SmsService {
         MotechEvent sendSmsEvent = sendSmsEvent(recipients, message, deliveryTime);
         RunOnceSchedulableJob schedulableJob = new RunOnceSchedulableJob(sendSmsEvent, deliveryTime.toDate());
         log.info(String.format("Scheduling message [%s] to number %s at %s.", message, recipients, deliveryTime.toString()));
-        motechSchedulerService.safeScheduleRunOnceJob(schedulableJob);
+        motechSchedulerService.scheduleRunOnceJob(schedulableJob);
     }
 
     private MotechEvent sendSmsEvent(List<String> recipients, String message, DateTime deliveryTime) {
