@@ -283,7 +283,7 @@
                                 schedules/**,*.properties,log4j.xml,*.json
                             </includes>
                             <excludes>
-                                activemq.properties,httpclient.properties
+                                activemq.properties
                             </excludes>
                         </configuration>
                     </execution>
