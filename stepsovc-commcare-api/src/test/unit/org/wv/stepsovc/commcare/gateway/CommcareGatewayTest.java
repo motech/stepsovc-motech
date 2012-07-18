@@ -55,7 +55,7 @@ public class CommcareGatewayTest {
     public void setup() {
         initMocks(this);
         someUrl = "http://localhost:8000";
-        spyCommcareGateway = spy(new CommcareGateway());
+        spyCommcareGateway = spy(new CommcareGateway(null));
         ReflectionTestUtils.setField(spyCommcareGateway, "httpClientService", mockHttpClientService);
         ReflectionTestUtils.setField(spyCommcareGateway, "velocityEngine", mockVelocityEngine);
         ReflectionTestUtils.setField(spyCommcareGateway, "allGroups", mockAllGroups);
