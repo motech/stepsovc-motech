@@ -2,18 +2,13 @@ package org.wv.stepsovc.commcare.gateway;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.velocity.app.VelocityEngine;
-import org.motechproject.context.Context;
-import org.motechproject.http.client.constants.EventSubjects;
 import org.motechproject.http.client.listener.HttpClientEventListener;
 import org.motechproject.http.client.service.HttpClientService;
-import org.motechproject.server.event.EventListenerRegistry;
 import org.motechproject.server.event.annotations.EventAnnotationBeanPostProcessor;
-import org.motechproject.server.event.annotations.MotechListenerEventProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.velocity.VelocityEngineUtils;
-import org.springframework.util.ReflectionUtils;
 import org.wv.stepsovc.commcare.domain.Group;
 import org.wv.stepsovc.commcare.factories.GroupFactory;
 import org.wv.stepsovc.commcare.repository.AllGroups;
@@ -60,7 +55,7 @@ public class CommcareGateway {
 
     @Autowired
     public CommcareGateway(EventAnnotationBeanPostProcessor eventAnnotationBeanPostProcessor) {
-        if(eventAnnotationBeanPostProcessor != null)
+        if (eventAnnotationBeanPostProcessor != null)
             eventAnnotationBeanPostProcessor.postProcessAfterInitialization(httpClientEventListener, "httpClientEventListener");
     }
 
