@@ -49,6 +49,7 @@ public class AggregateSMSEventHandler {
     }
 
     private void aggregateForFacility(List<SMSMessage> smsMessages) throws Exception {
+        logger.info("Aggregating for Sms group: " + smsMessages.get(0).group() );
         StringContent template = cmsLiteService.getStringContent(Locale.ENGLISH.getLanguage(), smsMessages.get(0).group());
         List<SMSMessage> sortedSMSes = Lambda.sort(smsMessages, on(SMSMessage.class).content());
         String allSMSes = joinFrom(sortedSMSes, SMSMessage.class, ", ").content();
