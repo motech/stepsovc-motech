@@ -7,6 +7,8 @@ public class BeneficiaryInformation {
 
     private String beneficiaryName;
 
+    private String beneficiaryLastName;
+
     private String beneficiaryDob;
 
     private String beneficiarySex;
@@ -133,5 +135,13 @@ public class BeneficiaryInformation {
 
     public void setCaseType(String caseType) {
         this.caseType = caseType;
+    }
+
+    public String getBeneficiaryLastName() {
+        return beneficiaryLastName;
+    }
+
+    public void setBeneficiaryLastName(String beneficiaryLastName) {
+        this.beneficiaryLastName = beneficiaryLastName;
     }
 }

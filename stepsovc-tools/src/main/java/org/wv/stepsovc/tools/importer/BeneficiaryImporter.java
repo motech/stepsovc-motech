@@ -27,7 +27,7 @@ public class BeneficiaryImporter {
     public void post(List<BeneficiaryInformation> entities) {
         logger.info("creating  beneficiary  cases in commcare");
         for (BeneficiaryInformation entity : entities) {
-            entity.setBeneficiaryName(dmisDataProcessor.decrypt(entity.getBeneficiaryName()));
+            entity.setBeneficiaryName(dmisDataProcessor.decrypt(entity.getBeneficiaryName()) +" "+dmisDataProcessor.decrypt(entity.getBeneficiaryLastName()));
             entity.setCareGiverName(dmisDataProcessor.decrypt(entity.getCareGiverName()));
 
             try {

@@ -12,6 +12,7 @@ import org.wv.stepsovc.tools.dmis.DMISDataProcessor;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.times;
@@ -30,7 +31,7 @@ public class BeneficiaryImporterTest {
     @Before
     public void setup() {
         initMocks(this);
-        beneficiaryImporter = new BeneficiaryImporter();
+        beneficiaryImporter = new org.wv.stepsovc.tools.importer.BeneficiaryImporter();
         ReflectionTestUtils.setField(beneficiaryImporter, "commcareGateway", mockCommcareGateway);
         ReflectionTestUtils.setField(beneficiaryImporter, "dmisDataProcessor", mockDmisDataProcessor);
 
@@ -39,7 +40,9 @@ public class BeneficiaryImporterTest {
     @Test
     public void shouldImportBeneficiaries() {
         String someBenName1 = "someBenName1";
+        String someBenLastName1 = "someBenLastName1";
         String someBenName2 = "someBenName2";
+        String someBenLastName2 = "someBenLastName2";
         String someCGName1 = "someCGName1";
         String someCGName2 = "someCGName2";
 
@@ -50,6 +53,7 @@ public class BeneficiaryImporterTest {
         beneficiaryInformation1.setReceivingOrganization("someReceivingOrganization1");
         beneficiaryInformation1.setBeneficiaryDob("someDOB1");
         beneficiaryInformation1.setBeneficiaryName(someBenName1);
+        beneficiaryInformation1.setBeneficiaryLastName(someBenLastName1);
         beneficiaryInformation1.setBeneficiarySex("F");
         beneficiaryInformation1.setCareGiverCode("someCGCode1");
         beneficiaryInformation1.setCareGiverName(someCGName1);
@@ -59,6 +63,7 @@ public class BeneficiaryImporterTest {
         beneficiaryInformation2.setReceivingOrganization("someReceivingOrganization2");
         beneficiaryInformation2.setBeneficiaryDob("someDOB2");
         beneficiaryInformation2.setBeneficiaryName(someBenName2);
+        beneficiaryInformation2.setBeneficiaryLastName(someBenLastName2);
         beneficiaryInformation2.setBeneficiarySex("M");
         beneficiaryInformation2.setCareGiverCode("someCGCode2");
         beneficiaryInformation2.setCareGiverName(someCGName2);
@@ -70,12 +75,9 @@ public class BeneficiaryImporterTest {
 
         ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
 
-        verify(mockDmisDataProcessor, times(4)).decrypt(captor.capture());
+        verify(mockDmisDataProcessor, times(6)).decrypt(captor.capture());
 
-        assertThat(captor.getAllValues().get(0), is(someBenName1));
-        assertThat(captor.getAllValues().get(1), is(someCGName1));
-        assertThat(captor.getAllValues().get(2), is(someBenName2));
-        assertThat(captor.getAllValues().get(3), is(someCGName2));
+        assertThat(captor.getAllValues(), hasItems(someBenName1, someBenLastName1, someCGName1, someBenLastName2, someCGName2));
 
     }
 
