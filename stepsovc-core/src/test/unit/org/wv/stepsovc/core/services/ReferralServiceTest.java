@@ -37,6 +37,8 @@ public class ReferralServiceTest {
     private StepsovcScheduleService mockStepsovcScheduleService;
     @Mock
     private StepsovcAlertService mockStepsovcAlertService;
+    @Mock
+    private BeneficiaryService mockBeneficiaryService;
     private ReferralService spyReferralService;
     private Integer exportWindowInWeeks = 3;
 
@@ -50,6 +52,7 @@ public class ReferralServiceTest {
         ReflectionTestUtils.setField(spyReferralService, "stepsovcScheduleService", mockStepsovcScheduleService);
         ReflectionTestUtils.setField(spyReferralService, "stepsovcAlertService", mockStepsovcAlertService);
         ReflectionTestUtils.setField(spyReferralService, "exportWindowInWeeks", exportWindowInWeeks);
+        ReflectionTestUtils.setField(spyReferralService, "beneficiaryService", mockBeneficiaryService);
     }
 
     @Test
@@ -65,6 +68,7 @@ public class ReferralServiceTest {
 
         doReturn(null).when(mockAllReferrals).findActiveReferral(code);
         doReturn(new FacilityAvailability(true)).when(mockFacilityService).getFacilityAvailability(stepsovcCase.getFacility_code(), stepsovcCase.getService_date());
+        doReturn(true).when(mockBeneficiaryService).beneficiaryExists(code);
 
         spyReferralService.addNewReferral(stepsovcCase);
 
@@ -92,6 +96,7 @@ public class ReferralServiceTest {
 
         doReturn(null).when(mockAllReferrals).findActiveReferral(code);
         doReturn(new FacilityAvailability(false, "2012-06-01", "2012-05-30", "2012-05-30")).when(mockFacilityService).getFacilityAvailability(stepsovcCase.getFacility_code(), stepsovcCase.getService_date());
+        doReturn(true).when(mockBeneficiaryService).beneficiaryExists(code);
 
         spyReferralService.addNewReferral(stepsovcCase);
 
@@ -117,6 +122,7 @@ public class ReferralServiceTest {
         facilityAvailability.setUnavailableFromDate(unavailableFrom);
         facilityAvailability.setUnavailableToDate(unavailableTo);
         doReturn(facilityAvailability).when(mockFacilityService).getFacilityAvailability(facilityCode, unavailableFrom);
+        doReturn(true).when(mockBeneficiaryService).beneficiaryExists(stepsovcCase.getBeneficiary_code());
 
         spyReferralService.addNewReferral(stepsovcCase);
 
@@ -133,6 +139,7 @@ public class ReferralServiceTest {
         StepsovcCase stepsovcCase = StepsovcCaseFixture.createCaseForServiceUnavailable("CG1", facilityCode, serviceDate, unavailableFrom, unavailableTo);
         FacilityAvailability facilityAvailability = new FacilityAvailability(true);
         doReturn(facilityAvailability).when(mockFacilityService).getFacilityAvailability(facilityCode, serviceDate);
+        doReturn(true).when(mockBeneficiaryService).beneficiaryExists(stepsovcCase.getBeneficiary_code());
 
         spyReferralService.addNewReferral(stepsovcCase);
 
@@ -185,6 +192,7 @@ public class ReferralServiceTest {
 
         doReturn(referral).when(mockAllReferrals).findActiveReferral(code);
         doReturn(new FacilityAvailability(true)).when(mockFacilityService).getFacilityAvailability(referral.getFacilityCode(), referral.getServiceDate());
+        doReturn(true).when(mockBeneficiaryService).beneficiaryExists(code);
 
         spyReferralService.updateAvailedServices(stepsovcCase);
 
@@ -213,6 +221,7 @@ public class ReferralServiceTest {
         doNothing().when(mockAllReferrals).add(Matchers.<Referral>any());
         doNothing().when(mockAllReferrals).update(Matchers.<Referral>any());
         doReturn(new FacilityAvailability(true)).when(mockFacilityService).getFacilityAvailability(stepsovcCase.getFacility_code(), stepsovcCase.getService_date());
+        doReturn(true).when(mockBeneficiaryService).beneficiaryExists(code);
 
         spyReferralService.addNewReferral(stepsovcCase);
 
