@@ -28,12 +28,6 @@
             <url>http://nexus.motechproject.org/content/repositories/releases</url>
             <uniqueVersion>false</uniqueVersion>
         </repository>
-        <snapshotRepository>
-            <id>motech.nexus.snapshots</id>
-            <name>Motech Snapshots Repository</name>
-            <url>http://nexus.motechproject.org/content/repositories/snapshots</url>
-            <uniqueVersion>false</uniqueVersion>
-        </snapshotRepository>
     </distributionManagement>
 
     <repositories>
