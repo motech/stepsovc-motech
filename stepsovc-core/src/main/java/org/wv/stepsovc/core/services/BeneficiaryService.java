@@ -77,4 +77,9 @@ public class BeneficiaryService {
         }
         return beneficiary.getCaseId();
     }
+
+    public boolean beneficiaryExists(String beneficiaryCode){
+        return allBeneficiaries.findBeneficiaryByCode(beneficiaryCode) != null;
+    }
+
 }

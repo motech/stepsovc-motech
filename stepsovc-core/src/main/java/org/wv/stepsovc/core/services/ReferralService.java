@@ -32,11 +32,19 @@ public class ReferralService {
     private StepsovcScheduleService stepsovcScheduleService;
     @Autowired
     private StepsovcAlertService stepsovcAlertService;
+    @Autowired
+    private BeneficiaryService beneficiaryService;
+
     @Value("#{stepovcProperties['export.window']}")
     private Integer exportWindowInWeeks;
 
     public void addNewReferral(StepsovcCase stepsovcCase) {
         logger.info("Handling new referral for " + stepsovcCase.getBeneficiary_code());
+
+        if(! beneficiaryService.beneficiaryExists(stepsovcCase.getBeneficiary_code())) {
+            logger.info("Beneficiary does not exists " + stepsovcCase.getBeneficiary_code());
+            return;
+        }
         inactivateOldReferral(stepsovcCase);
 
         Referral newReferral = new ReferralMapper().map(stepsovcCase);
