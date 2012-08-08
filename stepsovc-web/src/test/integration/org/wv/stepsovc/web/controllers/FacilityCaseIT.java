@@ -14,6 +14,7 @@ import org.wv.stepsovc.core.request.CaseUpdateType;
 import org.wv.stepsovc.core.request.StepsovcCase;
 
 import static fixtures.StepsovcCaseFixture.createCaseForReferral;
+import static fixtures.StepsovcCaseFixture.createNewBeneficiaryCase;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 
@@ -37,6 +38,19 @@ public class FacilityCaseIT {
     public void shouldCreateOrUpdateFacilityWithServiceUnavailability() {
         String mayFirst = "2012-05-01";
         String maySecond = "2012-05-02";
+
+        StepsovcCase benCase1 = createNewBeneficiaryCase(benCode1);
+        StepsovcCase benCase2 = createNewBeneficiaryCase(benCode2);
+        StepsovcCase benCase3 = createNewBeneficiaryCase(benCode3);
+
+        benCase1.setForm_type(CaseUpdateType.BENEFICIARY_REGISTRATION.getType());
+        benCase2.setForm_type(CaseUpdateType.BENEFICIARY_REGISTRATION.getType());
+        benCase3.setForm_type(CaseUpdateType.BENEFICIARY_REGISTRATION.getType());
+
+        stepsovcCaseController.createCase(benCase1);
+        stepsovcCaseController.createCase(benCase2);
+        stepsovcCaseController.createCase(benCase3);
+
         StepsovcCase caseForReferral1 = createCaseForReferral(benCode1, mayFirst, facilityId, "1988-12-23");
         StepsovcCase caseForReferral2 = createCaseForReferral(benCode2, mayFirst, facilityId, "1988-12-23");
         StepsovcCase caseForReferral3 = createCaseForReferral(benCode3, "2012-01-03", facilityId, "1988-12-23");
