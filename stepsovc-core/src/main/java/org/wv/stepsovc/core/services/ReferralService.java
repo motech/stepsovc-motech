@@ -39,7 +39,7 @@ public class ReferralService {
     private Integer exportWindowInWeeks;
 
     public void addNewReferral(StepsovcCase stepsovcCase) {
-        logger.info("Handling new referral for " + stepsovcCase.getBeneficiary_code());
+        logger.info("Handling new referral for " + stepsovcCase.getBeneficiary_code() + " to " + stepsovcCase.getFacility_code());
 
         if(! beneficiaryService.beneficiaryExists(stepsovcCase.getBeneficiary_code())) {
             logger.info("Beneficiary does not exists " + stepsovcCase.getBeneficiary_code());
