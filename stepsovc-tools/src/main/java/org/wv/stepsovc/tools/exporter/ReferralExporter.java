@@ -29,9 +29,11 @@ public class ReferralExporter {
         List<Referral> referrals = referralService.getReferralDataForExport();
         List<ReferralData> referralDataList = new ArrayList<ReferralData>();
         for (Referral referral : referrals) {
-            ReferralData referralData = referralDataMapper.map(referral);
-            referralData.setBeneficiaryId(beneficiaryService.getBeneficiaryId(referral.getBeneficiaryCode()));
-            referralDataList.add(referralData);
+            if(beneficiaryService.beneficiaryExists(referral.getBeneficiaryCode())) {
+                ReferralData referralData = referralDataMapper.map(referral);
+                referralData.setBeneficiaryId(beneficiaryService.getBeneficiaryId(referral.getBeneficiaryCode()));
+                referralDataList.add(referralData);
+            }
         }
         return referralDataList;
     }
