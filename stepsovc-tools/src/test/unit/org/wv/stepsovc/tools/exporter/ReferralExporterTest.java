@@ -29,7 +29,7 @@ public class ReferralExporterTest {
     @Test
     public void shouldReturnReferralDataForExport() {
         initMocks(this);
-        ReferralExporter referralExporter = new ReferralExporter();
+        org.wv.stepsovc.tools.exporter.ReferralExporter referralExporter = new org.wv.stepsovc.tools.exporter.ReferralExporter();
         ReflectionTestUtils.setField(referralExporter, "referralService", mockReferralService);
         ReflectionTestUtils.setField(referralExporter, "referralDataMapper", mockReferralDataMapper);
         ReflectionTestUtils.setField(referralExporter, "beneficiaryService", mockBeneficiaryService);
@@ -47,6 +47,8 @@ public class ReferralExporterTest {
         doReturn(Arrays.<Referral>asList(referral1, referral2)).when(mockReferralService).getReferralDataForExport();
         doReturn(referralData1).when(mockReferralDataMapper).map(referral1);
         doReturn(referralData2).when(mockReferralDataMapper).map(referral2);
+        doReturn(true).when(mockBeneficiaryService).beneficiaryExists(benCode1);
+        doReturn(true).when(mockBeneficiaryService).beneficiaryExists(benCode2);
         doReturn(benId1).when(mockBeneficiaryService).getBeneficiaryId(benCode1);
         doReturn(benId2).when(mockBeneficiaryService).getBeneficiaryId(benCode2);
 
