@@ -71,7 +71,9 @@ public class ReferralMapper {
         referral.setSignedDate(stepsovcCase.getVisit_date());
         referral.setServiceDetails(stepsovcCase.getService_details());
 
-        referral.setFacilityCode(stepsovcCase.getFacility_code());
+        if (stepsovcCase.getFacility_code() != null || !"".equals(stepsovcCase.getFacility_code()))
+            referral.setFacilityCode(stepsovcCase.getFacility_code());
+
         referral.setServiceDate(stepsovcCase.getService_date());
 
         return referral;
